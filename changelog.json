@@ -2,6 +2,31 @@
   "schemaVersion": 2,
   "versions": [
     {
+      "version": "0.2.44",
+      "tag": "v0.2.44",
+      "date": "2026-11-01",
+      "prerelease": false,
+      "groups": [
+        {
+          "type": "feat",
+          "entries": [
+            {
+              "id": "4d2e294",
+              "text": "Empty states trade their coloured cloud artwork for hairline schematics. The soft blue blobs and the entrance animation retire: each empty page now draws one 0.7 hairline square, the member’s own glyph as a single unfilled line inside it, and a short baseline beneath — data, logs, dns, tun, wifi, apps, permission, camera, search and error each keep their glyph, and the error member reads in the scheme’s error colour while its baseline stays neutral. Copy, actions and placeholder sizes are unchanged; only the picture is redrawn in the house line."
+            },
+            {
+              "id": "1bdf986",
+              "text": "Grouped rows read flat. Section cards lose their raised fill and their rounded group-end corners: a group now stands on the field itself — square-cornered, transparent, held together by a 0.7 Hara hairline frame and the row separators it already had. Selection fills and error tints keep their precedence; only the card stock under the rows changed, across settings, forms, sheets and lists alike."
+            },
+            {
+              "id": "fec61ee",
+              "text": "The profile editor’s core-kind selector joins the flat reading. Its hand-rolled group box — the one place that still computed first-and-last corner radii of its own — drops that arithmetic and takes the same square hairline frame as every other group, so the edit page’s sections read as one family. The selector’s title, its two core rows, the ink underline on the current core and the platform notes are untouched."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "version": "0.2.43",
       "tag": "v0.2.43",
       "date": "2026-10-31",
