@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.2.48 (2026-11-02)
+
+**Features**
+
+- The settings index is regrouped. Access control moves in with the configuration pages and backup joins maintenance, the developer page is renamed Data Maintenance, and the general page sheds its near-empty start-up section; its remaining sections run requests, connection, kernel, inbound and logs, the sensitive inbound rows sunk below the everyday ones. (65f6fd9)
+- The VPN, system-proxy and TUN master switches now live in exactly one place: the takeover section of the settings index. The network page keeps the detail rows those switches govern, so a master switch can no longer be flipped from two pages at once. On desktop the system-proxy switch deliberately stays in both, with a note in each place pointing at the other. (22c0a13)
+- The speed-test address moves to the proxy settings page, renamed Proxy & Speed Test, and hosts together with the append-system-DNS switch move to a new Resolution section on the DNS page, next to the overrides they belong with. (abf7c8f)
+- Access control’s three list-only options sink into their own List Display section, below the rows that actually change behaviour. On the resources page the geo update rows leave the top-bar menu and join the Geo section itself, and on the theme page the everyday text-size row now sits above liquid glass. (3af8164)
+- Three factory defaults are tuned. The log level starts at info, so a problem leaves a diagnosable trail; geo data refreshes itself every day instead of ageing into wrong routing; and timed-out nodes start hidden. Settings already saved are untouched — the new defaults reach fresh installs, and anyone who resets. (e681363)
+- A one-tap reset joins the bottom of the general page. One confirmed tap returns every setting to the tuned defaults — subscriptions, profiles and account data are not touched — and a connection that is running drops and reconnects on the defaults. (8f6c299)
+
 ## v0.2.47 (2026-11-02)
 
 **Features**
