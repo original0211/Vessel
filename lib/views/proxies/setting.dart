@@ -27,6 +27,7 @@ class ProxiesSetting extends ConsumerWidget {
       HaraSection(
         title: appLocalizations.proxySettings,
         rows: [
+          const TestUrlItem(),
           HaraOptions<ProxiesSortType>(
             ConfigOptionsItem<ProxiesSortType>(
               title: (l) => l.sort,
@@ -83,6 +84,49 @@ class ProxiesSetting extends ConsumerWidget {
           );
         },
       ),
+    );
+  }
+}
+
+class TestUrlItem extends ConsumerWidget {
+  const TestUrlItem({super.key});
+
+  @override
+  Widget build(BuildContext context, ref) {
+    final appLocalizations = context.appLocalizations;
+    final testUrl = ref.watch(
+      appSettingProvider.select((state) => state.testUrl),
+    );
+    return HaraInputRow(
+      label: appLocalizations.testUrl,
+      value: testUrl,
+      note: appLocalizations.testUrlApplyNote,
+      onTap: () {
+        showConfigInputDialog(
+          context: context,
+          title: appLocalizations.testUrl,
+          value: testUrl,
+          resetValue: defaultTestUrl,
+          maxLength: TextInputLimits.url,
+          validator: (String? value) {
+            if (value == null || value.isEmpty) {
+              return appLocalizations.emptyTip(appLocalizations.testUrl);
+            }
+            if (!value.isUrl) {
+              return appLocalizations.urlTip(appLocalizations.testUrl);
+            }
+            return null;
+          },
+          onChanged: (String? value) {
+            if (value == null) {
+              return;
+            }
+            ref
+                .read(appSettingProvider.notifier)
+                .update((state) => state.copyWith(testUrl: value));
+          },
+        );
+      },
     );
   }
 }

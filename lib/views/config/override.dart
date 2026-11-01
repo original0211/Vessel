@@ -395,9 +395,12 @@ void showOverrideAddSheet<K extends OverrideKey, M>(
 }
 
 class OverrideView<K extends OverrideKey, M> extends ConsumerWidget {
-  const OverrideView({super.key, required this.spec});
+  const OverrideView({super.key, required this.spec, this.header});
 
   final OverrideSpec<K, M> spec;
+
+  /// A band that stays over the entries in the empty and filled states alike.
+  final Widget? header;
 
   void _handleAdd(BuildContext context, WidgetRef ref) =>
       showOverrideAddSheet(context, ref, spec);
@@ -481,6 +484,21 @@ class OverrideView<K extends OverrideKey, M> extends ConsumerWidget {
       ),
     );
     final addEntry = target.addEntry(appLocalizations);
+    final switcher = NullStatusSwitcher(
+      isEmpty: isEmpty,
+      nullStatus: NullStatus(
+        label: appLocalizations.nullTip(target.entries(appLocalizations)),
+        description: target.description(appLocalizations),
+        illustration: spec.illustration,
+        action: TonalButton(
+          size: TonalButtonSize.bar,
+          glyph: AppGlyphs.addCircle,
+          label: addEntry,
+          onPressed: () => _handleAdd(context, ref),
+        ),
+      ),
+      child: _OverrideList(spec: spec, topInset: header == null),
+    );
     return CommonScaffold(
       title: spec.title(appLocalizations),
       iconActions: [
@@ -499,30 +517,25 @@ class OverrideView<K extends OverrideKey, M> extends ConsumerWidget {
       ],
       body: Material(
         color: palette.bg,
-        child: NullStatusSwitcher(
-          isEmpty: isEmpty,
-          nullStatus: NullStatus(
-            label: appLocalizations.nullTip(target.entries(appLocalizations)),
-            description: target.description(appLocalizations),
-            illustration: spec.illustration,
-            action: TonalButton(
-              size: TonalButtonSize.bar,
-              glyph: AppGlyphs.addCircle,
-              label: addEntry,
-              onPressed: () => _handleAdd(context, ref),
-            ),
-          ),
-          child: _OverrideList(spec: spec),
-        ),
+        child: header == null
+            ? switcher
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  header!,
+                  Expanded(child: switcher),
+                ],
+              ),
       ),
     );
   }
 }
 
 class _OverrideList<K extends OverrideKey, M> extends ConsumerWidget {
-  const _OverrideList({required this.spec});
+  const _OverrideList({required this.spec, this.topInset = true});
 
   final OverrideSpec<K, M> spec;
+  final bool topInset;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -538,7 +551,12 @@ class _OverrideList<K extends OverrideKey, M> extends ConsumerWidget {
           (constraints.maxWidth - HaraSpace.contentMaxWidth) / 2,
         );
         return ListView(
-          padding: EdgeInsets.fromLTRB(side, context.appBarInset, side, 48),
+          padding: EdgeInsets.fromLTRB(
+            side,
+            topInset ? context.appBarInset : 0,
+            side,
+            48,
+          ),
           children: [
             if (spec.target.issues case final issues?)
               CustomIssuesBanner(issues: ref.watch(issues)),

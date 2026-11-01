@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:kfusion/common/common.dart';
 import 'package:kfusion/enum/enum.dart';
 import 'package:kfusion/features/form/form.dart';
 import 'package:kfusion/l10n/l10n.dart';
 import 'package:kfusion/models/models.dart';
+import 'package:kfusion/providers/config.dart';
 import 'package:kfusion/views/config/override.dart';
 import 'package:kfusion/widgets/widgets.dart';
 import 'package:flutter/foundation.dart' show mapEquals;
@@ -123,6 +126,7 @@ class DnsView extends OverrideView<DnsOverrideKey, Dns> {
           ),
           keys: DnsOverrideKey.normalProfileKeys,
         ),
+        header: const DnsResolutionSection(),
       );
 }
 
@@ -367,6 +371,89 @@ class _PolicyItem extends ConsumerWidget {
         if (!mapEquals(next, policy)) {
           model.modelWriter(update)(ref, next);
         }
+      },
+    );
+  }
+}
+
+class HostsItem extends ConsumerWidget {
+  const HostsItem({super.key});
+
+  @override
+  Widget build(BuildContext context, ref) {
+    final appLocalizations = context.appLocalizations;
+    final hosts = ref.watch(
+      patchClashConfigProvider.select((state) => state.hosts),
+    );
+    return HaraOpenRow(
+      label: 'Hosts',
+      subtitle:
+          '${hosts.isEmpty ? appLocalizations.none : appLocalizations.itemsCount(hosts.length)}'
+          ' · ${appLocalizations.mihomoOnly}',
+      target: MapEditView(
+        title: 'Hosts',
+        entries: hosts,
+        keyMaxLength: TextInputLimits.domain,
+        valueMaxLength: TextInputLimits.hostValue,
+        titleBuilder: (item) => Text(item.key),
+        subtitleBuilder: (item) => Text(item.value),
+      ),
+      onChanged: (value) {
+        ref
+            .read(patchClashConfigProvider.notifier)
+            .update((state) => state.copyWith(hosts: value));
+      },
+    );
+  }
+}
+
+class AppendSystemDnsItem extends ConsumerWidget {
+  const AppendSystemDnsItem({super.key});
+
+  @override
+  Widget build(BuildContext context, ref) {
+    return HaraToggle(
+      ConfigToggleItem(
+        title: (l) => l.appendSystemDns,
+        subtitle: (l) => l.mihomoOnly,
+        selector: networkSettingProvider.select(
+          (state) => state.appendSystemDns,
+        ),
+        onChanged: (ref, value) => ref
+            .read(networkSettingProvider.notifier)
+            .update((state) => state.copyWith(appendSystemDns: value)),
+      ),
+    );
+  }
+}
+
+/// The resolution band over the override entries: the hosts table and
+/// the system DNS append live with the DNS they steer, not in the
+/// general page's core section.
+class DnsResolutionSection extends StatelessWidget {
+  const DnsResolutionSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final appLocalizations = context.appLocalizations;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final side = max(
+          HaraSpace.pageInset,
+          (constraints.maxWidth - HaraSpace.contentMaxWidth) / 2,
+        );
+        return Padding(
+          padding: EdgeInsets.fromLTRB(
+            side,
+            context.appBarInset,
+            side,
+            HaraSpace.groupGap,
+          ),
+          child: HaraSection(
+            title: appLocalizations.nameResolution,
+            rows: const [HostsItem(), AppendSystemDnsItem()],
+          ),
+        );
       },
     );
   }
