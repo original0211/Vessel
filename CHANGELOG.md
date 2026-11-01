@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.2.47 (2026-11-02)
+
+**Features**
+
+- The theme page’s choice rows carry new thumbnails: hairline sketches of the home screen itself, fielded for the option each stands for — the automatic row splits its field cleanly in two, and the standard and pure-black rows can finally be told apart. The tab-animation choice is gone, its motion frozen at the shipped default, and the liquid-glass row loses its ultra tier; anyone who had ultra selected lands on standard. (7a5b259)
+- Proxy groups fold on the home screen. Only the group carrying the current exit stays open; every other group rests as one header line — its name, its current pick, its member count and its best delay — so a subscription with many groups no longer sends you scrolling past every node it holds. (c432bff)
+- A search row and a rail of group chips join the node list. Search filters nodes across all groups at once, and a tap on a chip jumps straight to that group and opens it; on a full-size subscription the scroll down to the last group is roughly half what it was. (f1db3ba)
+
+**Bug Fixes**
+
+- The launcher’s long-press shortcuts wear the brand colours: start, pause and toggle now read as ink glyphs on a white field, matching the launcher icon, in place of the violet discs inherited from upstream. (9a2dc80)
+
 ## v0.2.46 (2026-11-01)
 
 **Features**
