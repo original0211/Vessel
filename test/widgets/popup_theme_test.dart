@@ -20,8 +20,7 @@ ThemeData _theme(Brightness brightness) {
   );
 }
 
-Color _floatingFill(ColorScheme colorScheme) =>
-    SurfaceLevel.floatingOf(colorScheme).colorOf(colorScheme);
+Color _fieldFill(Brightness brightness) => HaraPalette.of(brightness).bg;
 
 Future<ValueNotifier<ThemeMode>> _pumpPage(
   WidgetTester tester, {
@@ -68,24 +67,22 @@ void main() {
   Color fillOf(WidgetTester tester) =>
       tester.widget<PopupMenuCard>(find.byType(PopupMenuCard)).fill;
 
-  final light = _theme(Brightness.light);
   final dark = _theme(Brightness.dark);
 
   testWidgets('an open popup takes a new app theme', (tester) async {
     final mode = await _pumpPage(tester, body: (_) => Center(child: popupBox));
     open();
     await tester.pumpAndSettle();
-    expect(fillOf(tester), _floatingFill(light.colorScheme));
+    expect(fillOf(tester), _fieldFill(Brightness.light));
 
     mode.value = ThemeMode.dark;
     await tester.pumpAndSettle();
 
-    expect(fillOf(tester), _floatingFill(dark.colorScheme));
+    expect(fillOf(tester), _fieldFill(Brightness.dark));
   });
 
-  testWidgets('a popup opened in a sheet keeps its lift in a new app theme', (
-    tester,
-  ) async {
+  testWidgets('a popup opened in a sheet stays on the field in a new app '
+      'theme', (tester) async {
     final mode = await _pumpPage(
       tester,
       body: (context) => TextButton(
@@ -100,13 +97,16 @@ void main() {
     await tester.pumpAndSettle();
     open();
     await tester.pumpAndSettle();
-    expect(fillOf(tester), _floatingFill(light.colorScheme));
+    expect(fillOf(tester), _fieldFill(Brightness.light));
 
     mode.value = ThemeMode.dark;
     await tester.pumpAndSettle();
 
     final elevated = dark.extension<ElevatedColorScheme>()!.colorScheme;
-    expect(_floatingFill(elevated), isNot(_floatingFill(dark.colorScheme)));
-    expect(fillOf(tester), _floatingFill(elevated));
+    expect(
+      SurfaceLevel.floatingOf(elevated).colorOf(elevated),
+      isNot(_fieldFill(Brightness.dark)),
+    );
+    expect(fillOf(tester), _fieldFill(Brightness.dark));
   });
 }

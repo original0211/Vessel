@@ -141,7 +141,7 @@ void main() {
       expect(theme.elevated, same(theme));
     });
 
-    test('swaps in the carried scheme and repaints the canvas from it', () {
+    test('swaps in the carried scheme while the canvas stays on the field', () {
       final carried = ColorScheme.fromSeed(
         seedColor: Colors.teal,
         brightness: Brightness.dark,
@@ -150,7 +150,7 @@ void main() {
         extensions: [ElevatedColorScheme(carried)],
       ).elevated;
       expect(theme.colorScheme, carried);
-      expect(theme.canvasColor, carried.surface);
+      expect(theme.canvasColor, HaraPalette.dark.bg);
       expect(theme.scaffoldBackgroundColor, HaraPalette.dark.bg);
     });
   });
@@ -162,14 +162,15 @@ void main() {
     test('the scaffold stands on the field while cards and floats take '
         'their ladder colours', () {
       expect(theme.scaffoldBackgroundColor, HaraPalette.light.bg);
+      expect(theme.canvasColor, HaraPalette.light.bg);
       expect(theme.cardTheme.color, SurfaceLevel.card.colorOf(scheme));
       expect(theme.cardTheme.elevation, 0);
       final floating = SurfaceLevel.floatingOf(scheme).colorOf(scheme);
       expect(theme.dialogTheme.backgroundColor, floating);
-      expect(theme.popupMenuTheme.color, floating);
+      expect(theme.popupMenuTheme.color, HaraPalette.light.bg);
       expect(
         theme.menuTheme.style?.backgroundColor?.resolve(<WidgetState>{}),
-        floating,
+        HaraPalette.light.bg,
       );
     });
 

@@ -26,14 +26,21 @@ ThemeData _theme(Brightness brightness) {
 void main() {
   group('floating shapes at the theme base', () {
     for (final brightness in Brightness.values) {
-      test('dialog and menu shapes carry the cabin rim ($brightness)', () {
+      test('dialog keeps the cabin rim while menus take the hara hairline '
+          '($brightness)', () {
         final scheme = _scheme(brightness);
         final theme = _theme(brightness);
         final floating = AppShape.floating.copyWith(side: scheme.cabinRimSide);
+        final menu = AppShape.hara.copyWith(
+          side: BorderSide(
+            color: HaraPalette.of(brightness).line,
+            width: HaraSpace.hairline,
+          ),
+        );
 
         expect(theme.dialogTheme.shape, floating);
-        expect(theme.popupMenuTheme.shape, floating);
-        expect(theme.menuTheme.style?.shape?.resolve({}), floating);
+        expect(theme.popupMenuTheme.shape, menu);
+        expect(theme.menuTheme.style?.shape?.resolve({}), menu);
         expect(theme.bottomSheetTheme.shape, AppShape.top(AppCorner.floating));
       });
     }

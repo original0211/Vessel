@@ -197,10 +197,7 @@ extension AppSurfaceThemeExt on ThemeData {
     if (scheme == null) {
       return this;
     }
-    return copyWith(
-      colorScheme: scheme,
-      canvasColor: scheme.surface,
-    ).withAppSurfaces;
+    return copyWith(colorScheme: scheme).withAppSurfaces;
   }
 
   ThemeData get withAppSurfaces {
@@ -214,13 +211,15 @@ extension AppSurfaceThemeExt on ThemeData {
       dividerTheme: dividerTheme.copyWith(
         color: colorScheme.onSurface.withValues(alpha: 0.14),
       ),
+      canvasColor: field,
       scaffoldBackgroundColor: field,
       cardTheme: cardTheme.copyWith(color: card, elevation: 0),
       dialogTheme: dialogTheme.copyWith(backgroundColor: floating),
-      popupMenuTheme: popupMenuTheme.copyWith(color: floating),
+      popupMenuTheme: popupMenuTheme.copyWith(color: field, elevation: 0),
       menuTheme: MenuThemeData(
         style: (menuTheme.style ?? const MenuStyle()).copyWith(
-          backgroundColor: WidgetStatePropertyAll(floating),
+          backgroundColor: WidgetStatePropertyAll(field),
+          elevation: const WidgetStatePropertyAll(0),
         ),
       ),
       navigationBarTheme: navigationBarTheme.copyWith(

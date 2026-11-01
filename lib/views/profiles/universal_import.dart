@@ -10,6 +10,7 @@ import 'package:kfusion/features/form/form.dart';
 import 'package:kfusion/models/models.dart';
 import 'package:kfusion/providers/providers.dart';
 import 'package:kfusion/state.dart';
+import 'package:kfusion/ui/icons/icons.dart';
 import 'package:kfusion/views/profiles/singbox_degradations.dart';
 import 'package:kfusion/widgets/widgets.dart';
 import 'package:material_ui/material_ui.dart';
@@ -202,6 +203,10 @@ class _UniversalImportViewState extends ConsumerState<UniversalImportView> {
   Widget build(BuildContext context) {
     final palette = context.haraPalette;
     final preview = _preview;
+    final currentTemplate = routingTemplates.firstWhere(
+      (template) => template.id == _templateId,
+      orElse: () => kfusionDefaultTemplate,
+    );
     return CommonScaffold(
       title: '万能导入',
       body: LayoutBuilder(
@@ -305,28 +310,37 @@ class _UniversalImportViewState extends ConsumerState<UniversalImportView> {
                   ),
                   _HaraFieldRow(
                     title: '路由模板',
-                    child: DropdownButton<String>(
-                      value: _templateId,
-                      isExpanded: true,
-                      underline: const SizedBox.shrink(),
-                      style: HaraText.nodeName(
-                        context,
-                        palette.ink,
-                        current: false,
-                      ),
-                      items: [
-                        for (final template in routingTemplates)
-                          DropdownMenuItem(
-                            value: template.id,
-                            child: Text(
-                              template.label,
-                              textAlign: TextAlign.end,
+                    child: CommonPopupBox(
+                      targetBuilder: (open) => InkWell(
+                        customBorder: AppShape.hara,
+                        onTap: open,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              currentTemplate.label,
+                              style: HaraText.nodeName(
+                                context,
+                                palette.ink,
+                                current: false,
+                              ),
                             ),
-                          ),
-                      ],
-                      onChanged: (value) {
-                        if (value != null) setState(() => _templateId = value);
-                      },
+                            const SizedBox(width: 4),
+                            GlyphIcon(AppGlyphs.picker, color: palette.sub),
+                          ],
+                        ),
+                      ),
+                      popupBuilder: (_) => CommonPopupMenu(
+                        items: [
+                          for (final template in routingTemplates)
+                            CommonPopupMenuItem(
+                              label: template.label,
+                              checked: template.id == _templateId,
+                              onPressed: () =>
+                                  setState(() => _templateId = template.id),
+                            ),
+                        ],
+                      ),
                     ),
                   ),
                 ],

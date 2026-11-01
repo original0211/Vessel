@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:kfusion/ui/icons/icons.dart';
 import 'package:kfusion/ui/liquid_glass.dart';
 import 'package:kfusion/ui/elastic.dart';
+import 'package:kfusion/ui/hara.dart';
 import 'package:kfusion/ui/popup.dart';
 import 'package:kfusion/ui/surface.dart';
 import 'package:flutter/gestures.dart' show PointerDeviceKind, kPressTimeout;
@@ -148,7 +149,7 @@ void main() {
     );
   });
 
-  testWidgets('a popup fills from the elevated surface it opened on', (
+  testWidgets('a popup fills from the field even on an elevated surface', (
     tester,
   ) async {
     const lifted = Color(0xFF505050);
@@ -178,7 +179,9 @@ void main() {
     open();
     await tester.pumpAndSettle();
 
-    expect(cardOf(tester, find.byType(PopupMenuCard)).fill, lifted);
+    final fill = cardOf(tester, find.byType(PopupMenuCard)).fill;
+    expect(fill, HaraPalette.dark.bg);
+    expect(fill, isNot(lifted));
   });
 
   testWidgets('the popup is only built once it opens', (tester) async {
@@ -1603,7 +1606,9 @@ void main() {
     expect(childWidth, greaterThanOrEqualTo(parentWidth));
   });
 
-  testWidgets('the open sub menu casts the stronger shadow', (tester) async {
+  testWidgets('the open sub menu casts no shadow; its parent only dims', (
+    tester,
+  ) async {
     final open = await pumpMenu(tester, [
       const CommonPopupMenuItem(
         label: 'parent',
@@ -1616,10 +1621,10 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(surfaces, findsNWidgets(2));
-    expect(
-      shadowOf(tester, surfaces.first),
-      lessThan(shadowOf(tester, surfaces.last)),
-    );
+    expect(shadowOf(tester, surfaces.first), 0);
+    expect(shadowOf(tester, surfaces.last), 0);
+    expect(cardOf(tester, surfaces.first).dim.a, greaterThan(0));
+    expect(cardOf(tester, surfaces.last).dim.a, 0);
   });
 
   testWidgets('a sub menu settles wider than the parent it opened from', (
@@ -1783,7 +1788,7 @@ void main() {
 
     expect(lastWidth, closeTo(foldedWidth, 1));
     expect(last.grow, closeTo(0, 0.01));
-    expect(shadowOf(tester, surfaces), greaterThan(0));
+    expect(shadowOf(tester, surfaces), 0);
     await tester.pumpAndSettle();
   });
 
@@ -1961,9 +1966,7 @@ void main() {
     expect(tester.getSize(menu).height, greaterThan(foldedHeight));
   });
 
-  testWidgets('the parent hands its shadow over without a step', (
-    tester,
-  ) async {
+  testWidgets('the parent takes the dim over without a step', (tester) async {
     final open = await pumpMenu(tester, [
       const CommonPopupMenuItem(
         label: 'parent',
@@ -1972,20 +1975,20 @@ void main() {
     ]);
     open();
     await tester.pumpAndSettle();
-    final restingShadow = shadowOf(tester, surfaces);
+    expect(cardOf(tester, surfaces).dim.a, 0);
 
     await tester.tap(find.text('parent'));
     await tester.pump();
-    expect(shadowOf(tester, surfaces.first), restingShadow);
-    expect(shadowOf(tester, surfaces.last), 0);
+    expect(cardOf(tester, surfaces.first).dim.a, 0);
+    expect(cardOf(tester, surfaces.last).dim.a, 0);
 
     await tester.pumpAndSettle();
-    expect(shadowOf(tester, surfaces.first), lessThan(restingShadow));
-    expect(shadowOf(tester, surfaces.last), restingShadow);
+    expect(cardOf(tester, surfaces.first).dim.a, greaterThan(0));
+    expect(cardOf(tester, surfaces.last).dim.a, 0);
 
     await tester.tap(find.text('parent').last);
     await tester.pumpAndSettle();
-    expect(shadowOf(tester, surfaces), restingShadow);
+    expect(cardOf(tester, surfaces).dim.a, 0);
   });
 
   testWidgets('a parent keeps its scroll offset while a sub menu is open', (

@@ -5,6 +5,7 @@ import 'dart:ui' show ImageFilter, lerpDouble;
 
 import 'package:kfusion/ui/color.dart';
 import 'package:kfusion/ui/context.dart';
+import 'package:kfusion/ui/hara.dart';
 import 'package:kfusion/ui/icons/icons.dart';
 import 'package:kfusion/ui/metrics.dart';
 import 'package:kfusion/ui/motion.dart';
@@ -36,9 +37,9 @@ const _avoidGap = 8.0;
 
 const _cardInset = 8.0;
 
-const _cardRadius = AppCorner.floating;
+const _cardRadius = AppCorner.hara;
 
-const _itemRadius = _cardRadius - _cardInset;
+const _itemRadius = _cardRadius > _cardInset ? _cardRadius - _cardInset : 0.0;
 
 const _itemIconSize = 20.0;
 const _submenuArrowSize = 16.0;
@@ -53,24 +54,6 @@ const _itemArrowPadding = EdgeInsets.only(
 );
 
 const _dividerHeight = _cardInset * 2 + 1;
-
-// Soft and wide like HyperOS menus rather than a Material elevation.
-List<BoxShadow> _cardShadows(ColorScheme colorScheme, [double depth = 1]) {
-  final strength = colorScheme.brightness == Brightness.dark ? 3.0 : 1.0;
-  final alpha = strength * depth;
-  return [
-    BoxShadow(
-      color: colorScheme.shadow.withValues(alpha: 0.05 * alpha),
-      blurRadius: 10,
-      offset: const Offset(0, 2),
-    ),
-    BoxShadow(
-      color: colorScheme.shadow.withValues(alpha: 0.04 * alpha),
-      blurRadius: 30,
-      offset: const Offset(0, 4),
-    ),
-  ];
-}
 
 const _maxContentBlur = 8.0;
 
@@ -316,7 +299,7 @@ class CommonPopupRoute<T> extends PopupRoute<T> {
     Animation<double> secondaryAnimation,
   ) {
     return SurfaceScope(
-      level: SurfaceLevel.floatingOf(context.colorScheme),
+      level: SurfaceLevel.page,
       child: _PopupScope(
         platter: _platter,
         press: _press,
@@ -373,13 +356,11 @@ class CommonPopupRoute<T> extends PopupRoute<T> {
               platter: _platter,
               sourceColor: sourceColor,
               sourceImage: sourceImage,
-              rimColor: colorScheme.cabinRim,
-              surfaceColor: SurfaceLevel.floatingOf(
-                colorScheme,
-              ).colorOf(colorScheme),
+              rimColor: context.haraPalette.line,
+              surfaceColor: Theme.of(context).fieldColor,
               shadows: glass
                   ? glassMenuShadows(colorScheme)
-                  : _cardShadows(colorScheme),
+                  : const <BoxShadow>[],
               glass: glass
                   ? (
                       from: LiquidGlassStyle.regular(colorScheme),
@@ -892,7 +873,7 @@ class _RenderPopupMorph extends RenderProxyBox {
         Paint()
           ..color = _rimColor.withValues(alpha: _rimColor.a * settled * platter)
           ..style = PaintingStyle.stroke
-          ..strokeWidth = 1,
+          ..strokeWidth = HaraSpace.hairline,
       );
     }
     rim?.paintLine(context.canvas, rect.shift(offset), math.max(0.0, radius));
@@ -1201,8 +1182,7 @@ class _CommonPopupBoxState extends State<CommonPopupBox> {
     if (LiquidGlassScope.of(context)) {
       return Colors.transparent;
     }
-    final colorScheme = context.colorScheme;
-    return SurfaceLevel.floatingOf(colorScheme).colorOf(colorScheme);
+    return Theme.of(context).fieldColor;
   }
 
   void _captureSource(
@@ -2217,7 +2197,7 @@ class _CommonPopupMenuState extends State<CommonPopupMenu>
         ? LiquidGlassStyle.menu(colorScheme)
         : null;
     final rim = glass == null ? null : LiquidGlassRim.menu(colorScheme);
-    final fill = SurfaceLevel.floatingOf(colorScheme).colorOf(colorScheme);
+    final fill = Theme.of(context).fieldColor;
     // A card behind a sub menu takes a tap as one outside that sub menu.
     return GestureDetector(
       excludeFromSemantics: true,
@@ -2253,7 +2233,7 @@ class _CommonPopupMenuState extends State<CommonPopupMenu>
                           height: step.itemHeight,
                         ),
                   shadows: glass == null
-                      ? _cardShadows(colorScheme, shadow)
+                      ? const <BoxShadow>[]
                       : glassMenuShadows(colorScheme, shadow),
                   fill: fill,
                   dim: colorScheme.surface.withValues(
@@ -2265,7 +2245,7 @@ class _CommonPopupMenuState extends State<CommonPopupMenu>
                   rim: step == null
                       ? rim
                       : rim?.scale(_glassSpan.transform(unfold)),
-                  rimColor: colorScheme.cabinRim,
+                  rimColor: context.haraPalette.line,
                   bare: _platter?.value ?? false,
                   child: ConstrainedBox(
                     constraints: BoxConstraints(
@@ -2493,7 +2473,7 @@ class PopupMenuCard extends SingleChildRenderObjectWidget {
   final LiquidGlassStyle? glass;
   final LiquidGlassRim? rim;
 
-  /// The cabin rim for the plain fill; the glass takes [rim] instead.
+  /// The hairline rim for the plain fill; the glass takes [rim] instead.
   final Color rimColor;
 
   /// Leaves the glass out while the popup's platter bends the backdrop.
@@ -2705,7 +2685,7 @@ class _RenderPopupMenuCard extends RenderProxyBox {
         Paint()
           ..color = _rimColor
           ..style = PaintingStyle.stroke
-          ..strokeWidth = 1,
+          ..strokeWidth = HaraSpace.hairline,
       );
     } else if (_bare) {
       _pane.clear();

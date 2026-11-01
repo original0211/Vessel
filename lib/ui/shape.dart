@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'dart:ui' show ClipOp, lerpDouble;
 
+import 'package:kfusion/ui/hara.dart';
 import 'package:kfusion/ui/surface.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -270,6 +271,11 @@ class AppInputBorder extends InputBorder {
 }
 
 extension AppShapeThemeExt on ThemeData {
+  BorderSide get _menuRim => BorderSide(
+    color: (extension<HaraTheme>()?.palette ?? HaraPalette.of(brightness)).line,
+    width: HaraSpace.hairline,
+  );
+
   ThemeData get withAppShapes => copyWith(
     cardTheme: cardTheme.copyWith(shape: AppShape.xl),
     dialogTheme: dialogTheme.copyWith(
@@ -291,13 +297,11 @@ extension AppShapeThemeExt on ThemeData {
     ),
     chipTheme: chipTheme.copyWith(shape: AppShape.sm),
     popupMenuTheme: popupMenuTheme.copyWith(
-      shape: AppShape.floating.copyWith(side: colorScheme.cabinRimSide),
+      shape: AppShape.hara.copyWith(side: _menuRim),
     ),
     menuTheme: MenuThemeData(
       style: (menuTheme.style ?? const MenuStyle()).copyWith(
-        shape: WidgetStatePropertyAll(
-          AppShape.floating.copyWith(side: colorScheme.cabinRimSide),
-        ),
+        shape: WidgetStatePropertyAll(AppShape.hara.copyWith(side: _menuRim)),
       ),
     ),
     inputDecorationTheme: inputDecorationTheme.copyWith(border: AppShape.input),

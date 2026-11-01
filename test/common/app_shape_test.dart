@@ -1,3 +1,4 @@
+import 'package:kfusion/ui/hara.dart';
 import 'package:kfusion/ui/shape.dart';
 import 'package:kfusion/ui/surface.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -145,8 +146,11 @@ void main() {
       expect(dialog.borderRadius, AppRadius.floating);
       expect(dialog.side, theme.colorScheme.cabinRimSide);
       final menu = theme.popupMenuTheme.shape as RoundedSuperellipseBorder;
-      expect(menu.borderRadius, AppRadius.floating);
-      expect(menu.side, theme.colorScheme.cabinRimSide);
+      expect(menu.borderRadius, AppRadius.hara);
+      expect(
+        menu.side,
+        BorderSide(color: HaraPalette.light.line, width: HaraSpace.hairline),
+      );
     });
 
     test('sheets round only their top, at the floating radius', () {
