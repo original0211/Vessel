@@ -215,6 +215,33 @@ void main() {
     );
   });
 
+  testWidgets('the invitation button reads vermilion on the field', (
+    tester,
+  ) async {
+    await pumpView(
+      tester,
+      permission: WifiSsidPermission.denied,
+      isMacOS: true,
+    );
+    final context = tester.element(
+      find.widgetWithText(FilledButton, 'Tap to authorize'),
+    );
+    final palette = context.haraPalette;
+    final button = tester.widget<FilledButton>(
+      find.widgetWithText(FilledButton, 'Tap to authorize'),
+    );
+    expect(button.style?.backgroundColor?.resolve(<WidgetState>{}), palette.bg);
+    expect(
+      button.style?.side?.resolve(<WidgetState>{}),
+      BorderSide(color: palette.line, width: HaraSpace.hairline),
+    );
+    expect(
+      button.style?.foregroundColor?.resolve(<WidgetState>{}),
+      palette.vermilion,
+      reason: 'the pending state is vermilion text, never a tinted fill',
+    );
+  });
+
   testWidgets('the authorized button is square on the field', (tester) async {
     await pumpView(
       tester,

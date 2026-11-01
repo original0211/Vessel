@@ -187,5 +187,24 @@ void main() {
       expect(defaults.inactiveTrackColor, HaraPalette.light.line);
       expect(defaults.thumbColor, HaraPalette.light.ink);
     });
+
+    testWidgets('the slider defaults follow the dark field', (tester) async {
+      late SliderDefaultsM3 defaults;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: ThemeData(extensions: const [HaraTheme(HaraPalette.dark)]),
+          home: Builder(
+            builder: (context) {
+              defaults = SliderDefaultsM3(context);
+              return const SizedBox.shrink();
+            },
+          ),
+        ),
+      );
+
+      expect(defaults.activeTrackColor, HaraPalette.dark.ink);
+      expect(defaults.inactiveTrackColor, HaraPalette.dark.line);
+      expect(defaults.thumbColor, HaraPalette.dark.ink);
+    });
   });
 }
