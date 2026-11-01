@@ -56,16 +56,6 @@ extension ModeL10n on Mode {
   }
 }
 
-extension ProxiesTypeL10n on ProxiesType {
-  String get label {
-    final appLocalizations = currentAppLocalizations;
-    return switch (this) {
-      ProxiesType.tab => appLocalizations.tab,
-      ProxiesType.list => appLocalizations.list,
-    };
-  }
-}
-
 extension ProxyCardTypeL10n on ProxyCardType {
   String get label {
     final appLocalizations = currentAppLocalizations;

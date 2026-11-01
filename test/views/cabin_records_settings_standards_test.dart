@@ -282,11 +282,9 @@ void main() {
       expect(rings, isEmpty);
     });
 
-    testWidgets('the cabin core compact switch is present exactly once', (
-      tester,
-    ) async {
+    testWidgets('the cabin core compact switch is gone', (tester) async {
       await pumpTheme(tester);
-      expect(find.text('Compact cabin core'), findsOneWidget);
+      expect(find.text('Compact cabin core'), findsNothing);
     });
   });
 

@@ -136,6 +136,17 @@ void main() {
       expect(restored.testUrl, defaultTestUrl);
     });
 
+    test('ignores the app keys saved by earlier versions', () {
+      final restored = AppSettingProps.fromJson({
+        'floatingNavigationBar': false,
+        'cabinCoreCompact': true,
+        'developerMode': true,
+        'tabAnimation': 'fade',
+      });
+      expect(restored.tabAnimation, TabAnimation.fade);
+      expect(restored.autoCheckUpdate, true);
+    });
+
     test('a saved outboundModeV2 card folds into outboundMode', () {
       final restored = AppSettingProps.fromJson({
         'dashboardWidgets': ['networkSpeed', 'outboundModeV2', 'outboundMode'],
@@ -578,55 +589,28 @@ void main() {
   group('ProxiesStyleProps JSON round-trip', () {
     test('default values', () {
       const props = ProxiesStyleProps();
-      expect(props.type, ProxiesType.list);
       expect(props.sortType, ProxiesSortType.none);
-      expect(props.layout, ProxiesLayout.standard);
+      expect(props.cardType, ProxyCardType.standard);
     });
 
     test('round-trip with custom values', () {
-      const props = ProxiesStyleProps(
-        type: ProxiesType.tab,
-        sortType: ProxiesSortType.delay,
-      );
+      const props = ProxiesStyleProps(sortType: ProxiesSortType.delay);
       final restored = roundTrip(
         () => props.toJson(),
         ProxiesStyleProps.fromJson,
       );
-      expect(restored.type, ProxiesType.tab);
       expect(restored.sortType, ProxiesSortType.delay);
     });
 
-    test('reads the icon styles saved under their former names', () {
-      expect(
-        ProxiesStyleProps.fromJson({'iconStyle': 'standard'}).iconStyle,
-        ProxiesIconStyle.filled,
-      );
-      expect(
-        ProxiesStyleProps.fromJson({'iconStyle': 'icon'}).iconStyle,
-        ProxiesIconStyle.plain,
-      );
-      expect(
-        ProxiesStyleProps.fromJson({'iconStyle': 'none'}).iconStyle,
-        ProxiesIconStyle.hidden,
-      );
-    });
-
-    test('falls back to the default icon style', () {
-      expect(ProxiesStyleProps.fromJson({}).iconStyle, ProxiesIconStyle.filled);
-      expect(
-        ProxiesStyleProps.fromJson({'iconStyle': 'nonsense'}).iconStyle,
-        ProxiesIconStyle.filled,
-      );
-    });
-
-    test('round-trips every icon style under its own name', () {
-      for (final style in ProxiesIconStyle.values) {
-        final restored = roundTrip(
-          () => ProxiesStyleProps(iconStyle: style).toJson(),
-          ProxiesStyleProps.fromJson,
-        );
-        expect(restored.iconStyle, style);
-      }
+    test('ignores the proxies keys saved by earlier versions', () {
+      final restored = ProxiesStyleProps.fromJson({
+        'type': 'tab',
+        'layout': 'loose',
+        'iconStyle': 'plain',
+        'sortType': 'delay',
+      });
+      expect(restored.sortType, ProxiesSortType.delay);
+      expect(restored.cardType, ProxyCardType.standard);
     });
 
     test('reads the card sizes saved under their former names', () {

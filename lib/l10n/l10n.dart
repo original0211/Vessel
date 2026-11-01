@@ -945,6 +945,21 @@ class AppLocalizations {
     );
   }
 
+  /// `mihomo only`
+  String get mihomoOnly {
+    return Intl.message('mihomo only', name: 'mihomoOnly', desc: '', args: []);
+  }
+
+  /// `Applies only while the core is mihomo.`
+  String get mihomoOnlyNote {
+    return Intl.message(
+      'Applies only while the core is mihomo.',
+      name: 'mihomoOnlyNote',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `External controller secret`
   String get externalControllerSecret {
     return Intl.message(
@@ -963,6 +978,16 @@ class AppLocalizations {
       desc: '',
       args: [],
     );
+  }
+
+  /// `Core IPv6`
+  String get coreIpv6 {
+    return Intl.message('Core IPv6', name: 'coreIpv6', desc: '', args: []);
+  }
+
+  /// `VPN IPv6`
+  String get vpnIpv6 {
+    return Intl.message('VPN IPv6', name: 'vpnIpv6', desc: '', args: []);
   }
 
   /// `App`
@@ -1135,6 +1160,16 @@ class AppLocalizations {
     return Intl.message('Test URL', name: 'testUrl', desc: '', args: []);
   }
 
+  /// `A change here reaches the core the next time the configuration is applied or the app starts.`
+  String get testUrlApplyNote {
+    return Intl.message(
+      'A change here reaches the core the next time the configuration is applied or the app starts.',
+      name: 'testUrlApplyNote',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Sync`
   String get sync {
     return Intl.message('Sync', name: 'sync', desc: '', args: []);
@@ -1155,16 +1190,6 @@ class AppLocalizations {
     return Intl.message('Compact', name: 'compact', desc: '', args: []);
   }
 
-  /// `Tab`
-  String get tab {
-    return Intl.message('Tab', name: 'tab', desc: '', args: []);
-  }
-
-  /// `List`
-  String get list {
-    return Intl.message('List', name: 'list', desc: '', args: []);
-  }
-
   /// `Delay`
   String get delay {
     return Intl.message('Delay', name: 'delay', desc: '', args: []);
@@ -1175,14 +1200,19 @@ class AppLocalizations {
     return Intl.message('Style', name: 'style', desc: '', args: []);
   }
 
-  /// `Size`
-  String get size {
-    return Intl.message('Size', name: 'size', desc: '', args: []);
-  }
-
   /// `Sort`
   String get sort {
     return Intl.message('Sort', name: 'sort', desc: '', args: []);
+  }
+
+  /// `Affects only the app list on this page.`
+  String get accessListOnlyNote {
+    return Intl.message(
+      'Affects only the app list on this page.',
+      name: 'accessListOnlyNote',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Columns`
@@ -1363,11 +1393,6 @@ class AppLocalizations {
       desc: '',
       args: [],
     );
-  }
-
-  /// `Layout`
-  String get layout {
-    return Intl.message('Layout', name: 'layout', desc: '', args: []);
   }
 
   /// `Tight`
@@ -2270,26 +2295,6 @@ class AppLocalizations {
     );
   }
 
-  /// `Icon style`
-  String get iconStyle {
-    return Intl.message('Icon style', name: 'iconStyle', desc: '', args: []);
-  }
-
-  /// `Filled`
-  String get iconStyleFilled {
-    return Intl.message('Filled', name: 'iconStyleFilled', desc: '', args: []);
-  }
-
-  /// `Plain`
-  String get iconStylePlain {
-    return Intl.message('Plain', name: 'iconStylePlain', desc: '', args: []);
-  }
-
-  /// `Hidden`
-  String get iconStyleHidden {
-    return Intl.message('Hidden', name: 'iconStyleHidden', desc: '', args: []);
-  }
-
   /// `Filter`
   String get filter {
     return Intl.message('Filter', name: 'filter', desc: '', args: []);
@@ -2610,26 +2615,6 @@ class AppLocalizations {
     );
   }
 
-  /// `Bottom bar`
-  String get navigationBarStyle {
-    return Intl.message(
-      'Bottom bar',
-      name: 'navigationBarStyle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Floating`
-  String get floating {
-    return Intl.message('Floating', name: 'floating', desc: '', args: []);
-  }
-
-  /// `Docked`
-  String get docked {
-    return Intl.message('Docked', name: 'docked', desc: '', args: []);
-  }
-
   /// `Slide`
   String get slide {
     return Intl.message('Slide', name: 'slide', desc: '', args: []);
@@ -2685,16 +2670,6 @@ class AppLocalizations {
     return Intl.message(
       'Developer mode',
       name: 'developerMode',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Developer mode is enabled.`
-  String get developerModeEnableTip {
-    return Intl.message(
-      'Developer mode is enabled.',
-      name: 'developerModeEnableTip',
       desc: '',
       args: [],
     );
@@ -3158,16 +3133,6 @@ class AppLocalizations {
   /// `Exit`
   String get ipExit {
     return Intl.message('Exit', name: 'ipExit', desc: '', args: []);
-  }
-
-  /// `Compact cabin core`
-  String get cabinCoreCompact {
-    return Intl.message(
-      'Compact cabin core',
-      name: 'cabinCoreCompact',
-      desc: '',
-      args: [],
-    );
   }
 
   /// `Are you sure you want to restart the core?`

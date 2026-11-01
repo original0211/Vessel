@@ -96,7 +96,6 @@ abstract class ProxiesListState with _$ProxiesListState {
   const factory ProxiesListState({
     required List<Group> groups,
     required Set<String> currentUnfoldSet,
-    required ProxyCardType proxyCardType,
   }) = _ProxiesListState;
 }
 
@@ -105,7 +104,6 @@ abstract class ProxiesTabState with _$ProxiesTabState {
   const factory ProxiesTabState({
     required List<Group> groups,
     required String? currentGroupName,
-    required ProxyCardType proxyCardType,
   }) = _ProxiesTabState;
 }
 

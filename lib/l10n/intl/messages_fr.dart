@@ -227,6 +227,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "accessControlSettings": MessageLookupByLibrary.simpleMessage(
       "Réglages du contrôle d’accès",
     ),
+    "accessListOnlyNote": MessageLookupByLibrary.simpleMessage(
+      "Affecte uniquement la liste des applications de cette page.",
+    ),
     "account": MessageLookupByLibrary.simpleMessage("Compte"),
     "action": MessageLookupByLibrary.simpleMessage("Action"),
     "actionDelayTest": MessageLookupByLibrary.simpleMessage(
@@ -350,9 +353,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "bypassPrivateRouteDesc": MessageLookupByLibrary.simpleMessage(
       "Avec « Contourner les adresses privées » activé, les adresses LAN, de bouclage et multicast ne passent pas par TUN.",
     ),
-    "cabinCoreCompact": MessageLookupByLibrary.simpleMessage(
-      "Noyau de cabine compact",
-    ),
     "cache": MessageLookupByLibrary.simpleMessage("Cache"),
     "cacheAlgorithm": MessageLookupByLibrary.simpleMessage(
       "Algorithme de cache",
@@ -461,6 +461,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "coreBlockedBySmartAppControlTip": MessageLookupByLibrary.simpleMessage(
       "Windows Smart App Control a bloqué KFusionCore.exe car il n’est pas signé. Ouvrez Sécurité Windows → Contrôle des applications et du navigateur → Paramètres de Smart App Control, choisissez Désactivé, puis relancez Vessel. Smart App Control ne peut pas être réactivé sans réinstaller Windows.",
     ),
+    "coreIpv6": MessageLookupByLibrary.simpleMessage("IPv6 du noyau"),
     "coreNotConnectedTip": MessageLookupByLibrary.simpleMessage(
       "Le cœur n\'est pas connecté. Démarrez le cœur et réessayez",
     ),
@@ -573,9 +574,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Repose sur une API tierce ; à titre indicatif uniquement",
     ),
     "developerMode": MessageLookupByLibrary.simpleMessage("Mode développeur"),
-    "developerModeEnableTip": MessageLookupByLibrary.simpleMessage(
-      "Le mode développeur est activé.",
-    ),
     "dialerProxy": MessageLookupByLibrary.simpleMessage("Proxy de connexion"),
     "dialerProxyLoopStopped": m27,
     "direct": MessageLookupByLibrary.simpleMessage("Direct"),
@@ -695,7 +693,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Les entrées ajoutées ici remplacent le DNS de tous les profils URL et fichier ; tout ce qui n’est pas ajouté garde le réglage du profil. Les profils personnalisés définissent leur DNS dans leur contenu.",
     ),
     "dnsQueries": MessageLookupByLibrary.simpleMessage("Requêtes DNS"),
-    "docked": MessageLookupByLibrary.simpleMessage("Ancrée"),
     "domain": MessageLookupByLibrary.simpleMessage("Domaine"),
     "done": MessageLookupByLibrary.simpleMessage("Terminé"),
     "download": MessageLookupByLibrary.simpleMessage("Réception"),
@@ -796,7 +793,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "findProcessMode": MessageLookupByLibrary.simpleMessage(
       "Recherche de processus",
     ),
-    "floating": MessageLookupByLibrary.simpleMessage("Flottante"),
     "followSystem": MessageLookupByLibrary.simpleMessage("Suivre le système"),
     "fontSize": MessageLookupByLibrary.simpleMessage("Taille"),
     "forceDnsMapping": MessageLookupByLibrary.simpleMessage(
@@ -847,10 +843,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Historique des icônes",
     ),
     "iconSets": MessageLookupByLibrary.simpleMessage("Jeux d’icônes"),
-    "iconStyle": MessageLookupByLibrary.simpleMessage("Style des icônes"),
-    "iconStyleFilled": MessageLookupByLibrary.simpleMessage("Pleines"),
-    "iconStyleHidden": MessageLookupByLibrary.simpleMessage("Masquées"),
-    "iconStylePlain": MessageLookupByLibrary.simpleMessage("Simples"),
     "ignoreBatteryOptimization": MessageLookupByLibrary.simpleMessage(
       "Ignorer l’optimisation de la batterie",
     ),
@@ -1009,7 +1001,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "launchInterruptedTip": MessageLookupByLibrary.simpleMessage(
       "L’app s’est arrêtée de façon inattendue lors de son dernier démarrage. La configuration automatique a été ignorée pour ce lancement ; vous pouvez la démarrer manuellement pour réessayer.",
     ),
-    "layout": MessageLookupByLibrary.simpleMessage("Disposition"),
     "light": MessageLookupByLibrary.simpleMessage("Clair"),
     "lineIssueTip": m40,
     "lineWrap": MessageLookupByLibrary.simpleMessage("Retour à la ligne"),
@@ -1018,7 +1009,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Obtenir un profil depuis un lien d’abonnement ou un lien de partage de proxy",
     ),
     "liquidGlass": MessageLookupByLibrary.simpleMessage("Liquid Glass"),
-    "list": MessageLookupByLibrary.simpleMessage("Liste"),
     "listen": MessageLookupByLibrary.simpleMessage("Écoute"),
     "listenRoutingMark": MessageLookupByLibrary.simpleMessage(
       "Marque de routage d’écoute",
@@ -1073,6 +1063,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "maxLengthTip": m42,
     "maximize": MessageLookupByLibrary.simpleMessage("Agrandir"),
     "memoryInfo": MessageLookupByLibrary.simpleMessage("Infos mémoire"),
+    "mihomoOnly": MessageLookupByLibrary.simpleMessage("mihomo uniquement"),
+    "mihomoOnlyNote": MessageLookupByLibrary.simpleMessage(
+      "S\'applique uniquement lorsque le noyau est mihomo.",
+    ),
     "minimize": MessageLookupByLibrary.simpleMessage("Réduire"),
     "minimizeOnExit": MessageLookupByLibrary.simpleMessage(
       "Réduire à la fermeture",
@@ -1085,9 +1079,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "monthsAgoShort": m46,
     "more": MessageLookupByLibrary.simpleMessage("Plus"),
     "name": MessageLookupByLibrary.simpleMessage("Nom"),
-    "navigationBarStyle": MessageLookupByLibrary.simpleMessage(
-      "Barre inférieure",
-    ),
     "network": MessageLookupByLibrary.simpleMessage("Réseau"),
     "networkAccessDeniedError": m47,
     "networkBadResponseError": m48,
@@ -1570,7 +1561,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "singleAdd": MessageLookupByLibrary.simpleMessage("Ajout unique"),
     "singleImport": MessageLookupByLibrary.simpleMessage("Importation unique"),
     "singleValueTip": m69,
-    "size": MessageLookupByLibrary.simpleMessage("Taille"),
     "skipCertVerify": MessageLookupByLibrary.simpleMessage(
       "Ignorer la vérification du certificat",
     ),
@@ -1632,7 +1622,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "system": MessageLookupByLibrary.simpleMessage("Système"),
     "systemApp": MessageLookupByLibrary.simpleMessage("Apps système"),
     "systemProxy": MessageLookupByLibrary.simpleMessage("Proxy système"),
-    "tab": MessageLookupByLibrary.simpleMessage("Onglet"),
     "tabAnimation": MessageLookupByLibrary.simpleMessage(
       "Animation des onglets",
     ),
@@ -1642,6 +1631,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "target": MessageLookupByLibrary.simpleMessage("Cible"),
     "tcpConcurrent": MessageLookupByLibrary.simpleMessage("TCP simultané"),
     "testUrl": MessageLookupByLibrary.simpleMessage("URL de test"),
+    "testUrlApplyNote": MessageLookupByLibrary.simpleMessage(
+      "Un changement ici atteint le noyau à la prochaine application de la configuration ou au prochain démarrage de l\'application.",
+    ),
     "textScale": MessageLookupByLibrary.simpleMessage("Taille du texte"),
     "textScalePreview": MessageLookupByLibrary.simpleMessage(
       "Le texte de l’app ressemblera à ceci",
@@ -1711,6 +1703,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "vpnEnableDesc": MessageLookupByLibrary.simpleMessage(
       "Le VPN fait passer automatiquement tout le trafic du système par VpnService.",
     ),
+    "vpnIpv6": MessageLookupByLibrary.simpleMessage("VPN IPv6"),
     "whitelistMode": MessageLookupByLibrary.simpleMessage("Mode liste blanche"),
     "writeToSystem": MessageLookupByLibrary.simpleMessage(
       "Écrire dans le système",

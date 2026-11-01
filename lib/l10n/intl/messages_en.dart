@@ -217,6 +217,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "accessControlSettings": MessageLookupByLibrary.simpleMessage(
       "Access control settings",
     ),
+    "accessListOnlyNote": MessageLookupByLibrary.simpleMessage(
+      "Affects only the app list on this page.",
+    ),
     "account": MessageLookupByLibrary.simpleMessage("Account"),
     "action": MessageLookupByLibrary.simpleMessage("Action"),
     "actionDelayTest": MessageLookupByLibrary.simpleMessage("Test all delays"),
@@ -336,9 +339,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "bypassPrivateRouteDesc": MessageLookupByLibrary.simpleMessage(
       "With Bypass private addresses on, LAN, loopback and multicast addresses skip TUN.",
     ),
-    "cabinCoreCompact": MessageLookupByLibrary.simpleMessage(
-      "Compact cabin core",
-    ),
     "cache": MessageLookupByLibrary.simpleMessage("Cache"),
     "cacheAlgorithm": MessageLookupByLibrary.simpleMessage("Cache algorithm"),
     "cacheCorrupt": MessageLookupByLibrary.simpleMessage(
@@ -435,6 +435,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "coreBlockedBySmartAppControlTip": MessageLookupByLibrary.simpleMessage(
       "Windows Smart App Control blocked KFusionCore.exe because it is not signed. Open Windows Security → App & browser control → Smart App Control settings, choose Off, then start Vessel again. Smart App Control cannot be turned back on without reinstalling Windows.",
     ),
+    "coreIpv6": MessageLookupByLibrary.simpleMessage("Core IPv6"),
     "coreNotConnectedTip": MessageLookupByLibrary.simpleMessage(
       "The core is not connected. Start the core and try again.",
     ),
@@ -545,9 +546,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Relies on a third-party API; for reference only",
     ),
     "developerMode": MessageLookupByLibrary.simpleMessage("Developer mode"),
-    "developerModeEnableTip": MessageLookupByLibrary.simpleMessage(
-      "Developer mode is enabled.",
-    ),
     "dialerProxy": MessageLookupByLibrary.simpleMessage("Dialer proxy"),
     "dialerProxyLoopStopped": m27,
     "direct": MessageLookupByLibrary.simpleMessage("Direct"),
@@ -665,7 +663,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Entries added here replace the DNS of every URL and file profile; anything not added keeps the profile\'s own setting. Custom profiles set their DNS in their content.",
     ),
     "dnsQueries": MessageLookupByLibrary.simpleMessage("DNS queries"),
-    "docked": MessageLookupByLibrary.simpleMessage("Docked"),
     "domain": MessageLookupByLibrary.simpleMessage("Domain"),
     "done": MessageLookupByLibrary.simpleMessage("Done"),
     "download": MessageLookupByLibrary.simpleMessage("Download"),
@@ -758,7 +755,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "filter": MessageLookupByLibrary.simpleMessage("Filter"),
     "filters": MessageLookupByLibrary.simpleMessage("Filters"),
     "findProcessMode": MessageLookupByLibrary.simpleMessage("Find process"),
-    "floating": MessageLookupByLibrary.simpleMessage("Floating"),
     "followSystem": MessageLookupByLibrary.simpleMessage("Follow system"),
     "fontSize": MessageLookupByLibrary.simpleMessage("Size"),
     "forceDnsMapping": MessageLookupByLibrary.simpleMessage(
@@ -805,10 +801,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "icon": MessageLookupByLibrary.simpleMessage("Icon"),
     "iconRecords": MessageLookupByLibrary.simpleMessage("Icon records"),
     "iconSets": MessageLookupByLibrary.simpleMessage("Icon sets"),
-    "iconStyle": MessageLookupByLibrary.simpleMessage("Icon style"),
-    "iconStyleFilled": MessageLookupByLibrary.simpleMessage("Filled"),
-    "iconStyleHidden": MessageLookupByLibrary.simpleMessage("Hidden"),
-    "iconStylePlain": MessageLookupByLibrary.simpleMessage("Plain"),
     "ignoreBatteryOptimization": MessageLookupByLibrary.simpleMessage(
       "Ignore battery optimization",
     ),
@@ -955,7 +947,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "launchInterruptedTip": MessageLookupByLibrary.simpleMessage(
       "The app exited unexpectedly while it was starting up last time. Automatic setup was skipped for this launch; you can start it manually to retry.",
     ),
-    "layout": MessageLookupByLibrary.simpleMessage("Layout"),
     "light": MessageLookupByLibrary.simpleMessage("Light"),
     "lineIssueTip": m40,
     "lineWrap": MessageLookupByLibrary.simpleMessage("Word wrap"),
@@ -964,7 +955,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Obtain a profile from a subscription link or a proxy share link",
     ),
     "liquidGlass": MessageLookupByLibrary.simpleMessage("Liquid Glass"),
-    "list": MessageLookupByLibrary.simpleMessage("List"),
     "listen": MessageLookupByLibrary.simpleMessage("Listen"),
     "listenRoutingMark": MessageLookupByLibrary.simpleMessage(
       "Listen routing mark",
@@ -1011,6 +1001,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "maxLengthTip": m42,
     "maximize": MessageLookupByLibrary.simpleMessage("Maximize"),
     "memoryInfo": MessageLookupByLibrary.simpleMessage("Memory info"),
+    "mihomoOnly": MessageLookupByLibrary.simpleMessage("mihomo only"),
+    "mihomoOnlyNote": MessageLookupByLibrary.simpleMessage(
+      "Applies only while the core is mihomo.",
+    ),
     "minimize": MessageLookupByLibrary.simpleMessage("Minimize"),
     "minimizeOnExit": MessageLookupByLibrary.simpleMessage("Minimize on exit"),
     "minutes": MessageLookupByLibrary.simpleMessage("minutes"),
@@ -1021,7 +1015,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "monthsAgoShort": m46,
     "more": MessageLookupByLibrary.simpleMessage("More"),
     "name": MessageLookupByLibrary.simpleMessage("Name"),
-    "navigationBarStyle": MessageLookupByLibrary.simpleMessage("Bottom bar"),
     "network": MessageLookupByLibrary.simpleMessage("Network"),
     "networkAccessDeniedError": m47,
     "networkBadResponseError": m48,
@@ -1467,7 +1460,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "singleAdd": MessageLookupByLibrary.simpleMessage("Single add"),
     "singleImport": MessageLookupByLibrary.simpleMessage("Single import"),
     "singleValueTip": m69,
-    "size": MessageLookupByLibrary.simpleMessage("Size"),
     "skipCertVerify": MessageLookupByLibrary.simpleMessage(
       "Skip certificate verification",
     ),
@@ -1525,12 +1517,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "system": MessageLookupByLibrary.simpleMessage("System"),
     "systemApp": MessageLookupByLibrary.simpleMessage("System apps"),
     "systemProxy": MessageLookupByLibrary.simpleMessage("System proxy"),
-    "tab": MessageLookupByLibrary.simpleMessage("Tab"),
     "tabAnimation": MessageLookupByLibrary.simpleMessage("Tab animation"),
     "tapToAuthorize": MessageLookupByLibrary.simpleMessage("Tap to authorize"),
     "target": MessageLookupByLibrary.simpleMessage("Target"),
     "tcpConcurrent": MessageLookupByLibrary.simpleMessage("TCP concurrent"),
     "testUrl": MessageLookupByLibrary.simpleMessage("Test URL"),
+    "testUrlApplyNote": MessageLookupByLibrary.simpleMessage(
+      "A change here reaches the core the next time the configuration is applied or the app starts.",
+    ),
     "textScale": MessageLookupByLibrary.simpleMessage("Text scaling"),
     "textScalePreview": MessageLookupByLibrary.simpleMessage(
       "Text in the app will look like this",
@@ -1596,6 +1590,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "vpnEnableDesc": MessageLookupByLibrary.simpleMessage(
       "VPN routes all system traffic through VpnService automatically.",
     ),
+    "vpnIpv6": MessageLookupByLibrary.simpleMessage("VPN IPv6"),
     "whitelistMode": MessageLookupByLibrary.simpleMessage("Whitelist mode"),
     "writeToSystem": MessageLookupByLibrary.simpleMessage("Write to system"),
     "yearsAgo": m71,

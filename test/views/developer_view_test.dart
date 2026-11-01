@@ -1,6 +1,5 @@
 import 'package:kfusion/common/common.dart';
 import 'package:kfusion/providers/app.dart';
-import 'package:kfusion/providers/config.dart';
 import 'package:kfusion/state.dart';
 import 'package:kfusion/views/developer.dart';
 import 'package:material_ui/material_ui.dart';
@@ -41,20 +40,21 @@ void main() {
     globalState.appEnv = 'dev';
   });
 
-  testWidgets('toggles developer mode through the header row', (tester) async {
+  testWidgets('shows no developer mode switch, only the actions', (
+    tester,
+  ) async {
     final container = _containerFor(tester);
     await _pumpDeveloperView(tester, container);
 
-    final initial = container.read(appSettingProvider).developerMode;
-    await tester.tap(
+    expect(
       find.descendant(
         of: find.byType(ListView),
         matching: find.text(currentAppLocalizations.developerMode),
       ),
+      findsNothing,
     );
-    await tester.pumpAndSettle();
-
-    expect(container.read(appSettingProvider).developerMode, !initial);
+    expect(find.text(currentAppLocalizations.clearData), findsOneWidget);
+    expect(find.text(currentAppLocalizations.pruneCache), findsOneWidget);
     expect(tester.takeException(), null);
   });
 

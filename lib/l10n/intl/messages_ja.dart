@@ -194,6 +194,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "選択したアプリはVPNから除外されます",
     ),
     "accessControlSettings": MessageLookupByLibrary.simpleMessage("アクセス制御の設定"),
+    "accessListOnlyNote": MessageLookupByLibrary.simpleMessage(
+      "このページのアプリ一覧の表示にのみ影響します。",
+    ),
     "account": MessageLookupByLibrary.simpleMessage("アカウント"),
     "action": MessageLookupByLibrary.simpleMessage("アクション"),
     "actionDelayTest": MessageLookupByLibrary.simpleMessage("すべての遅延をテスト"),
@@ -285,7 +288,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "bypassPrivateRouteDesc": MessageLookupByLibrary.simpleMessage(
       "プライベートアドレスをバイパスすると、LAN・ループバック・マルチキャストのアドレスは TUN を通りません。",
     ),
-    "cabinCoreCompact": MessageLookupByLibrary.simpleMessage("キャビンコアをコンパクトに"),
     "cache": MessageLookupByLibrary.simpleMessage("キャッシュ"),
     "cacheAlgorithm": MessageLookupByLibrary.simpleMessage("キャッシュアルゴリズム"),
     "cacheCorrupt": MessageLookupByLibrary.simpleMessage(
@@ -362,6 +364,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "coreBlockedBySmartAppControlTip": MessageLookupByLibrary.simpleMessage(
       "Windows のスマート アプリ コントロールが、署名されていない KFusionCore.exe をブロックしました。Windows セキュリティ → アプリとブラウザーの制御 → スマート アプリ コントロールの設定で「オフ」を選び、Vessel を再起動してください。一度オフにすると、Windows を再インストールしない限り再度オンにはできません。",
     ),
+    "coreIpv6": MessageLookupByLibrary.simpleMessage("コア IPv6"),
     "coreNotConnectedTip": MessageLookupByLibrary.simpleMessage(
       "コアに接続されていません。コアを起動してからもう一度お試しください",
     ),
@@ -464,9 +467,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "サードパーティAPIに依存しているため、参考値です",
     ),
     "developerMode": MessageLookupByLibrary.simpleMessage("開発者モード"),
-    "developerModeEnableTip": MessageLookupByLibrary.simpleMessage(
-      "開発者モードが有効になりました。",
-    ),
     "dialerProxy": MessageLookupByLibrary.simpleMessage("ダイヤラープロキシ"),
     "dialerProxyLoopStopped": m27,
     "direct": MessageLookupByLibrary.simpleMessage("ダイレクト"),
@@ -566,7 +566,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "ここで追加した項目は、すべての URL・ファイルプロファイルの DNS を上書きします。追加していない項目はプロファイル自身の設定のままです。カスタムプロファイルの DNS はその内容で設定します。",
     ),
     "dnsQueries": MessageLookupByLibrary.simpleMessage("DNSクエリ"),
-    "docked": MessageLookupByLibrary.simpleMessage("固定"),
     "domain": MessageLookupByLibrary.simpleMessage("ドメイン"),
     "done": MessageLookupByLibrary.simpleMessage("完了"),
     "download": MessageLookupByLibrary.simpleMessage("ダウンロード"),
@@ -643,7 +642,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "filter": MessageLookupByLibrary.simpleMessage("フィルター"),
     "filters": MessageLookupByLibrary.simpleMessage("フィルター"),
     "findProcessMode": MessageLookupByLibrary.simpleMessage("プロセス検出"),
-    "floating": MessageLookupByLibrary.simpleMessage("フローティング"),
     "followSystem": MessageLookupByLibrary.simpleMessage("システムに従う"),
     "fontSize": MessageLookupByLibrary.simpleMessage("サイズ"),
     "forceDnsMapping": MessageLookupByLibrary.simpleMessage("DNSマッピングを強制"),
@@ -684,10 +682,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "icon": MessageLookupByLibrary.simpleMessage("アイコン"),
     "iconRecords": MessageLookupByLibrary.simpleMessage("アイコン履歴"),
     "iconSets": MessageLookupByLibrary.simpleMessage("アイコンセット"),
-    "iconStyle": MessageLookupByLibrary.simpleMessage("アイコンスタイル"),
-    "iconStyleFilled": MessageLookupByLibrary.simpleMessage("背景あり"),
-    "iconStyleHidden": MessageLookupByLibrary.simpleMessage("非表示"),
-    "iconStylePlain": MessageLookupByLibrary.simpleMessage("背景なし"),
     "ignoreBatteryOptimization": MessageLookupByLibrary.simpleMessage(
       "電池の最適化を無視",
     ),
@@ -819,7 +813,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "launchInterruptedTip": MessageLookupByLibrary.simpleMessage(
       "前回、アプリは起動中に予期せず終了しました。今回の自動セットアップはスキップしました。手動で起動して再試行できます。",
     ),
-    "layout": MessageLookupByLibrary.simpleMessage("レイアウト"),
     "light": MessageLookupByLibrary.simpleMessage("ライト"),
     "lineIssueTip": m40,
     "lineWrap": MessageLookupByLibrary.simpleMessage("折り返し"),
@@ -828,7 +821,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "サブスクリプションリンクまたはプロキシの共有リンクからプロファイルを取得します",
     ),
     "liquidGlass": MessageLookupByLibrary.simpleMessage("リキッドグラス"),
-    "list": MessageLookupByLibrary.simpleMessage("リスト"),
     "listen": MessageLookupByLibrary.simpleMessage("リッスン"),
     "listenRoutingMark": MessageLookupByLibrary.simpleMessage("リッスンのルーティングマーク"),
     "listenRoutingMarkDesc": MessageLookupByLibrary.simpleMessage(
@@ -869,6 +861,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "maxLengthTip": m42,
     "maximize": MessageLookupByLibrary.simpleMessage("最大化"),
     "memoryInfo": MessageLookupByLibrary.simpleMessage("メモリ情報"),
+    "mihomoOnly": MessageLookupByLibrary.simpleMessage("mihomo のみ"),
+    "mihomoOnlyNote": MessageLookupByLibrary.simpleMessage(
+      "コアが mihomo のときのみ適用されます。",
+    ),
     "minimize": MessageLookupByLibrary.simpleMessage("最小化"),
     "minimizeOnExit": MessageLookupByLibrary.simpleMessage("終了時に最小化"),
     "minutes": MessageLookupByLibrary.simpleMessage("分"),
@@ -879,7 +875,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "monthsAgoShort": m46,
     "more": MessageLookupByLibrary.simpleMessage("その他"),
     "name": MessageLookupByLibrary.simpleMessage("名前"),
-    "navigationBarStyle": MessageLookupByLibrary.simpleMessage("ボトムバー"),
     "network": MessageLookupByLibrary.simpleMessage("ネットワーク"),
     "networkAccessDeniedError": m47,
     "networkBadResponseError": m48,
@@ -1275,7 +1270,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "singleAdd": MessageLookupByLibrary.simpleMessage("個別追加"),
     "singleImport": MessageLookupByLibrary.simpleMessage("個別インポート"),
     "singleValueTip": m69,
-    "size": MessageLookupByLibrary.simpleMessage("サイズ"),
     "skipCertVerify": MessageLookupByLibrary.simpleMessage("証明書の検証をスキップ"),
     "skipDomain": MessageLookupByLibrary.simpleMessage("スキップするドメイン"),
     "skipDstAddress": MessageLookupByLibrary.simpleMessage("スキップする宛先アドレス"),
@@ -1321,12 +1315,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "system": MessageLookupByLibrary.simpleMessage("システム"),
     "systemApp": MessageLookupByLibrary.simpleMessage("システムアプリ"),
     "systemProxy": MessageLookupByLibrary.simpleMessage("システムプロキシ"),
-    "tab": MessageLookupByLibrary.simpleMessage("タブ"),
     "tabAnimation": MessageLookupByLibrary.simpleMessage("タブアニメーション"),
     "tapToAuthorize": MessageLookupByLibrary.simpleMessage("タップして許可"),
     "target": MessageLookupByLibrary.simpleMessage("宛先"),
     "tcpConcurrent": MessageLookupByLibrary.simpleMessage("TCP同時接続"),
     "testUrl": MessageLookupByLibrary.simpleMessage("テストURL"),
+    "testUrlApplyNote": MessageLookupByLibrary.simpleMessage(
+      "ここの変更は、次に構成が適用されるかアプリが起動したときにコアへ届きます。",
+    ),
     "textScale": MessageLookupByLibrary.simpleMessage("テキストの拡大縮小"),
     "textScalePreview": MessageLookupByLibrary.simpleMessage(
       "アプリ内の文字はこの大きさで表示されます",
@@ -1388,6 +1384,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "vpnEnableDesc": MessageLookupByLibrary.simpleMessage(
       "VPN は VpnService でシステムの全トラフィックを自動的にルーティングします。",
     ),
+    "vpnIpv6": MessageLookupByLibrary.simpleMessage("VPN IPv6"),
     "whitelistMode": MessageLookupByLibrary.simpleMessage("ホワイトリストモード"),
     "writeToSystem": MessageLookupByLibrary.simpleMessage("システムに書き込む"),
     "yearsAgo": m71,

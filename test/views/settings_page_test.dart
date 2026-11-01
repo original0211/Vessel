@@ -138,7 +138,6 @@ void main() {
     await _pumpSettings(tester, container);
     await tester.pump();
 
-    expect(container.read(appSettingProvider).developerMode, isFalse);
     await tester.scrollUntilVisible(
       find.text('Developer mode'),
       300,

@@ -37,10 +37,6 @@ class ThemeView extends StatelessWidget {
                 SizedBox(height: HaraSpace.groupGap),
                 _PureBlackItem(),
                 SizedBox(height: HaraSpace.groupGap),
-                _NavigationBarItem(),
-                SizedBox(height: HaraSpace.groupGap),
-                _CabinCoreCompactItem(),
-                SizedBox(height: HaraSpace.groupGap),
                 _TabAnimationItem(),
                 SizedBox(height: HaraSpace.groupGap),
                 _LiquidGlassItem(),
@@ -161,16 +157,15 @@ class _ThemeModeItem extends ConsumerWidget {
     final themeMode = ref.watch(
       themeSettingProvider.select((state) => state.themeMode),
     );
-    final floatingBar = ref.watch(_floatingBarProvider);
     final liquidGlass = ref.watch(_liquidGlassProvider);
     final light = MiniScreen(
       colorScheme: ref.watch(genColorSchemeProvider(Brightness.light)),
-      floatingBar: floatingBar,
+      floatingBar: true,
       liquidGlass: liquidGlass,
     );
     final dark = MiniScreen(
       colorScheme: ref.watch(genColorSchemeProvider(Brightness.dark)),
-      floatingBar: floatingBar,
+      floatingBar: true,
       liquidGlass: liquidGlass,
     );
     return PreviewChoiceGroup<ThemeMode>(
@@ -204,10 +199,6 @@ class _ThemeModeItem extends ConsumerWidget {
   }
 }
 
-final _floatingBarProvider = appSettingProvider.select(
-  (state) => state.floatingNavigationBar,
-);
-
 final _liquidGlassProvider = themeSettingProvider.select(
   (state) => state.liquidGlass != LiquidGlassMode.none,
 );
@@ -221,14 +212,13 @@ class _PureBlackItem extends ConsumerWidget {
     final pureBlack = ref.watch(
       themeSettingProvider.select((state) => state.pureBlack),
     );
-    final floatingBar = ref.watch(_floatingBarProvider);
     final liquidGlass = ref.watch(_liquidGlassProvider);
     Widget preview(bool pureBlack) => MiniScreenThumb(
       screen: MiniScreen(
         colorScheme: ref.watch(
           genColorSchemeProvider(Brightness.dark, pureBlack: pureBlack),
         ),
-        floatingBar: floatingBar,
+        floatingBar: true,
         liquidGlass: liquidGlass,
       ),
     );
@@ -259,71 +249,6 @@ class _PureBlackItem extends ConsumerWidget {
   }
 }
 
-class _NavigationBarItem extends ConsumerWidget {
-  const _NavigationBarItem();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final appLocalizations = context.appLocalizations;
-    final floatingBar = ref.watch(_floatingBarProvider);
-    final liquidGlass = ref.watch(_liquidGlassProvider);
-    final colorScheme = context.colorScheme;
-    return PreviewChoiceGroup<bool>(
-      info: Info(
-        label: appLocalizations.navigationBarStyle,
-        glyph: AppGlyphs.layers,
-      ),
-      value: floatingBar,
-      choices: [
-        PreviewChoice(
-          value: true,
-          label: appLocalizations.floating,
-          pictogram: MiniScreenThumb(
-            screen: MiniScreen(
-              colorScheme: colorScheme,
-              floatingBar: true,
-              liquidGlass: liquidGlass,
-            ),
-          ),
-        ),
-        PreviewChoice(
-          value: false,
-          label: appLocalizations.docked,
-          pictogram: MiniScreenThumb(
-            screen: MiniScreen(colorScheme: colorScheme, floatingBar: false),
-          ),
-        ),
-      ],
-      onChanged: (value) {
-        ref
-            .read(appSettingProvider.notifier)
-            .update((state) => state.copyWith(floatingNavigationBar: value));
-      },
-    );
-  }
-}
-
-class _CabinCoreCompactItem extends ConsumerWidget {
-  const _CabinCoreCompactItem();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final appLocalizations = context.appLocalizations;
-    final compact = ref.watch(
-      appSettingProvider.select((state) => state.cabinCoreCompact),
-    );
-    return _ThemeToggle(
-      label: appLocalizations.cabinCoreCompact,
-      value: compact,
-      onChanged: (value) {
-        ref
-            .read(appSettingProvider.notifier)
-            .update((state) => state.copyWith(cabinCoreCompact: value));
-      },
-    );
-  }
-}
-
 class _TabAnimationItem extends ConsumerWidget {
   const _TabAnimationItem();
 
@@ -333,13 +258,12 @@ class _TabAnimationItem extends ConsumerWidget {
     final tabAnimation = ref.watch(
       appSettingProvider.select((state) => state.tabAnimation),
     );
-    final floatingBar = ref.watch(_floatingBarProvider);
     final liquidGlass = ref.watch(_liquidGlassProvider);
     final colorScheme = context.colorScheme;
     Widget switching(TabAnimation tabAnimation) => MiniScreenThumb(
       screen: MiniScreen(
         colorScheme: colorScheme,
-        floatingBar: floatingBar,
+        floatingBar: true,
         liquidGlass: liquidGlass,
         selected: 1,
         previous: 0,

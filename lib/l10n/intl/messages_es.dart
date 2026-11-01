@@ -222,6 +222,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "accessControlSettings": MessageLookupByLibrary.simpleMessage(
       "Ajustes de control de acceso",
     ),
+    "accessListOnlyNote": MessageLookupByLibrary.simpleMessage(
+      "Afecta solo a la lista de aplicaciones de esta página.",
+    ),
     "account": MessageLookupByLibrary.simpleMessage("Cuenta"),
     "action": MessageLookupByLibrary.simpleMessage("Acción"),
     "actionDelayTest": MessageLookupByLibrary.simpleMessage(
@@ -353,9 +356,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "bypassPrivateRouteDesc": MessageLookupByLibrary.simpleMessage(
       "Con Omitir direcciones privadas activado, las direcciones de LAN, loopback y multidifusión no pasan por TUN.",
     ),
-    "cabinCoreCompact": MessageLookupByLibrary.simpleMessage(
-      "Núcleo de cabina compacto",
-    ),
     "cache": MessageLookupByLibrary.simpleMessage("Caché"),
     "cacheAlgorithm": MessageLookupByLibrary.simpleMessage(
       "Algoritmo de caché",
@@ -462,6 +462,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "coreBlockedBySmartAppControlTip": MessageLookupByLibrary.simpleMessage(
       "Smart App Control de Windows bloqueó KFusionCore.exe porque no está firmado. Abre Seguridad de Windows → Control de aplicaciones y navegador → Configuración de Smart App Control, elige Desactivado y vuelve a iniciar Vessel. Smart App Control no se puede volver a activar sin reinstalar Windows.",
     ),
+    "coreIpv6": MessageLookupByLibrary.simpleMessage("IPv6 del núcleo"),
     "coreNotConnectedTip": MessageLookupByLibrary.simpleMessage(
       "El núcleo no está conectado. Inicie el núcleo e inténtelo de nuevo",
     ),
@@ -572,9 +573,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Depende de una API de terceros; solo con fines informativos",
     ),
     "developerMode": MessageLookupByLibrary.simpleMessage("Modo desarrollador"),
-    "developerModeEnableTip": MessageLookupByLibrary.simpleMessage(
-      "El modo desarrollador está activado.",
-    ),
     "dialerProxy": MessageLookupByLibrary.simpleMessage("Proxy de marcación"),
     "dialerProxyLoopStopped": m27,
     "direct": MessageLookupByLibrary.simpleMessage("Directo"),
@@ -692,7 +690,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Las entradas añadidas aquí sustituyen el DNS de todos los perfiles de URL y de archivo; lo que no añadas conserva el ajuste del propio perfil. Los perfiles personalizados definen su DNS en su contenido.",
     ),
     "dnsQueries": MessageLookupByLibrary.simpleMessage("Consultas DNS"),
-    "docked": MessageLookupByLibrary.simpleMessage("Fija"),
     "domain": MessageLookupByLibrary.simpleMessage("Dominio"),
     "done": MessageLookupByLibrary.simpleMessage("Hecho"),
     "download": MessageLookupByLibrary.simpleMessage("Descarga"),
@@ -799,7 +796,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "filter": MessageLookupByLibrary.simpleMessage("Filtro"),
     "filters": MessageLookupByLibrary.simpleMessage("Filtros"),
     "findProcessMode": MessageLookupByLibrary.simpleMessage("Buscar proceso"),
-    "floating": MessageLookupByLibrary.simpleMessage("Flotante"),
     "followSystem": MessageLookupByLibrary.simpleMessage("Seguir el sistema"),
     "fontSize": MessageLookupByLibrary.simpleMessage("Tamaño"),
     "forceDnsMapping": MessageLookupByLibrary.simpleMessage("Forzar mapeo DNS"),
@@ -846,10 +842,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "icon": MessageLookupByLibrary.simpleMessage("Icono"),
     "iconRecords": MessageLookupByLibrary.simpleMessage("Registros de iconos"),
     "iconSets": MessageLookupByLibrary.simpleMessage("Conjuntos de iconos"),
-    "iconStyle": MessageLookupByLibrary.simpleMessage("Estilo de icono"),
-    "iconStyleFilled": MessageLookupByLibrary.simpleMessage("Relleno"),
-    "iconStyleHidden": MessageLookupByLibrary.simpleMessage("Oculto"),
-    "iconStylePlain": MessageLookupByLibrary.simpleMessage("Simple"),
     "ignoreBatteryOptimization": MessageLookupByLibrary.simpleMessage(
       "Ignorar optimización de batería",
     ),
@@ -1010,7 +1002,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "launchInterruptedTip": MessageLookupByLibrary.simpleMessage(
       "La última vez, la app se cerró inesperadamente mientras se iniciaba. En este inicio se ha omitido la configuración automática; puedes iniciarla manualmente para reintentarlo.",
     ),
-    "layout": MessageLookupByLibrary.simpleMessage("Diseño"),
     "light": MessageLookupByLibrary.simpleMessage("Claro"),
     "lineIssueTip": m40,
     "lineWrap": MessageLookupByLibrary.simpleMessage("Ajuste de línea"),
@@ -1019,7 +1010,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Obtén un perfil desde un enlace de suscripción o un enlace para compartir proxies",
     ),
     "liquidGlass": MessageLookupByLibrary.simpleMessage("Liquid Glass"),
-    "list": MessageLookupByLibrary.simpleMessage("Lista"),
     "listen": MessageLookupByLibrary.simpleMessage("Escucha"),
     "listenRoutingMark": MessageLookupByLibrary.simpleMessage(
       "Marca de enrutamiento de escucha",
@@ -1076,6 +1066,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "memoryInfo": MessageLookupByLibrary.simpleMessage(
       "Información de memoria",
     ),
+    "mihomoOnly": MessageLookupByLibrary.simpleMessage("solo mihomo"),
+    "mihomoOnlyNote": MessageLookupByLibrary.simpleMessage(
+      "Se aplica solo mientras el núcleo sea mihomo.",
+    ),
     "minimize": MessageLookupByLibrary.simpleMessage("Minimizar"),
     "minimizeOnExit": MessageLookupByLibrary.simpleMessage(
       "Minimizar al salir",
@@ -1088,9 +1082,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "monthsAgoShort": m46,
     "more": MessageLookupByLibrary.simpleMessage("Más"),
     "name": MessageLookupByLibrary.simpleMessage("Nombre"),
-    "navigationBarStyle": MessageLookupByLibrary.simpleMessage(
-      "Barra inferior",
-    ),
     "network": MessageLookupByLibrary.simpleMessage("Red"),
     "networkAccessDeniedError": m47,
     "networkBadResponseError": m48,
@@ -1565,7 +1556,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "singleAdd": MessageLookupByLibrary.simpleMessage("Añadir uno"),
     "singleImport": MessageLookupByLibrary.simpleMessage("Importar uno"),
     "singleValueTip": m69,
-    "size": MessageLookupByLibrary.simpleMessage("Tamaño"),
     "skipCertVerify": MessageLookupByLibrary.simpleMessage(
       "Omitir verificación de certificado",
     ),
@@ -1627,7 +1617,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "system": MessageLookupByLibrary.simpleMessage("Sistema"),
     "systemApp": MessageLookupByLibrary.simpleMessage("Apps del sistema"),
     "systemProxy": MessageLookupByLibrary.simpleMessage("Proxy del sistema"),
-    "tab": MessageLookupByLibrary.simpleMessage("Pestaña"),
     "tabAnimation": MessageLookupByLibrary.simpleMessage(
       "Animación de pestañas",
     ),
@@ -1637,6 +1626,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "target": MessageLookupByLibrary.simpleMessage("Destino"),
     "tcpConcurrent": MessageLookupByLibrary.simpleMessage("TCP concurrente"),
     "testUrl": MessageLookupByLibrary.simpleMessage("URL de prueba"),
+    "testUrlApplyNote": MessageLookupByLibrary.simpleMessage(
+      "Un cambio aquí llega al núcleo la próxima vez que se aplique la configuración o se inicie la aplicación.",
+    ),
     "textScale": MessageLookupByLibrary.simpleMessage("Escala del texto"),
     "textScalePreview": MessageLookupByLibrary.simpleMessage(
       "Así se verá el texto en la app",
@@ -1706,6 +1698,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "vpnEnableDesc": MessageLookupByLibrary.simpleMessage(
       "La VPN enruta automáticamente todo el tráfico del sistema a través de VpnService.",
     ),
+    "vpnIpv6": MessageLookupByLibrary.simpleMessage("VPN IPv6"),
     "whitelistMode": MessageLookupByLibrary.simpleMessage("Modo lista blanca"),
     "writeToSystem": MessageLookupByLibrary.simpleMessage(
       "Escribir en el sistema",

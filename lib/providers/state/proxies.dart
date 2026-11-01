@@ -121,13 +121,9 @@ ProxiesListState proxiesListState(Ref ref) {
   final query = ref.watch(queryProvider(QueryTag.proxies));
   final currentGroups = ref.watch(filterGroupsStateProvider(query));
   final currentUnfoldSet = ref.watch(unfoldSetProvider);
-  final cardType = ref.watch(
-    proxiesStyleSettingProvider.select((state) => state.cardType),
-  );
   return ProxiesListState(
     groups: currentGroups.value,
     currentUnfoldSet: currentUnfoldSet,
-    proxyCardType: cardType,
   );
 }
 
@@ -138,13 +134,9 @@ ProxiesTabState proxiesTabState(Ref ref) {
   final currentGroupName = ref.watch(
     currentProfileProvider.select((state) => state?.currentGroupName),
   );
-  final cardType = ref.watch(
-    proxiesStyleSettingProvider.select((state) => state.cardType),
-  );
   return ProxiesTabState(
     groups: currentGroups.value,
     currentGroupName: currentGroupName,
-    proxyCardType: cardType,
   );
 }
 

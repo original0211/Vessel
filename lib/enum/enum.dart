@@ -192,8 +192,6 @@ enum InterfaceNameMode { clear, follow, custom }
 
 enum RestoreOption { all, onlyProfiles }
 
-enum ProxiesType { tab, list }
-
 enum ProxiesLayout { loose, standard, tight }
 
 enum ProxyCardType { loose, standard, compact }
@@ -380,8 +378,6 @@ enum HotAction {
   copyEnv,
   exit,
 }
-
-enum ProxiesIconStyle { filled, plain, hidden }
 
 enum EditorFontSize {
   standard(16),

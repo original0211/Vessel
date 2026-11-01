@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:kfusion/common/common.dart';
 import 'package:kfusion/providers/action.dart';
-import 'package:kfusion/providers/config.dart';
 import 'package:kfusion/widgets/widgets.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -55,9 +54,6 @@ class DeveloperView extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final palette = context.haraPalette;
     final appLocalizations = context.appLocalizations;
-    final enable = ref.watch(
-      appSettingProvider.select((state) => state.developerMode),
-    );
     return BaseScaffold(
       title: appLocalizations.developerMode,
       body: Material(
@@ -71,19 +67,6 @@ class DeveloperView extends ConsumerWidget {
             return ListView(
               padding: EdgeInsets.fromLTRB(side, context.appBarInset, side, 48),
               children: [
-                HaraHairline(color: palette.line),
-                _HaraToggleRow(
-                  label: appLocalizations.developerMode,
-                  value: enable,
-                  onTap: () {
-                    ref
-                        .read(appSettingProvider.notifier)
-                        .update(
-                          (state) => state.copyWith(developerMode: !enable),
-                        );
-                  },
-                ),
-                const SizedBox(height: HaraSpace.groupGap),
                 HaraSection(
                   title: appLocalizations.options,
                   rows: _getDeveloperRows(context, ref),
@@ -91,48 +74,6 @@ class DeveloperView extends ConsumerWidget {
               ],
             );
           },
-        ),
-      ),
-    );
-  }
-}
-
-/// A toggle row: the row tap flips the value, the state reads as the
-/// shared toggle mark at the row's end.
-class _HaraToggleRow extends StatelessWidget {
-  const _HaraToggleRow({
-    required this.label,
-    required this.value,
-    required this.onTap,
-  });
-
-  final String label;
-  final bool value;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final palette = context.haraPalette;
-    final appLocalizations = context.appLocalizations;
-    return Semantics(
-      toggled: value,
-      child: HaraRow(
-        onTap: onTap,
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                label,
-                style: HaraText.nodeName(context, palette.ink, current: false),
-              ),
-            ),
-            HaraToggleMark(
-              value: value,
-              word: value
-                  ? appLocalizations.enabled
-                  : appLocalizations.disabled,
-            ),
-          ],
         ),
       ),
     );

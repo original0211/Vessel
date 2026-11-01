@@ -834,9 +834,6 @@ void main() {
     addTearDown(container.dispose);
     globalState.container = container;
     container.read(viewSizeProvider.notifier).value = const Size(500, 800);
-    container
-        .read(appSettingProvider.notifier)
-        .update((state) => state.copyWith(floatingNavigationBar: false));
 
     await tester.pumpWidget(
       UncontrolledProviderScope(
@@ -853,13 +850,6 @@ void main() {
     await tester.pumpAndSettle();
     expect(container.read(currentPageLabelProvider), PageLabel.tools);
     expect(tester.widget<HaraNavBar>(find.byType(HaraNavBar)).selectedIndex, 1);
-
-    container
-        .read(appSettingProvider.notifier)
-        .update((state) => state.copyWith(floatingNavigationBar: true));
-    await tester.pumpAndSettle();
-    expect(find.byType(NavigationBar), findsNothing);
-    expect(find.byType(HaraNavBar), findsOneWidget);
     expect(find.text('page:tools inset:0.0'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });

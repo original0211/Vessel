@@ -217,8 +217,6 @@ abstract class AppSettingProps with _$AppSettingProps {
     @Default(TabAnimation.slide)
     @JsonKey(readValue: _readTabAnimation)
     TabAnimation tabAnimation,
-    @Default(true) bool floatingNavigationBar,
-    @Default(false) bool cabinCoreCompact,
     @Default(true) bool autoCheckUpdate,
     @Default(true)
     @JsonKey(readValue: _readSidebarExpanded)
@@ -226,7 +224,6 @@ abstract class AppSettingProps with _$AppSettingProps {
     @Default(0) int acceptedDisclaimerVersion,
     @Default(true) bool minimizeOnExit,
     @Default(false) bool hidden,
-    @Default(false) bool developerMode,
     @Default(true) bool showTrayTitle,
     @Default(true) bool checkCertificate,
     @Default(defaultFilters) List<Filter> filters,
@@ -335,18 +332,6 @@ abstract class NetworkProps with _$NetworkProps {
       json == null ? const NetworkProps() : _$NetworkPropsFromJson(json);
 }
 
-/// Reads the styles named `standard`, `icon` and `none` before they became
-/// [ProxiesIconStyle.filled], [ProxiesIconStyle.plain] and
-/// [ProxiesIconStyle.hidden].
-ProxiesIconStyle proxiesIconStyleSafeFromJson(Object? iconStyle) {
-  return switch (iconStyle) {
-    'filled' || 'standard' => ProxiesIconStyle.filled,
-    'plain' || 'icon' => ProxiesIconStyle.plain,
-    'hidden' || 'none' => ProxiesIconStyle.hidden,
-    _ => ProxiesIconStyle.filled,
-  };
-}
-
 ProxyCardType proxyCardTypeSafeFromJson(Object? cardType) {
   return switch (cardType) {
     'loose' || 'expand' => ProxyCardType.loose,
@@ -359,12 +344,7 @@ ProxyCardType proxyCardTypeSafeFromJson(Object? cardType) {
 @freezed
 abstract class ProxiesStyleProps with _$ProxiesStyleProps {
   const factory ProxiesStyleProps({
-    @Default(ProxiesType.list) ProxiesType type,
     @Default(ProxiesSortType.none) ProxiesSortType sortType,
-    @Default(ProxiesLayout.standard) ProxiesLayout layout,
-    @Default(ProxiesIconStyle.filled)
-    @JsonKey(fromJson: proxiesIconStyleSafeFromJson)
-    ProxiesIconStyle iconStyle,
     @Default(ProxyCardType.standard)
     @JsonKey(fromJson: proxyCardTypeSafeFromJson)
     ProxyCardType cardType,

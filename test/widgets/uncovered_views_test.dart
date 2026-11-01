@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
-import 'package:kfusion/common/l10n_labels.dart';
 import 'package:kfusion/common/request.dart';
 import 'package:kfusion/enum/enum.dart';
 import 'package:kfusion/l10n/l10n.dart';
@@ -77,7 +76,9 @@ void main() {
     );
   });
 
-  testWidgets('proxies setting picks its style from a menu', (tester) async {
+  testWidgets('proxies setting offers only the sort and filter rows', (
+    tester,
+  ) async {
     final container = _containerFor(tester);
 
     await tester.pumpWidget(
@@ -89,15 +90,12 @@ void main() {
     await tester.pump();
     final l10n = AppLocalizations.current;
 
-    expect(find.text(l10n.iconStyle), findsOneWidget);
-
-    await tester.tap(find.text(l10n.style));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text(ProxiesType.tab.label));
-    await tester.pumpAndSettle();
-
-    expect(container.read(proxiesStyleSettingProvider).type, ProxiesType.tab);
-    expect(find.text(l10n.iconStyle), findsNothing);
+    expect(find.text('Style'), findsNothing);
+    expect(find.text('Layout'), findsNothing);
+    expect(find.text('Size'), findsNothing);
+    expect(find.text('Icon style'), findsNothing);
+    expect(find.text(l10n.sort), findsOneWidget);
+    expect(find.text(l10n.hideTimeoutProxies), findsOneWidget);
     expect(tester.takeException(), null);
   });
 
@@ -123,37 +121,6 @@ void main() {
       ProxiesSortType.delay,
     );
     expect(find.byType(CommonPopupMenu), findsNothing);
-  });
-
-  testWidgets('proxies setting picks its card size from a menu', (
-    tester,
-  ) async {
-    final container = _containerFor(tester);
-
-    await tester.pumpWidget(
-      UncontrolledProviderScope(
-        container: container,
-        child: const TestApp(child: Scaffold(body: ProxiesSetting())),
-      ),
-    );
-    await tester.pump();
-    final l10n = AppLocalizations.current;
-
-    expect(
-      container.read(proxiesStyleSettingProvider).cardType,
-      ProxyCardType.standard,
-    );
-    await tester.tap(find.text(l10n.size));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text(ProxyCardType.compact.label));
-    await tester.pumpAndSettle();
-
-    expect(
-      container.read(proxiesStyleSettingProvider).cardType,
-      ProxyCardType.compact,
-    );
-    expect(find.byType(CommonPopupMenu), findsNothing);
-    expect(tester.takeException(), null);
   });
 
   testWidgets('proxies setting toggles hidden timeout proxies', (tester) async {

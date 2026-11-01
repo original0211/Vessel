@@ -845,7 +845,7 @@ final class ProxiesListStateProvider
   }
 }
 
-String _$proxiesListStateHash() => r'212d21f79e9c149076e13d1d19ccd83ccb4b471b';
+String _$proxiesListStateHash() => r'af72f4ae235a9932704150eb3c049877318caf86';
 
 @ProviderFor(proxiesTabState)
 final proxiesTabStateProvider = ProxiesTabStateProvider._();
@@ -887,7 +887,7 @@ final class ProxiesTabStateProvider
   }
 }
 
-String _$proxiesTabStateHash() => r'e4eccd77c3848489c8ec620f4e515cec7cdd5a31';
+String _$proxiesTabStateHash() => r'1f162eecaaa9ce1a202a807708be7d6ea8aed1e2';
 
 @ProviderFor(isStart)
 final isStartProvider = IsStartProvider._();

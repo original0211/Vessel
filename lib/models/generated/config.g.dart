@@ -35,8 +35,6 @@ _AppSettingProps _$AppSettingPropsFromJson(Map<String, dynamic> json) =>
             _readTabAnimation(json, 'tabAnimation'),
           ) ??
           TabAnimation.slide,
-      floatingNavigationBar: json['floatingNavigationBar'] as bool? ?? true,
-      cabinCoreCompact: json['cabinCoreCompact'] as bool? ?? false,
       autoCheckUpdate: json['autoCheckUpdate'] as bool? ?? true,
       sidebarExpanded:
           _readSidebarExpanded(json, 'sidebarExpanded') as bool? ?? true,
@@ -44,7 +42,6 @@ _AppSettingProps _$AppSettingPropsFromJson(Map<String, dynamic> json) =>
           (json['acceptedDisclaimerVersion'] as num?)?.toInt() ?? 0,
       minimizeOnExit: json['minimizeOnExit'] as bool? ?? true,
       hidden: json['hidden'] as bool? ?? false,
-      developerMode: json['developerMode'] as bool? ?? false,
       showTrayTitle: json['showTrayTitle'] as bool? ?? true,
       checkCertificate: json['checkCertificate'] as bool? ?? true,
       filters:
@@ -97,14 +94,11 @@ Map<String, dynamic> _$AppSettingPropsToJson(_AppSettingProps instance) =>
       'closeConnections': instance.closeConnections,
       'testUrl': instance.testUrl,
       'tabAnimation': _$TabAnimationEnumMap[instance.tabAnimation]!,
-      'floatingNavigationBar': instance.floatingNavigationBar,
-      'cabinCoreCompact': instance.cabinCoreCompact,
       'autoCheckUpdate': instance.autoCheckUpdate,
       'sidebarExpanded': instance.sidebarExpanded,
       'acceptedDisclaimerVersion': instance.acceptedDisclaimerVersion,
       'minimizeOnExit': instance.minimizeOnExit,
       'hidden': instance.hidden,
-      'developerMode': instance.developerMode,
       'showTrayTitle': instance.showTrayTitle,
       'checkCertificate': instance.checkCertificate,
       'filters': instance.filters,
@@ -249,18 +243,9 @@ Map<String, dynamic> _$NetworkPropsToJson(_NetworkProps instance) =>
 
 _ProxiesStyleProps _$ProxiesStylePropsFromJson(Map<String, dynamic> json) =>
     _ProxiesStyleProps(
-      type:
-          $enumDecodeNullable(_$ProxiesTypeEnumMap, json['type']) ??
-          ProxiesType.list,
       sortType:
           $enumDecodeNullable(_$ProxiesSortTypeEnumMap, json['sortType']) ??
           ProxiesSortType.none,
-      layout:
-          $enumDecodeNullable(_$ProxiesLayoutEnumMap, json['layout']) ??
-          ProxiesLayout.standard,
-      iconStyle: json['iconStyle'] == null
-          ? ProxiesIconStyle.filled
-          : proxiesIconStyleSafeFromJson(json['iconStyle']),
       cardType: json['cardType'] == null
           ? ProxyCardType.standard
           : proxyCardTypeSafeFromJson(json['cardType']),
@@ -269,32 +254,15 @@ _ProxiesStyleProps _$ProxiesStylePropsFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$ProxiesStylePropsToJson(_ProxiesStyleProps instance) =>
     <String, dynamic>{
-      'type': _$ProxiesTypeEnumMap[instance.type]!,
       'sortType': _$ProxiesSortTypeEnumMap[instance.sortType]!,
-      'layout': _$ProxiesLayoutEnumMap[instance.layout]!,
-      'iconStyle': _$ProxiesIconStyleEnumMap[instance.iconStyle]!,
       'cardType': _$ProxyCardTypeEnumMap[instance.cardType]!,
       'hideTimeoutProxies': instance.hideTimeoutProxies,
     };
-
-const _$ProxiesTypeEnumMap = {ProxiesType.tab: 'tab', ProxiesType.list: 'list'};
 
 const _$ProxiesSortTypeEnumMap = {
   ProxiesSortType.none: 'none',
   ProxiesSortType.delay: 'delay',
   ProxiesSortType.name: 'name',
-};
-
-const _$ProxiesLayoutEnumMap = {
-  ProxiesLayout.loose: 'loose',
-  ProxiesLayout.standard: 'standard',
-  ProxiesLayout.tight: 'tight',
-};
-
-const _$ProxiesIconStyleEnumMap = {
-  ProxiesIconStyle.filled: 'filled',
-  ProxiesIconStyle.plain: 'plain',
-  ProxiesIconStyle.hidden: 'hidden',
 };
 
 const _$ProxyCardTypeEnumMap = {

@@ -194,6 +194,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "선택한 앱은 VPN에서 제외됩니다",
     ),
     "accessControlSettings": MessageLookupByLibrary.simpleMessage("접근 제어 설정"),
+    "accessListOnlyNote": MessageLookupByLibrary.simpleMessage(
+      "이 페이지의 앱 목록 표시에만 영향을 줍니다.",
+    ),
     "account": MessageLookupByLibrary.simpleMessage("계정"),
     "action": MessageLookupByLibrary.simpleMessage("동작"),
     "actionDelayTest": MessageLookupByLibrary.simpleMessage("모든 지연 테스트"),
@@ -279,7 +282,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "bypassPrivateRouteDesc": MessageLookupByLibrary.simpleMessage(
       "사설 주소 우회를 켜면 LAN, 루프백, 멀티캐스트 주소는 TUN을 거치지 않습니다.",
     ),
-    "cabinCoreCompact": MessageLookupByLibrary.simpleMessage("캐빈 코어 컴팩트 모드"),
     "cache": MessageLookupByLibrary.simpleMessage("캐시"),
     "cacheAlgorithm": MessageLookupByLibrary.simpleMessage("캐시 알고리즘"),
     "cacheCorrupt": MessageLookupByLibrary.simpleMessage(
@@ -352,6 +354,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "coreBlockedBySmartAppControlTip": MessageLookupByLibrary.simpleMessage(
       "서명되지 않아 Windows Smart App Control이 KFusionCore.exe를 차단했습니다. Windows 보안 → 앱 및 브라우저 컨트롤 → Smart App Control 설정에서 끔을 선택한 후 Vessel를 다시 시작하세요. Smart App Control은 Windows를 다시 설치하지 않으면 다시 켤 수 없습니다.",
     ),
+    "coreIpv6": MessageLookupByLibrary.simpleMessage("코어 IPv6"),
     "coreNotConnectedTip": MessageLookupByLibrary.simpleMessage(
       "코어에 연결되어 있지 않습니다. 코어를 시작한 후 다시 시도하세요",
     ),
@@ -454,9 +457,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "서드파티 API에 의존하므로 참고용으로만 사용하세요",
     ),
     "developerMode": MessageLookupByLibrary.simpleMessage("개발자 모드"),
-    "developerModeEnableTip": MessageLookupByLibrary.simpleMessage(
-      "개발자 모드가 켜졌습니다.",
-    ),
     "dialerProxy": MessageLookupByLibrary.simpleMessage("다이얼러 프록시"),
     "dialerProxyLoopStopped": m27,
     "direct": MessageLookupByLibrary.simpleMessage("직접"),
@@ -558,7 +558,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "여기에 추가한 항목은 모든 URL 및 파일 프로필의 DNS를 대체합니다. 추가하지 않은 항목은 프로필 자체 설정을 유지합니다. 사용자 지정 프로필은 내용에서 DNS를 설정합니다.",
     ),
     "dnsQueries": MessageLookupByLibrary.simpleMessage("DNS 쿼리"),
-    "docked": MessageLookupByLibrary.simpleMessage("고정"),
     "domain": MessageLookupByLibrary.simpleMessage("도메인"),
     "done": MessageLookupByLibrary.simpleMessage("완료"),
     "download": MessageLookupByLibrary.simpleMessage("다운로드"),
@@ -635,7 +634,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "filter": MessageLookupByLibrary.simpleMessage("필터"),
     "filters": MessageLookupByLibrary.simpleMessage("필터"),
     "findProcessMode": MessageLookupByLibrary.simpleMessage("프로세스 찾기"),
-    "floating": MessageLookupByLibrary.simpleMessage("플로팅"),
     "followSystem": MessageLookupByLibrary.simpleMessage("시스템 설정 따르기"),
     "fontSize": MessageLookupByLibrary.simpleMessage("크기"),
     "forceDnsMapping": MessageLookupByLibrary.simpleMessage("DNS 매핑 강제"),
@@ -676,10 +674,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "icon": MessageLookupByLibrary.simpleMessage("아이콘"),
     "iconRecords": MessageLookupByLibrary.simpleMessage("아이콘 기록"),
     "iconSets": MessageLookupByLibrary.simpleMessage("아이콘 세트"),
-    "iconStyle": MessageLookupByLibrary.simpleMessage("아이콘 스타일"),
-    "iconStyleFilled": MessageLookupByLibrary.simpleMessage("채움"),
-    "iconStyleHidden": MessageLookupByLibrary.simpleMessage("숨김"),
-    "iconStylePlain": MessageLookupByLibrary.simpleMessage("기본"),
     "ignoreBatteryOptimization": MessageLookupByLibrary.simpleMessage(
       "배터리 최적화 무시",
     ),
@@ -807,7 +801,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "launchInterruptedTip": MessageLookupByLibrary.simpleMessage(
       "지난번 시작하는 중에 앱이 예기치 않게 종료되었습니다. 이번 실행에서는 자동 설정을 건너뛰었으니 직접 시작하여 다시 시도하세요.",
     ),
-    "layout": MessageLookupByLibrary.simpleMessage("레이아웃"),
     "light": MessageLookupByLibrary.simpleMessage("라이트"),
     "lineIssueTip": m40,
     "lineWrap": MessageLookupByLibrary.simpleMessage("자동 줄 바꿈"),
@@ -816,7 +809,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "구독 링크 또는 프록시 공유 링크로 프로필 가져오기",
     ),
     "liquidGlass": MessageLookupByLibrary.simpleMessage("Liquid Glass"),
-    "list": MessageLookupByLibrary.simpleMessage("목록"),
     "listen": MessageLookupByLibrary.simpleMessage("수신"),
     "listenRoutingMark": MessageLookupByLibrary.simpleMessage("수신 라우팅 마크"),
     "listenRoutingMarkDesc": MessageLookupByLibrary.simpleMessage(
@@ -857,6 +849,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "maxLengthTip": m42,
     "maximize": MessageLookupByLibrary.simpleMessage("최대화"),
     "memoryInfo": MessageLookupByLibrary.simpleMessage("메모리 정보"),
+    "mihomoOnly": MessageLookupByLibrary.simpleMessage("mihomo 전용"),
+    "mihomoOnlyNote": MessageLookupByLibrary.simpleMessage(
+      "코어가 mihomo일 때만 적용됩니다.",
+    ),
     "minimize": MessageLookupByLibrary.simpleMessage("최소화"),
     "minimizeOnExit": MessageLookupByLibrary.simpleMessage("종료 시 최소화"),
     "minutes": MessageLookupByLibrary.simpleMessage("분"),
@@ -867,7 +863,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "monthsAgoShort": m46,
     "more": MessageLookupByLibrary.simpleMessage("더 보기"),
     "name": MessageLookupByLibrary.simpleMessage("이름"),
-    "navigationBarStyle": MessageLookupByLibrary.simpleMessage("하단 바"),
     "network": MessageLookupByLibrary.simpleMessage("네트워크"),
     "networkAccessDeniedError": m47,
     "networkBadResponseError": m48,
@@ -1251,7 +1246,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "singleAdd": MessageLookupByLibrary.simpleMessage("개별 추가"),
     "singleImport": MessageLookupByLibrary.simpleMessage("개별 가져오기"),
     "singleValueTip": m69,
-    "size": MessageLookupByLibrary.simpleMessage("크기"),
     "skipCertVerify": MessageLookupByLibrary.simpleMessage("인증서 검증 건너뛰기"),
     "skipDomain": MessageLookupByLibrary.simpleMessage("건너뛸 도메인"),
     "skipDstAddress": MessageLookupByLibrary.simpleMessage("건너뛸 목적지 주소"),
@@ -1299,12 +1293,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "system": MessageLookupByLibrary.simpleMessage("시스템"),
     "systemApp": MessageLookupByLibrary.simpleMessage("시스템 앱"),
     "systemProxy": MessageLookupByLibrary.simpleMessage("시스템 프록시"),
-    "tab": MessageLookupByLibrary.simpleMessage("탭"),
     "tabAnimation": MessageLookupByLibrary.simpleMessage("탭 애니메이션"),
     "tapToAuthorize": MessageLookupByLibrary.simpleMessage("눌러서 허용"),
     "target": MessageLookupByLibrary.simpleMessage("대상"),
     "tcpConcurrent": MessageLookupByLibrary.simpleMessage("TCP 동시 연결"),
     "testUrl": MessageLookupByLibrary.simpleMessage("테스트 URL"),
+    "testUrlApplyNote": MessageLookupByLibrary.simpleMessage(
+      "여기서 변경한 내용은 다음에 구성이 적용되거나 앱이 시작될 때 코어에 전달됩니다.",
+    ),
     "textScale": MessageLookupByLibrary.simpleMessage("글자 크기 조절"),
     "textScalePreview": MessageLookupByLibrary.simpleMessage(
       "앱의 글자가 이렇게 표시됩니다",
@@ -1368,6 +1364,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "vpnEnableDesc": MessageLookupByLibrary.simpleMessage(
       "VPN은 VpnService를 통해 모든 시스템 트래픽을 자동으로 라우팅합니다.",
     ),
+    "vpnIpv6": MessageLookupByLibrary.simpleMessage("VPN IPv6"),
     "whitelistMode": MessageLookupByLibrary.simpleMessage("화이트리스트 모드"),
     "writeToSystem": MessageLookupByLibrary.simpleMessage("시스템에 기록"),
     "yearsAgo": m71,

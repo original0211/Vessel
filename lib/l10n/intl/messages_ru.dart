@@ -218,6 +218,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "accessControlSettings": MessageLookupByLibrary.simpleMessage(
       "Настройки контроля доступа",
     ),
+    "accessListOnlyNote": MessageLookupByLibrary.simpleMessage(
+      "Влияет только на список приложений на этой странице.",
+    ),
     "account": MessageLookupByLibrary.simpleMessage("Аккаунт"),
     "action": MessageLookupByLibrary.simpleMessage("Действие"),
     "actionDelayTest": MessageLookupByLibrary.simpleMessage(
@@ -345,9 +348,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "bypassPrivateRouteDesc": MessageLookupByLibrary.simpleMessage(
       "При обходе частных адресов адреса LAN, loopback и multicast идут в обход TUN.",
     ),
-    "cabinCoreCompact": MessageLookupByLibrary.simpleMessage(
-      "Компактное ядро кабины",
-    ),
     "cache": MessageLookupByLibrary.simpleMessage("Кэш"),
     "cacheAlgorithm": MessageLookupByLibrary.simpleMessage("Алгоритм кэша"),
     "cacheCorrupt": MessageLookupByLibrary.simpleMessage(
@@ -448,6 +448,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "coreBlockedBySmartAppControlTip": MessageLookupByLibrary.simpleMessage(
       "Smart App Control в Windows заблокировал неподписанный KFusionCore.exe. Откройте Безопасность Windows → Управление приложениями и браузером → Параметры Smart App Control, выберите «Выкл.» и снова запустите Vessel. Повторно включить Smart App Control без переустановки Windows нельзя.",
     ),
+    "coreIpv6": MessageLookupByLibrary.simpleMessage("IPv6 ядра"),
     "coreNotConnectedTip": MessageLookupByLibrary.simpleMessage(
       "Ядро не подключено. Запустите ядро и повторите попытку",
     ),
@@ -560,9 +561,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Использует сторонний API; только для справки",
     ),
     "developerMode": MessageLookupByLibrary.simpleMessage("Режим разработчика"),
-    "developerModeEnableTip": MessageLookupByLibrary.simpleMessage(
-      "Режим разработчика включён.",
-    ),
     "dialerProxy": MessageLookupByLibrary.simpleMessage(
       "Прокси для подключения",
     ),
@@ -686,7 +684,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Добавленные здесь параметры заменяют DNS всех профилей из URL и файлов; остальные остаются такими, как в профиле. DNS пользовательского профиля задаётся в его содержимом.",
     ),
     "dnsQueries": MessageLookupByLibrary.simpleMessage("DNS-запросы"),
-    "docked": MessageLookupByLibrary.simpleMessage("Закреплённая"),
     "domain": MessageLookupByLibrary.simpleMessage("Домен"),
     "done": MessageLookupByLibrary.simpleMessage("Готово"),
     "download": MessageLookupByLibrary.simpleMessage("Загрузка"),
@@ -785,7 +782,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "filter": MessageLookupByLibrary.simpleMessage("Фильтр"),
     "filters": MessageLookupByLibrary.simpleMessage("Фильтры"),
     "findProcessMode": MessageLookupByLibrary.simpleMessage("Поиск процесса"),
-    "floating": MessageLookupByLibrary.simpleMessage("Плавающая"),
     "followSystem": MessageLookupByLibrary.simpleMessage("Как в системе"),
     "fontSize": MessageLookupByLibrary.simpleMessage("Размер"),
     "forceDnsMapping": MessageLookupByLibrary.simpleMessage(
@@ -834,10 +830,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "icon": MessageLookupByLibrary.simpleMessage("Значок"),
     "iconRecords": MessageLookupByLibrary.simpleMessage("История значков"),
     "iconSets": MessageLookupByLibrary.simpleMessage("Наборы значков"),
-    "iconStyle": MessageLookupByLibrary.simpleMessage("Стиль значков"),
-    "iconStyleFilled": MessageLookupByLibrary.simpleMessage("С подложкой"),
-    "iconStyleHidden": MessageLookupByLibrary.simpleMessage("Скрыто"),
-    "iconStylePlain": MessageLookupByLibrary.simpleMessage("Без подложки"),
     "ignoreBatteryOptimization": MessageLookupByLibrary.simpleMessage(
       "Игнорировать оптимизацию батареи",
     ),
@@ -986,7 +978,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "launchInterruptedTip": MessageLookupByLibrary.simpleMessage(
       "В прошлый раз приложение неожиданно завершилось во время запуска. Автоматическая настройка для этого запуска пропущена; вы можете запустить её вручную.",
     ),
-    "layout": MessageLookupByLibrary.simpleMessage("Макет"),
     "light": MessageLookupByLibrary.simpleMessage("Светлая"),
     "lineIssueTip": m40,
     "lineWrap": MessageLookupByLibrary.simpleMessage("Перенос строк"),
@@ -995,7 +986,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Получить профиль по ссылке на подписку или на прокси",
     ),
     "liquidGlass": MessageLookupByLibrary.simpleMessage("Жидкое стекло"),
-    "list": MessageLookupByLibrary.simpleMessage("Список"),
     "listen": MessageLookupByLibrary.simpleMessage("Прослушивание"),
     "listenRoutingMark": MessageLookupByLibrary.simpleMessage(
       "Метка маршрутизации",
@@ -1050,6 +1040,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "maxLengthTip": m42,
     "maximize": MessageLookupByLibrary.simpleMessage("Развернуть"),
     "memoryInfo": MessageLookupByLibrary.simpleMessage("Память"),
+    "mihomoOnly": MessageLookupByLibrary.simpleMessage("только mihomo"),
+    "mihomoOnlyNote": MessageLookupByLibrary.simpleMessage(
+      "Применяется, только пока ядро — mihomo.",
+    ),
     "minimize": MessageLookupByLibrary.simpleMessage("Свернуть"),
     "minimizeOnExit": MessageLookupByLibrary.simpleMessage(
       "Сворачивать при выходе",
@@ -1062,7 +1056,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "monthsAgoShort": m46,
     "more": MessageLookupByLibrary.simpleMessage("Ещё"),
     "name": MessageLookupByLibrary.simpleMessage("Название"),
-    "navigationBarStyle": MessageLookupByLibrary.simpleMessage("Нижняя панель"),
     "network": MessageLookupByLibrary.simpleMessage("Сеть"),
     "networkAccessDeniedError": m47,
     "networkBadResponseError": m48,
@@ -1524,7 +1517,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "singleAdd": MessageLookupByLibrary.simpleMessage("По одному"),
     "singleImport": MessageLookupByLibrary.simpleMessage("По одному"),
     "singleValueTip": m69,
-    "size": MessageLookupByLibrary.simpleMessage("Размер"),
     "skipCertVerify": MessageLookupByLibrary.simpleMessage(
       "Пропускать проверку сертификата",
     ),
@@ -1588,7 +1580,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "system": MessageLookupByLibrary.simpleMessage("Система"),
     "systemApp": MessageLookupByLibrary.simpleMessage("Системные приложения"),
     "systemProxy": MessageLookupByLibrary.simpleMessage("Системный прокси"),
-    "tab": MessageLookupByLibrary.simpleMessage("Вкладки"),
     "tabAnimation": MessageLookupByLibrary.simpleMessage("Анимация вкладок"),
     "tapToAuthorize": MessageLookupByLibrary.simpleMessage(
       "Нажмите, чтобы разрешить",
@@ -1596,6 +1587,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "target": MessageLookupByLibrary.simpleMessage("Цель"),
     "tcpConcurrent": MessageLookupByLibrary.simpleMessage("Параллельный TCP"),
     "testUrl": MessageLookupByLibrary.simpleMessage("URL для теста"),
+    "testUrlApplyNote": MessageLookupByLibrary.simpleMessage(
+      "Изменение попадёт в ядро при следующем применении конфигурации или запуске приложения.",
+    ),
     "textScale": MessageLookupByLibrary.simpleMessage("Масштаб текста"),
     "textScalePreview": MessageLookupByLibrary.simpleMessage(
       "Так будет выглядеть текст в приложении",
@@ -1667,6 +1661,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "vpnEnableDesc": MessageLookupByLibrary.simpleMessage(
       "VPN автоматически направляет весь системный трафик через VpnService.",
     ),
+    "vpnIpv6": MessageLookupByLibrary.simpleMessage("VPN IPv6"),
     "whitelistMode": MessageLookupByLibrary.simpleMessage(
       "Режим белого списка",
     ),

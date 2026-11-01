@@ -147,18 +147,15 @@ void main() {
   group('home navigation', () {
     AppSettingProps readSetting() => container.read(appSettingProvider);
 
-    testWidgets('picks a floating or docked bottom bar', (tester) async {
+    testWidgets('offers no bottom bar style or cabin core rows', (
+      tester,
+    ) async {
       await pumpThemeView(tester);
 
-      expect(readSetting().floatingNavigationBar, isTrue);
-
-      await tester.tap(find.text('Docked'));
-      await tester.pumpAndSettle();
-      expect(readSetting().floatingNavigationBar, isFalse);
-
-      await tester.tap(find.text('Floating'));
-      await tester.pumpAndSettle();
-      expect(readSetting().floatingNavigationBar, isTrue);
+      expect(find.text('Bottom bar'), findsNothing);
+      expect(find.text('Floating'), findsNothing);
+      expect(find.text('Docked'), findsNothing);
+      expect(find.text('Compact cabin core'), findsNothing);
     });
 
     testWidgets('picks a sliding or fading tab switch', (tester) async {
