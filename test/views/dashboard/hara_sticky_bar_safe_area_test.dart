@@ -24,6 +24,9 @@ const _node = 'Node-01';
 const _profile = Profile(
   id: 1,
   label: 'Home',
+  // The pick puts the exit inside GLOBAL: under the fold defaults only
+  // the exit group starts expanded, and this suite needs its long list.
+  selectedMap: {'GLOBAL': _node},
   autoUpdateDuration: Duration.zero,
 );
 

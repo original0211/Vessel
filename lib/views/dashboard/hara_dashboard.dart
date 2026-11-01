@@ -13,6 +13,7 @@ import 'package:kfusion/providers/ip_quality.dart';
 import 'package:kfusion/providers/outbound_ip.dart';
 import 'package:kfusion/providers/providers.dart';
 import 'package:kfusion/providers/routed_probe.dart';
+import 'package:kfusion/ui/icons/icons.dart';
 import 'package:kfusion/ui/ui.dart';
 import 'package:kfusion/views/profiles/universal_import.dart';
 import 'package:kfusion/views/proxies/hara_proxies.dart';
@@ -24,6 +25,7 @@ import 'widgets/core_status_button.dart';
 
 const _pendingBudget = Duration(seconds: 45);
 const _stickyExtent = 48.0;
+const _chipRailExtent = 40.0;
 
 String _coreName(CoreKind kind) {
   return switch (kind) {
@@ -59,9 +61,24 @@ class _HaraDashboardState extends ConsumerState<HaraDashboard>
   bool _sortByDelay = false;
   Timer? _pendingTimer;
   late final ScrollController _scrollController;
-  final _sticky = ValueNotifier<bool>(false);
+  final _sticky = ValueNotifier<({bool status, bool chips})>((
+    status: false,
+    chips: false,
+  ));
   final _heroKey = GlobalKey();
   double? _heroExtent;
+  final _searchController = TextEditingController();
+  final _railKey = GlobalKey();
+  double? _railOffset;
+  double? _railExtent;
+  final _sectionKeys = <String, GlobalKey>{};
+  Map<String, bool> _foldToggles = {};
+  int? _foldSeededProfileId;
+  bool _pinAllowedCache = false;
+  double _safeTopCache = 0;
+  String? _exitGroupCache;
+  List<Group> _groupsCache = const [];
+  bool _searchingCache = false;
 
   @override
   void initState() {
@@ -82,6 +99,10 @@ class _HaraDashboardState extends ConsumerState<HaraDashboard>
       if (mounted && previous != next && _sortByDelay) {
         setState(() => _sortByDelay = false);
       }
+      if (previous != next) {
+        _foldSeededProfileId = null;
+        _foldToggles = {};
+      }
     });
     ref.listenManual(
       proxiesStyleSettingProvider.select((state) => state.sortType),
@@ -100,6 +121,7 @@ class _HaraDashboardState extends ConsumerState<HaraDashboard>
     _probe.unwatch(routedOutbound);
     _scrollController.dispose();
     _sticky.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -128,10 +150,122 @@ class _HaraDashboardState extends ConsumerState<HaraDashboard>
   }
 
   void _updateSticky() {
+    if (!_scrollController.hasClients) return;
+    final offset = _scrollController.offset;
     final extent = _heroExtent;
-    if (extent == null || !_scrollController.hasClients) return;
-    final show = _scrollController.offset >= extent - _stickyExtent;
-    if (show != _sticky.value) _sticky.value = show;
+    final status = extent != null && offset >= extent - _stickyExtent;
+    var chips = false;
+    final rail = _railOffset;
+    if (rail != null) {
+      // The chip rail takes over exactly where its in-flow copy slides
+      // under the status row, so the inset counts the status row only
+      // when that row is actually on screen.
+      final inset = status && _pinAllowedCache
+          ? _safeTopCache + _stickyExtent
+          : 0.0;
+      chips = offset >= rail - inset;
+    }
+    final next = (status: status, chips: chips);
+    if (next != _sticky.value) _sticky.value = next;
+  }
+
+  bool _expandedFor(String groupName) {
+    if (_searchingCache) return true;
+    return _foldToggles[groupName] ?? (groupName == _exitGroupCache);
+  }
+
+  void _setFold(String groupName, bool expanded) {
+    setState(() => _foldToggles[groupName] = expanded);
+    final effective = <String>{
+      for (final group in _groupsCache)
+        if (_foldToggles[group.name] ?? (group.name == _exitGroupCache))
+          group.name,
+    };
+    ref.read(proxiesActionProvider.notifier).updateCurrentUnfoldSet(effective);
+  }
+
+  GlobalKey _sectionKeyFor(String groupName) {
+    return _sectionKeys.putIfAbsent(groupName, () => GlobalKey());
+  }
+
+  double? _contentOffsetOf(GlobalKey key) {
+    final box = key.currentContext?.findRenderObject() as RenderBox?;
+    if (box == null || !box.hasSize || !_scrollController.hasClients) {
+      return null;
+    }
+    final self = context.findRenderObject() as RenderBox?;
+    final top = self?.localToGlobal(Offset.zero).dy ?? 0;
+    return _scrollController.offset + (box.localToGlobal(Offset.zero).dy - top);
+  }
+
+  double _overlayAlignment() {
+    if (!_scrollController.hasClients) return 0;
+    final viewport = _scrollController.position.viewportDimension;
+    if (viewport <= 0) return 0;
+    var overlay = _chipRailExtent;
+    if (_pinAllowedCache) overlay += _safeTopCache + _stickyExtent;
+    return (overlay / viewport).clamp(0.0, 0.6);
+  }
+
+  /// Section heights from the settled type scale; the scroll that follows
+  /// an estimate corrects against the laid-out section, so this only has
+  /// to land within the viewport's reach.
+  double? _estimateGroupOffset(String groupName) {
+    final rail = _railOffset;
+    final railExtent = _railExtent;
+    if (rail == null || railExtent == null) return null;
+    final textScale = MediaQuery.textScalerOf(context).scale(1);
+    final titleBlock =
+        HaraSpace.groupGap +
+        11 * 1.5 * textScale +
+        HaraSpace.sectionTitleGap +
+        HaraSpace.hairline;
+    final rowHeight =
+        HaraSpace.nodeRowVertical * 2 +
+        15 * 1.4 * textScale +
+        HaraSpace.hairline;
+    var y = rail + railExtent;
+    for (final group in _groupsCache) {
+      if (group.name == groupName) return y;
+      y += titleBlock;
+      if (_expandedFor(group.name)) y += group.all.length * rowHeight;
+    }
+    return null;
+  }
+
+  Future<void> _scrollToGroup(String groupName) async {
+    if (!_expandedFor(groupName)) _setFold(groupName, true);
+    await WidgetsBinding.instance.endOfFrame;
+    if (!mounted || !_scrollController.hasClients) return;
+    final alignment = _overlayAlignment();
+    final target = _sectionKeys[groupName]?.currentContext;
+    if (target != null && target.mounted) {
+      await Scrollable.ensureVisible(
+        target,
+        alignment: alignment,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+      return;
+    }
+    final estimate = _estimateGroupOffset(groupName);
+    if (estimate == null) return;
+    final maxExtent = _scrollController.position.maxScrollExtent;
+    await _scrollController.animateTo(
+      estimate.clamp(0.0, maxExtent),
+      duration: const Duration(milliseconds: 320),
+      curve: Curves.easeOut,
+    );
+    if (!mounted) return;
+    final landed = _sectionKeys[groupName]?.currentContext;
+    if (landed != null && landed.mounted) {
+      await Scrollable.ensureVisible(
+        landed,
+        alignment: alignment,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+      );
+    }
   }
 
   _Phase _phase({
@@ -220,9 +354,40 @@ class _HaraDashboardState extends ConsumerState<HaraDashboard>
         : listedGroups;
     final exit = _exitLeaf(groups);
     final pinAllowed = phase == _Phase.connected || phase == _Phase.suspended;
+    final query = ref.watch(queryProvider(QueryTag.proxies));
+    final searching = query.isNotEmpty;
+    _pinAllowedCache = pinAllowed;
+    _safeTopCache = MediaQuery.paddingOf(context).top;
+    _exitGroupCache = exit?.group;
+    _groupsCache = groups;
+    _searchingCache = searching;
+    final profileId = profile?.id;
+    if (profileId != null && profileId != _foldSeededProfileId) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted || _foldSeededProfileId == profileId) return;
+        _foldSeededProfileId = profileId;
+        final stored = ref.read(unfoldSetProvider);
+        if (stored.isEmpty) return;
+        final names = ref
+            .read(groupsProvider)
+            .map((group) => group.name)
+            .toSet();
+        setState(() {
+          _foldToggles = {
+            for (final name in names) name: stored.contains(name),
+          };
+        });
+      });
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final box = _heroKey.currentContext?.findRenderObject() as RenderBox?;
       if (box != null && box.hasSize) _heroExtent = box.size.height;
+      final railBox = _railKey.currentContext?.findRenderObject() as RenderBox?;
+      if (railBox != null && railBox.hasSize) {
+        _railExtent = railBox.size.height;
+        _railOffset = _contentOffsetOf(_railKey);
+      }
+      _updateSticky();
     });
     return Material(
       color: palette.bg,
@@ -273,12 +438,29 @@ class _HaraDashboardState extends ConsumerState<HaraDashboard>
                               ],
                             ),
                           ),
+                          if (groups.isNotEmpty || searching)
+                            SliverToBoxAdapter(
+                              child: _searchRow(context, palette),
+                            ),
                           if (groups.isNotEmpty)
                             SliverToBoxAdapter(
                               child: _testAllHead(context, palette),
                             ),
+                          if (groups.isNotEmpty)
+                            SliverToBoxAdapter(
+                              child: KeyedSubtree(
+                                key: _railKey,
+                                child: _chipRailBlock(
+                                  context,
+                                  palette,
+                                  groups,
+                                  exit?.group,
+                                ),
+                              ),
+                            ),
                           for (final group in groups)
                             HaraProxyGroupSection(
+                              key: _sectionKeyFor(group.name),
                               group: group,
                               exitName: exit != null && exit.group == group.name
                                   ? exit.leaf
@@ -287,6 +469,15 @@ class _HaraDashboardState extends ConsumerState<HaraDashboard>
                               exitMarker: pinAllowed
                                   ? HaraExitMarker.label
                                   : HaraExitMarker.dot,
+                              expanded: _expandedFor(group.name),
+                              onToggleFold: searching
+                                  ? null
+                                  : () => _setFold(
+                                      group.name,
+                                      !_expandedFor(group.name),
+                                    ),
+                              pinExit: !searching && !_sortByDelay,
+                              headerCount: searching ? group.all.length : null,
                             ),
                           const SliverToBoxAdapter(
                             child: SizedBox(height: HaraSpace.modeToNavGap),
@@ -297,25 +488,54 @@ class _HaraDashboardState extends ConsumerState<HaraDashboard>
                   ),
                 ],
               ),
-              if (pinAllowed)
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  child: ValueListenableBuilder<bool>(
-                    valueListenable: _sticky,
-                    builder: (context, show, _) {
-                      if (!show) return const SizedBox.shrink();
-                      return _stickyBar(
-                        context,
-                        phase: phase,
-                        palette: palette,
-                        nodeName: nodeName,
-                        side: side,
-                      );
-                    },
-                  ),
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: ValueListenableBuilder<({bool status, bool chips})>(
+                  valueListenable: _sticky,
+                  builder: (context, view, _) {
+                    final showStatus = view.status && pinAllowed;
+                    if (!showStatus && !view.chips) {
+                      return const SizedBox.shrink();
+                    }
+                    return Material(
+                      color: palette.bg,
+                      child: SafeArea(
+                        bottom: false,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: side),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              if (showStatus)
+                                _stickyBar(
+                                  context,
+                                  phase: phase,
+                                  palette: palette,
+                                  nodeName: nodeName,
+                                ),
+                              if (view.chips) ...[
+                                KeyedSubtree(
+                                  key: const ValueKey('stickyNodeChips'),
+                                  child: _chipRail(
+                                    context,
+                                    palette,
+                                    groups,
+                                    exit?.group,
+                                  ),
+                                ),
+                                const HaraHairline(),
+                              ],
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
+              ),
             ],
           );
         },
@@ -516,52 +736,165 @@ class _HaraDashboardState extends ConsumerState<HaraDashboard>
     required _Phase phase,
     required HaraPalette palette,
     required String? nodeName,
-    required double side,
   }) {
     final appLocalizations = context.appLocalizations;
     final statusText = phase == _Phase.suspended
         ? appLocalizations.suspended
         : appLocalizations.connected;
-    return Material(
-      color: palette.bg,
-      child: SafeArea(
-        bottom: false,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: side),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          height: _stickyExtent - HaraSpace.hairline,
+          child: Row(
             children: [
-              SizedBox(
-                height: _stickyExtent - HaraSpace.hairline,
-                child: Row(
-                  children: [
-                    DiscRingMotif(
-                      size: HaraSpace.ringCompact,
-                      color: palette.ink.withValues(alpha: 0.78),
-                      strokeWidth: HaraSpace.ringStroke,
-                      lit: true,
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      statusText,
-                      style: HaraText.statusNode(context, palette.ink),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Text(
-                        nodeName ?? '',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: HaraText.statusNode(context, palette.sub),
-                      ),
-                    ),
-                  ],
+              DiscRingMotif(
+                size: HaraSpace.ringCompact,
+                color: palette.ink.withValues(alpha: 0.78),
+                strokeWidth: HaraSpace.ringStroke,
+                lit: true,
+              ),
+              const SizedBox(width: 10),
+              Text(
+                statusText,
+                style: HaraText.statusNode(context, palette.ink),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  nodeName ?? '',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: HaraText.statusNode(context, palette.sub),
                 ),
               ),
-              const HaraHairline(),
             ],
           ),
         ),
+        const HaraHairline(),
+      ],
+    );
+  }
+
+  Widget _searchRow(BuildContext context, HaraPalette palette) {
+    final appLocalizations = context.appLocalizations;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const SizedBox(height: HaraSpace.groupGap),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: HaraSpace.nodeRowVertical,
+          ),
+          child: Row(
+            children: [
+              GlyphIcon(AppGlyphs.search, color: palette.sub),
+              const SizedBox(width: 8),
+              Expanded(
+                child: TextField(
+                  controller: _searchController,
+                  style: HaraText.nodeName(
+                    context,
+                    palette.ink,
+                    current: false,
+                  ),
+                  cursorColor: palette.ink,
+                  textInputAction: TextInputAction.search,
+                  onChanged: (value) {
+                    ref.read(queryProvider(QueryTag.proxies).notifier).value =
+                        value;
+                  },
+                  decoration: InputDecoration(
+                    isCollapsed: true,
+                    border: InputBorder.none,
+                    hintText: appLocalizations.search,
+                    hintStyle: HaraText.nodeName(
+                      context,
+                      palette.dim,
+                      current: false,
+                    ),
+                  ),
+                ),
+              ),
+              if (_searchController.text.isNotEmpty)
+                InkWell(
+                  customBorder: AppShape.hara,
+                  onTap: () {
+                    _searchController.clear();
+                    ref.read(queryProvider(QueryTag.proxies).notifier).value =
+                        '';
+                  },
+                  child: GlyphIcon(AppGlyphs.close, color: palette.sub),
+                ),
+            ],
+          ),
+        ),
+        HaraHairline(color: palette.line),
+      ],
+    );
+  }
+
+  /// The group rail in its in-flow place above the sections; the sticky
+  /// overlay re-renders the same rail once this copy scrolls under it.
+  Widget _chipRailBlock(
+    BuildContext context,
+    HaraPalette palette,
+    List<Group> groups,
+    String? exitGroupName,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const SizedBox(height: 16),
+        _chipRail(context, palette, groups, exitGroupName),
+        const SizedBox(height: 16),
+        HaraHairline(color: palette.line),
+      ],
+    );
+  }
+
+  Widget _chipRail(
+    BuildContext context,
+    HaraPalette palette,
+    List<Group> groups,
+    String? exitGroupName,
+  ) {
+    return SizedBox(
+      height: _chipRailExtent,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: groups.length,
+        separatorBuilder: (_, _) => const SizedBox(width: 24),
+        itemBuilder: (context, index) {
+          final group = groups[index];
+          final isExit = group.name == exitGroupName;
+          return InkWell(
+            customBorder: AppShape.hara,
+            onTap: () => _scrollToGroup(group.name),
+            child: IntrinsicWidth(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  EmojiText(
+                    group.name,
+                    maxLines: 1,
+                    style: HaraText.mode(
+                      context,
+                      isExit ? palette.ink : palette.dim,
+                      selected: isExit,
+                    ),
+                  ),
+                  const SizedBox(height: HaraSpace.modeUnderlineGap),
+                  Container(
+                    height: HaraSpace.modeUnderline,
+                    color: isExit ? palette.ink : HaraPalette.transparent,
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
