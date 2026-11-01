@@ -7,18 +7,18 @@ String _attributeOf(String tag, String attribute) {
 }
 
 List<String> _tags(String source, String element) {
-  return RegExp(
-    '<$element\\b[^>]*>',
-  ).allMatches(source).map((match) => match.group(0)!).toList();
+  return RegExp('<$element\\b[^>]*>')
+      .allMatches(source)
+      .map((match) => match.group(0)!)
+      .toList();
 }
 
 String _resolveColor(String value) {
   if (!value.startsWith('@color/')) {
     return value;
   }
-  final colors = File(
-    'android/app/src/main/res/values/colors.xml',
-  ).readAsStringSync();
+  final colors = File('android/app/src/main/res/values/colors.xml')
+      .readAsStringSync();
   final name = value.substring('@color/'.length);
   return RegExp('<color name="$name">([^<]+)</color>')
       .firstMatch(colors)!
@@ -75,9 +75,8 @@ void main() {
   });
 
   test('shortcut resources carry no upstream purple', () {
-    final colors = File(
-      'android/app/src/main/res/values/colors.xml',
-    ).readAsStringSync();
+    final colors = File('android/app/src/main/res/values/colors.xml')
+        .readAsStringSync();
     expect(_resolveColor('@color/shortcut_background'), '#FFFFFF');
     expect(colors.toUpperCase(), isNot(contains('#6666FB')));
     for (final name in ['start', 'stop', 'toggle']) {
