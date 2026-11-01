@@ -177,6 +177,7 @@ class _ResourcesViewState extends ConsumerState<ResourcesView> {
         CommonPopupMenuItem(
           glyph: AppGlyphs.toggle,
           label: appLocalizations.autoUpdate,
+          note: appLocalizations.mihomoOnlyNote,
           subItems: [
             CommonPopupMenuItem(
               label: appLocalizations.turnOn,
@@ -193,6 +194,7 @@ class _ResourcesViewState extends ConsumerState<ResourcesView> {
         CommonPopupMenuItem(
           glyph: AppGlyphs.clock,
           label: appLocalizations.resourceUpdateInterval,
+          note: appLocalizations.mihomoOnlyNote,
           onPressed: _updateInterval,
         ),
       ],

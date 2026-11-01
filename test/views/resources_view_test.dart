@@ -188,6 +188,58 @@ void main() {
     await tester.pumpWidget(const SizedBox.shrink());
   });
 
+  testWidgets('the bar menu items carry their mihomo-only note', (
+    tester,
+  ) async {
+    const size = Size(1000, 1000);
+    tester.view.physicalSize = size;
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final container = createContainer();
+    container.read(viewSizeProvider.notifier).update((_) => size);
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const TestApp(child: ResourcesView()),
+      ),
+    );
+    await pumpUntilFound(tester, find.text(GeoResource.MMDB.name));
+    await tester.pumpAndSettle();
+
+    final l10n = currentAppLocalizations;
+
+    // Closed, the note stands only as the Geo section's footer.
+    expect(find.text(l10n.mihomoOnlyNote), findsOneWidget);
+
+    await tester.tap(
+      find.descendant(
+        of: find.byType(AppBar),
+        matching: find.byGlyph(AppGlyphs.more),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    // Open, each of the two items carries the note on its own row.
+    expect(find.text(l10n.mihomoOnlyNote), findsNWidgets(3));
+    for (final label in [l10n.autoUpdate, l10n.resourceUpdateInterval]) {
+      final row = find.ancestor(
+        of: find.text(label),
+        matching: find.byType(InkWell),
+      );
+      expect(row, findsOneWidget);
+      expect(
+        find.descendant(of: row, matching: find.text(l10n.mihomoOnlyNote)),
+        findsOneWidget,
+      );
+    }
+    expect(tester.takeException(), null);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+  });
+
   testWidgets('refreshes the update time once the core finishes updating', (
     tester,
   ) async {

@@ -1538,6 +1538,7 @@ class CommonPopupMenuItem {
     this.danger = false,
     this.checked,
     this.subItems = const [],
+    this.note,
   });
 
   final String label;
@@ -1546,6 +1547,9 @@ class CommonPopupMenuItem {
   final bool danger;
   final bool? checked;
   final List<CommonPopupMenuItem> subItems;
+
+  /// A quieter second line under the label, for a scope it cannot carry.
+  final String? note;
 }
 
 const _menuMinWidth = 160.0;
@@ -2066,13 +2070,30 @@ class _CommonPopupMenuState extends State<CommonPopupMenu>
                 const SizedBox(width: 12),
               ],
               Expanded(
-                child: EmojiText(
-                  item.label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTextStyle.subheadline
-                      .of(context)
-                      .copyWith(color: foregroundColor),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    EmojiText(
+                      item.label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyle.subheadline
+                          .of(context)
+                          .copyWith(color: foregroundColor),
+                    ),
+                    if (item.note case final note?) ...[
+                      const SizedBox(height: 2),
+                      Text(
+                        note,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyle.footnote
+                            .of(context)
+                            .copyWith(color: foregroundColor.opacity60),
+                      ),
+                    ],
+                  ],
                 ),
               ),
               if (arrow != null) ...[const SizedBox(width: 8), arrow],
