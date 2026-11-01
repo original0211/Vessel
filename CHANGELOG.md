@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.2.46 (2026-11-01)
+
+**Features**
+
+- Switches, checkboxes, sliders and filled buttons now read from the field palette. The theme colour that used to fill them retires from the controls: a switch’s on state is ink on the field instead of the accent blue the profile edit page showed, and filled buttons stand on the field in ink text — on the on-demand page the granted state reads in ink and the outstanding one in vermilion text, both over the field with a hairline rim and no tinted bed. (0eaa5a8)
+- Settings now say where they apply. The family of options that only ever reaches the mihomo core — most of the general page, the DNS override group, the desktop TUN and outbound sections and the geo updates — carries a mihomo-only note, on the row itself or at its section’s foot, with the DNS note adding that profiles carrying their own content sit outside it. The two IPv6 rows are told apart as the core’s and the VPN’s, the test-URL row notes that a change arrives at the next apply or launch, and the access-control sort and filter rows are marked as ordering this page’s own list only. (29c9ba2)
+
+**Bug Fixes**
+
+- Popup menus now sit square on the field with a hairline rim (a5da5cd)
+- The resources page’s top-bar menu items join the labelled family. Automatic update and its interval live in that bar menu rather than in the Geo section below, so the section’s footnote never reached them; both items now carry the mihomo-only note on their own menu rows, closing the family’s last unlabelled surface. (bb01c83)
+
 ## v0.2.45 (2026-11-01)
 
 **Bug Fixes**
