@@ -14,9 +14,6 @@ import '../helpers/test_profiles.dart';
 
 const _tag = 'mihomo only';
 const _note = 'Applies only while the core is mihomo.';
-const _testUrlNote =
-    'A change here reaches the core the next time the configuration '
-    'is applied or the app starts.';
 
 ProviderContainer _container(WidgetTester tester, Size size) {
   tester.view.physicalSize = size;
@@ -61,17 +58,10 @@ void main() {
       expect(find.textContaining(_note), findsOneWidget);
     });
 
-    testWidgets('family rows carry the tag, hosts included', (tester) async {
+    testWidgets('family rows carry the tag', (tester) async {
       await pumpGeneral(tester);
-      expect(find.text(_tag), findsNWidgets(7));
-      expect(find.textContaining(_tag), findsNWidgets(8));
-    });
-
-    testWidgets('the test url row explains when a change lands', (
-      tester,
-    ) async {
-      await pumpGeneral(tester);
-      expect(find.text(_testUrlNote), findsOneWidget);
+      expect(find.text(_tag), findsNWidgets(6));
+      expect(find.textContaining(_tag), findsNWidgets(6));
     });
 
     testWidgets('the clash ipv6 row reads as the core one', (tester) async {

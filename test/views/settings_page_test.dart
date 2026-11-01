@@ -76,7 +76,7 @@ void main() {
     for (final label in [
       'Language',
       'Theme',
-      'Proxy settings',
+      'Proxy and speed test',
       'Backup and restore',
       'General',
       'Network',
@@ -84,7 +84,7 @@ void main() {
       'On demand',
       'Logs',
       'Resources',
-      'Developer mode',
+      'Data maintenance',
       'Disclaimer',
       'About',
     ]) {
@@ -139,11 +139,11 @@ void main() {
     await tester.pump();
 
     await tester.scrollUntilVisible(
-      find.text('Developer mode'),
+      find.text('Data maintenance'),
       300,
       scrollable: find.byType(Scrollable).first,
     );
-    await tester.tap(find.text('Developer mode'));
+    await tester.tap(find.text('Data maintenance'));
     await tester.pumpAndSettle();
     expect(find.byType(DeveloperView), findsOneWidget);
   });
@@ -198,6 +198,8 @@ void main() {
 
     expect(find.byType(CoreSwitchItem), findsNothing);
     expect(find.text('Auto run'), findsNothing);
-    expect(find.text('On demand'), findsOneWidget);
+    // The on-demand row left with the startup section (SETTINGS-IA M4);
+    // the page entry on the index is the way in now.
+    expect(find.text('On demand'), findsNothing);
   });
 }

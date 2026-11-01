@@ -125,70 +125,7 @@ void main() {
     await tester.pumpWidget(const SizedBox.shrink());
   });
 
-  testWidgets('the bar menu switches auto update and sets its interval', (
-    tester,
-  ) async {
-    const size = Size(1000, 1000);
-    tester.view.physicalSize = size;
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
-
-    final container = createContainer();
-    container.read(viewSizeProvider.notifier).update((_) => size);
-
-    await tester.pumpWidget(
-      UncontrolledProviderScope(
-        container: container,
-        child: const TestApp(child: ResourcesView()),
-      ),
-    );
-    await tester.pumpAndSettle();
-
-    final l10n = currentAppLocalizations;
-    bool autoUpdate() => container.read(patchClashConfigProvider).geoAutoUpdate;
-    Future<void> tapMenuPath(List<String> labels) async {
-      await tester.tap(
-        find.descendant(
-          of: find.byType(AppBar),
-          matching: find.byGlyph(AppGlyphs.more),
-        ),
-      );
-      await tester.pumpAndSettle();
-      for (final label in labels) {
-        await tester.tap(find.text(label).last);
-        await tester.pumpAndSettle();
-      }
-    }
-
-    expect(find.byTooltip(l10n.update), findsOneWidget);
-    expect(autoUpdate(), isFalse);
-
-    await tapMenuPath([l10n.autoUpdate, l10n.turnOn]);
-    expect(autoUpdate(), isTrue);
-
-    await tapMenuPath([l10n.autoUpdate, l10n.turnOff]);
-    expect(autoUpdate(), isFalse);
-
-    await tapMenuPath([l10n.resourceUpdateInterval]);
-    expect(find.byType(InputDialog), findsOneWidget);
-    expect(
-      find.text(defaultClashConfig.geoUpdateInterval.toString()),
-      findsOneWidget,
-    );
-
-    await tester.enterText(find.byType(TextFormField), '6');
-    await tester.tap(find.text(l10n.submit));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(InputDialog), findsNothing);
-    expect(container.read(patchClashConfigProvider).geoUpdateInterval, 6);
-    expect(tester.takeException(), null);
-
-    await tester.pumpWidget(const SizedBox.shrink());
-  });
-
-  testWidgets('the bar menu items carry their mihomo-only note', (
+  testWidgets('the geo section switches auto update and sets its interval', (
     tester,
   ) async {
     const size = Size(1000, 1000);
@@ -210,31 +147,89 @@ void main() {
     await tester.pumpAndSettle();
 
     final l10n = currentAppLocalizations;
+    bool autoUpdate() => container.read(patchClashConfigProvider).geoAutoUpdate;
 
-    // Closed, the note stands only as the Geo section's footer.
-    expect(find.text(l10n.mihomoOnlyNote), findsOneWidget);
-
-    await tester.tap(
+    expect(find.byTooltip(l10n.update), findsOneWidget);
+    expect(
       find.descendant(
         of: find.byType(AppBar),
         matching: find.byGlyph(AppGlyphs.more),
       ),
+      findsNothing,
     );
+    expect(autoUpdate(), isFalse);
+
+    await tester.tap(find.text(l10n.autoUpdate));
+    await tester.pumpAndSettle();
+    expect(autoUpdate(), isTrue);
+
+    await tester.tap(find.text(l10n.autoUpdate));
+    await tester.pumpAndSettle();
+    expect(autoUpdate(), isFalse);
+
+    await tester.tap(find.text(l10n.resourceUpdateInterval));
+    await tester.pumpAndSettle();
+    expect(find.byType(InputDialog), findsOneWidget);
+    expect(
+      find.text(defaultClashConfig.geoUpdateInterval.toString()),
+      findsOneWidget,
+    );
+
+    await tester.enterText(find.byType(TextFormField), '6');
+    await tester.tap(find.text(l10n.submit));
     await tester.pumpAndSettle();
 
-    // Open, each of the two items carries the note on its own row.
-    expect(find.text(l10n.mihomoOnlyNote), findsNWidgets(3));
-    for (final label in [l10n.autoUpdate, l10n.resourceUpdateInterval]) {
-      final row = find.ancestor(
-        of: find.text(label),
-        matching: find.byType(InkWell),
-      );
-      expect(row, findsOneWidget);
-      expect(
-        find.descendant(of: row, matching: find.text(l10n.mihomoOnlyNote)),
-        findsOneWidget,
-      );
-    }
+    expect(find.byType(InputDialog), findsNothing);
+    expect(container.read(patchClashConfigProvider).geoUpdateInterval, 6);
+    expect(tester.takeException(), null);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+  });
+
+  testWidgets('the geo update rows stand in the section the family note '
+      'closes', (tester) async {
+    const size = Size(1000, 1000);
+    tester.view.physicalSize = size;
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final container = createContainer();
+    container.read(viewSizeProvider.notifier).update((_) => size);
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const TestApp(child: ResourcesView()),
+      ),
+    );
+    await pumpUntilFound(tester, find.text(GeoResource.MMDB.name));
+    await tester.pumpAndSettle();
+
+    final l10n = currentAppLocalizations;
+
+    // The note stands once, as the Geo section's footer.
+    expect(find.text(l10n.mihomoOnlyNote), findsOneWidget);
+    final section = find.ancestor(
+      of: find.text(l10n.autoUpdate),
+      matching: find.byType(HaraSection),
+    );
+    expect(section, findsOneWidget);
+    expect(
+      find.descendant(of: section, matching: find.text(GeoResource.MMDB.name)),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: section,
+        matching: find.text(l10n.resourceUpdateInterval),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: section, matching: find.text(l10n.mihomoOnlyNote)),
+      findsOneWidget,
+    );
     expect(tester.takeException(), null);
 
     await tester.pumpWidget(const SizedBox.shrink());

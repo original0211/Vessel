@@ -685,29 +685,29 @@ class AccessControlPanel extends StatelessWidget {
                     ),
                   ),
                 ),
-                _HaraBoundOptions<AccessSortType>(
-                  ConfigOptionsItem<AccessSortType>(
-                    title: (l) => l.sort,
-                    subtitle: (l) => l.accessListOnlyNote,
-                    options: AccessSortType.values,
-                    textBuilder: (type) => switch (type) {
-                      AccessSortType.none => appLocalizations.defaultText,
-                      AccessSortType.name => appLocalizations.name,
-                      AccessSortType.time => appLocalizations.time,
-                    },
-                    selector: accessControlStateProvider.select(
-                      (state) => state.sort,
-                    ),
-                    onChanged: _writer(
-                      (state, value) => state.copyWith(sort: value),
-                    ),
-                  ),
-                ),
                 const SizedBox(height: HaraSpace.groupGap),
                 _section(
                   context,
-                  appLocalizations.source,
+                  appLocalizations.listDisplay,
                   rows: [
+                    _HaraBoundOptions<AccessSortType>(
+                      ConfigOptionsItem<AccessSortType>(
+                        title: (l) => l.sort,
+                        subtitle: (l) => l.accessListOnlyNote,
+                        options: AccessSortType.values,
+                        textBuilder: (type) => switch (type) {
+                          AccessSortType.none => appLocalizations.defaultText,
+                          AccessSortType.name => appLocalizations.name,
+                          AccessSortType.time => appLocalizations.time,
+                        },
+                        selector: accessControlStateProvider.select(
+                          (state) => state.sort,
+                        ),
+                        onChanged: _writer(
+                          (state, value) => state.copyWith(sort: value),
+                        ),
+                      ),
+                    ),
                     HaraToggle(
                       ConfigToggleItem(
                         title: (l) => l.systemApp,

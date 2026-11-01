@@ -149,8 +149,8 @@ class _ResourcesViewState extends ConsumerState<ResourcesView> {
   Widget build(BuildContext context) {
     final palette = context.haraPalette;
     final appLocalizations = context.appLocalizations;
-    final autoUpdate = ref.watch(
-      patchClashConfigProvider.select((state) => state.geoAutoUpdate),
+    final updateInterval = ref.watch(
+      patchClashConfigProvider.select((state) => state.geoUpdateInterval),
     );
     final resources = _resources;
     final (:iconSets, :ruleProviders) = resources ?? _noResources;
@@ -171,31 +171,6 @@ class _ResourcesViewState extends ConsumerState<ResourcesView> {
           tooltip: appLocalizations.update,
           isLoading: isUpdating,
           onPressed: _updateAll,
-        ),
-      ],
-      menuItems: [
-        CommonPopupMenuItem(
-          glyph: AppGlyphs.toggle,
-          label: appLocalizations.autoUpdate,
-          note: appLocalizations.mihomoOnlyNote,
-          subItems: [
-            CommonPopupMenuItem(
-              label: appLocalizations.turnOn,
-              checked: autoUpdate,
-              onPressed: () => _updateAutoUpdate(true),
-            ),
-            CommonPopupMenuItem(
-              label: appLocalizations.turnOff,
-              checked: !autoUpdate,
-              onPressed: () => _updateAutoUpdate(false),
-            ),
-          ],
-        ),
-        CommonPopupMenuItem(
-          glyph: AppGlyphs.clock,
-          label: appLocalizations.resourceUpdateInterval,
-          note: appLocalizations.mihomoOnlyNote,
-          onPressed: _updateInterval,
         ),
       ],
       body: NullStatusSwitcher(
@@ -224,6 +199,20 @@ class _ResourcesViewState extends ConsumerState<ResourcesView> {
                     rows: [
                       for (final geoResource in GeoResource.values)
                         _GeoResourceItem(geoResource, preloaded: _fileInfos),
+                      HaraToggle(
+                        ConfigToggleItem(
+                          title: (l) => l.autoUpdate,
+                          selector: patchClashConfigProvider.select(
+                            (state) => state.geoAutoUpdate,
+                          ),
+                          onChanged: (ref, value) => _updateAutoUpdate(value),
+                        ),
+                      ),
+                      HaraInputRow(
+                        label: appLocalizations.resourceUpdateInterval,
+                        value: '$updateInterval ${appLocalizations.hours}',
+                        onTap: _updateInterval,
+                      ),
                     ],
                     footer: appLocalizations.mihomoOnlyNote,
                   ),

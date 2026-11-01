@@ -36,11 +36,11 @@ class ThemeView extends StatelessWidget {
                 SizedBox(height: HaraSpace.groupGap),
                 _PureBlackItem(),
                 SizedBox(height: HaraSpace.groupGap),
+                _TextScaleFactorItem(),
+                SizedBox(height: HaraSpace.groupGap),
                 _LiquidGlassItem(),
                 SizedBox(height: HaraSpace.groupGap),
                 _SidebarBlurItem(),
-                SizedBox(height: HaraSpace.groupGap),
-                _TextScaleFactorItem(),
               ],
             );
           },
