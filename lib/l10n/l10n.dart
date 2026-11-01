@@ -3610,6 +3610,66 @@ class AppLocalizations {
     );
   }
 
+  /// `Restore default settings`
+  String get resetSettings {
+    return Intl.message(
+      'Restore default settings',
+      name: 'resetSettings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Restore defaults`
+  String get restoreDefaults {
+    return Intl.message(
+      'Restore defaults',
+      name: 'restoreDefaults',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All settings will be restored to their defaults (the tuned factory defaults).`
+  String get resetSettingsDesc {
+    return Intl.message(
+      'All settings will be restored to their defaults (the tuned factory defaults).',
+      name: 'resetSettingsDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Subscriptions, profiles, and account data will not be affected.`
+  String get resetSettingsDataDesc {
+    return Intl.message(
+      'Subscriptions, profiles, and account data will not be affected.',
+      name: 'resetSettingsDataDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The current connection will be disconnected and reconnected with the default settings.`
+  String get resetSettingsReconnectDesc {
+    return Intl.message(
+      'The current connection will be disconnected and reconnected with the default settings.',
+      name: 'resetSettingsReconnectDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Default settings restored`
+  String get resetSettingsDone {
+    return Intl.message(
+      'Default settings restored',
+      name: 'resetSettingsDone',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Restore profiles only`
   String get restoreOnlyConfig {
     return Intl.message(

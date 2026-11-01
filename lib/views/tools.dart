@@ -118,6 +118,7 @@ class _ToolViewState extends ConsumerState<ToolsView> {
           label: appLocalizations.general,
           target: const GeneralView(),
         ),
+        keywords: [appLocalizations.resetSettings, 'reset'],
       ),
       _Destination(
         appLocalizations.network,
@@ -190,9 +191,7 @@ class _ToolViewState extends ConsumerState<ToolsView> {
     final query = _query.trim().toLowerCase();
     final searching = query.isNotEmpty;
     final matches = searching
-        ? destinations
-              .where((item) => item.label.toLowerCase().contains(query))
-              .toList()
+        ? destinations.where((item) => item.matches(query)).toList()
         : const <_Destination>[];
     final sections = <Widget>[
       const ItemPositionProvider(
@@ -282,12 +281,20 @@ class _ToolViewState extends ConsumerState<ToolsView> {
 }
 
 /// One destination of the settings index: the label the search row
-/// matches on, and the row itself.
+/// matches on, the row itself, and any extra words that reach the
+/// destination — a row living at the foot of its page is findable by
+/// its own name without appearing on the index itself.
 class _Destination {
-  const _Destination(this.label, this.row);
+  const _Destination(this.label, this.row, {this.keywords = const []});
 
   final String label;
   final Widget row;
+  final List<String> keywords;
+
+  bool matches(String query) {
+    return label.toLowerCase().contains(query) ||
+        keywords.any((word) => word.toLowerCase().contains(query));
+  }
 }
 
 /// The search row under the core switch card: typing filters the

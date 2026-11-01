@@ -1016,6 +1016,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "resetPageChangesTip": MessageLookupByLibrary.simpleMessage(
       "このページには変更があります。リセットしてもよろしいですか？",
     ),
+    "resetSettings": MessageLookupByLibrary.simpleMessage("設定をデフォルトに戻す"),
+    "resetSettingsDataDesc": MessageLookupByLibrary.simpleMessage(
+      "サブスクリプション、プロファイル、アカウントデータには影響しません。",
+    ),
+    "resetSettingsDesc": MessageLookupByLibrary.simpleMessage(
+      "すべての設定をデフォルト（調整済みの工場出荷時デフォルト）に戻します。",
+    ),
+    "resetSettingsDone": MessageLookupByLibrary.simpleMessage("デフォルト設定に戻しました"),
+    "resetSettingsReconnectDesc": MessageLookupByLibrary.simpleMessage(
+      "実行中の接続は切断され、デフォルト設定で再接続します。",
+    ),
     "resourceUpdateInterval": MessageLookupByLibrary.simpleMessage("自動更新間隔"),
     "resourceUpdateIntervalTip": MessageLookupByLibrary.simpleMessage(
       "自動更新間隔は0より大きくしてください",
@@ -1029,6 +1040,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "restartCoreTip": MessageLookupByLibrary.simpleMessage("コアを再起動してもよろしいですか？"),
     "restore": MessageLookupByLibrary.simpleMessage("復元"),
     "restoreAllData": MessageLookupByLibrary.simpleMessage("すべてのデータを復元"),
+    "restoreDefaults": MessageLookupByLibrary.simpleMessage("デフォルトに戻す"),
     "restoreOnlyConfig": MessageLookupByLibrary.simpleMessage("プロファイルのみ復元"),
     "restoreSuccess": MessageLookupByLibrary.simpleMessage("復元が完了しました"),
     "result": MessageLookupByLibrary.simpleMessage("結果"),

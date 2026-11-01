@@ -41,4 +41,5 @@ part 'actions/icon_sets.dart';
 part 'actions/geo_resource.dart';
 part 'actions/resources.dart';
 part 'actions/updating.dart';
+part 'actions/reset.dart';
 part 'generated/action.g.dart';

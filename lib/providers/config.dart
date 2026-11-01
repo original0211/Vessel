@@ -125,6 +125,25 @@ void writeConfig(Ref ref, Config config) {
   ref.read(excludeSSIDsProvider.notifier).value = config.excludeSSIDs;
 }
 
+/// The config a full settings reset writes: defaults throughout, with
+/// state rather than preference carried over.
+Config buildResetConfig(Config current) {
+  return Config(
+    currentProfileId: current.currentProfileId,
+    appSettingProps: defaultAppSettingProps.copyWith(
+      acceptedDisclaimerVersion:
+          current.appSettingProps.acceptedDisclaimerVersion,
+    ),
+    themeProps: defaultThemeProps,
+    networkProps: defaultNetworkProps,
+    vpnProps: defaultVpnProps,
+    proxiesStyleProps: defaultProxiesStyleProps,
+    windowProps: current.windowProps,
+    patchClashConfig: defaultClashConfig,
+    excludeSSIDs: const [],
+  );
+}
+
 List<Override> buildConfigOverrides(Config config) {
   return [
     appSettingProvider.overrideWithBuild((_, _) => config.appSettingProps),

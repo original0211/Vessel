@@ -926,6 +926,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "resetPageChangesTip": MessageLookupByLibrary.simpleMessage(
       "当前页面存在更改，确定重置吗？",
     ),
+    "resetSettings": MessageLookupByLibrary.simpleMessage("恢复默认设置"),
+    "resetSettingsDataDesc": MessageLookupByLibrary.simpleMessage(
+      "订阅、配置与账户数据不受影响。",
+    ),
+    "resetSettingsDesc": MessageLookupByLibrary.simpleMessage(
+      "将把全部设置恢复为默认（出厂最优默认）。",
+    ),
+    "resetSettingsDone": MessageLookupByLibrary.simpleMessage("已恢复默认设置"),
+    "resetSettingsReconnectDesc": MessageLookupByLibrary.simpleMessage(
+      "正在运行的连接会断开，并以默认设置重新连接。",
+    ),
     "resourceUpdateInterval": MessageLookupByLibrary.simpleMessage("自动更新间隔"),
     "resourceUpdateIntervalTip": MessageLookupByLibrary.simpleMessage(
       "自动更新间隔必须大于0",
@@ -939,6 +950,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "restartCoreTip": MessageLookupByLibrary.simpleMessage("您确定要重启核心吗？"),
     "restore": MessageLookupByLibrary.simpleMessage("恢复"),
     "restoreAllData": MessageLookupByLibrary.simpleMessage("恢复所有数据"),
+    "restoreDefaults": MessageLookupByLibrary.simpleMessage("恢复默认"),
     "restoreOnlyConfig": MessageLookupByLibrary.simpleMessage("仅恢复配置文件"),
     "restoreSuccess": MessageLookupByLibrary.simpleMessage("恢复成功"),
     "result": MessageLookupByLibrary.simpleMessage("结果"),

@@ -1223,6 +1223,21 @@ class MessageLookup extends MessageLookupByLibrary {
     "resetPageChangesTip": MessageLookupByLibrary.simpleMessage(
       "На этой странице есть изменения. Вы уверены, что хотите выполнить сброс?",
     ),
+    "resetSettings": MessageLookupByLibrary.simpleMessage(
+      "Восстановить настройки по умолчанию",
+    ),
+    "resetSettingsDataDesc": MessageLookupByLibrary.simpleMessage(
+      "Подписки, профили и данные учётной записи не будут затронуты.",
+    ),
+    "resetSettingsDesc": MessageLookupByLibrary.simpleMessage(
+      "Все настройки будут восстановлены до заводских значений по умолчанию.",
+    ),
+    "resetSettingsDone": MessageLookupByLibrary.simpleMessage(
+      "Настройки по умолчанию восстановлены",
+    ),
+    "resetSettingsReconnectDesc": MessageLookupByLibrary.simpleMessage(
+      "Текущее соединение будет разорвано и переподключено с настройками по умолчанию.",
+    ),
     "resourceUpdateInterval": MessageLookupByLibrary.simpleMessage(
       "Интервал автообновления",
     ),
@@ -1241,6 +1256,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "restore": MessageLookupByLibrary.simpleMessage("Восстановить"),
     "restoreAllData": MessageLookupByLibrary.simpleMessage(
       "Восстановить все данные",
+    ),
+    "restoreDefaults": MessageLookupByLibrary.simpleMessage(
+      "Восстановить по умолчанию",
     ),
     "restoreOnlyConfig": MessageLookupByLibrary.simpleMessage(
       "Восстановить только профили",

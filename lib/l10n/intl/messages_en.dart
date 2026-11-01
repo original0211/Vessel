@@ -1176,6 +1176,21 @@ class MessageLookup extends MessageLookupByLibrary {
     "resetPageChangesTip": MessageLookupByLibrary.simpleMessage(
       "This page has changes. Are you sure you want to reset?",
     ),
+    "resetSettings": MessageLookupByLibrary.simpleMessage(
+      "Restore default settings",
+    ),
+    "resetSettingsDataDesc": MessageLookupByLibrary.simpleMessage(
+      "Subscriptions, profiles, and account data will not be affected.",
+    ),
+    "resetSettingsDesc": MessageLookupByLibrary.simpleMessage(
+      "All settings will be restored to their defaults (the tuned factory defaults).",
+    ),
+    "resetSettingsDone": MessageLookupByLibrary.simpleMessage(
+      "Default settings restored",
+    ),
+    "resetSettingsReconnectDesc": MessageLookupByLibrary.simpleMessage(
+      "The current connection will be disconnected and reconnected with the default settings.",
+    ),
     "resourceUpdateInterval": MessageLookupByLibrary.simpleMessage(
       "Auto-update interval",
     ),
@@ -1193,6 +1208,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "restore": MessageLookupByLibrary.simpleMessage("Restore"),
     "restoreAllData": MessageLookupByLibrary.simpleMessage("Restore all data"),
+    "restoreDefaults": MessageLookupByLibrary.simpleMessage("Restore defaults"),
     "restoreOnlyConfig": MessageLookupByLibrary.simpleMessage(
       "Restore profiles only",
     ),

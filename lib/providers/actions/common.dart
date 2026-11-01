@@ -22,6 +22,8 @@ class CommonAction extends _$CommonAction {
     );
   }
 
+  Future<void> resetSettings() => applySettingsReset(ref);
+
   void updateSpeedStatistics() {
     ref
         .read(appSettingProvider.notifier)

@@ -664,6 +664,75 @@ List<Widget> startupSettingItems() {
   ];
 }
 
+/// The reset row at the foot of the general page, in the open-row voice:
+/// the tap only opens the confirmation, and the reset runs solely from
+/// the confirmation's destructive word, in the brand vermilion.
+class ResetSettingsItem extends ConsumerWidget {
+  const ResetSettingsItem({super.key});
+
+  Future<void> _confirm(BuildContext context, WidgetRef ref) async {
+    final palette = context.haraPalette;
+    final appLocalizations = context.appLocalizations;
+    final confirmed = await dialogs.showCommonDialog<bool>(
+      context: context,
+      child: Builder(
+        builder: (context) => CommonDialog(
+          title: appLocalizations.resetSettings,
+          destructive: true,
+          actions: [
+            TextButton(
+              autofocus: true,
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text(appLocalizations.cancel),
+            ),
+            TextButton(
+              style: TextButton.styleFrom(foregroundColor: palette.vermilion),
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(appLocalizations.restoreDefaults),
+            ),
+          ],
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(appLocalizations.resetSettingsDesc),
+              const SizedBox(height: 6),
+              Text(appLocalizations.resetSettingsDataDesc),
+              const SizedBox(height: 6),
+              Text(appLocalizations.resetSettingsReconnectDesc),
+            ],
+          ),
+        ),
+      ),
+    );
+    if (confirmed != true || !context.mounted) {
+      return;
+    }
+    await ref.read(commonActionProvider.notifier).resetSettings();
+    dialogs.showNotifier(appLocalizations.resetSettingsDone);
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final palette = context.haraPalette;
+    final appLocalizations = context.appLocalizations;
+    return HaraRow(
+      onTap: () => _confirm(context, ref),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              appLocalizations.resetSettings,
+              style: HaraText.nodeName(context, palette.ink, current: false),
+            ),
+          ),
+          Text('→', style: HaraText.addRowArrow(context, palette.sub)),
+        ],
+      ),
+    );
+  }
+}
+
 class GeneralView extends ConsumerWidget {
   const GeneralView({super.key});
 
@@ -837,6 +906,10 @@ class GeneralView extends ConsumerWidget {
         title: appLocalizations.logsAndDiagnostics,
         rows: _logItems(),
         footer: appLocalizations.logcatDesc,
+      ),
+      HaraSection(
+        title: appLocalizations.reset,
+        rows: const [ResetSettingsItem()],
       ),
     ];
     return BaseScaffold(

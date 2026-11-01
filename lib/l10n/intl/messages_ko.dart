@@ -998,6 +998,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "resetPageChangesTip": MessageLookupByLibrary.simpleMessage(
       "이 페이지에 변경 사항이 있습니다. 초기화하시겠습니까?",
     ),
+    "resetSettings": MessageLookupByLibrary.simpleMessage("기본 설정으로 복원"),
+    "resetSettingsDataDesc": MessageLookupByLibrary.simpleMessage(
+      "구독, 프로필 및 계정 데이터는 영향을 받지 않습니다.",
+    ),
+    "resetSettingsDesc": MessageLookupByLibrary.simpleMessage(
+      "모든 설정이 기본값(조정된 공장 기본값)으로 복원됩니다.",
+    ),
+    "resetSettingsDone": MessageLookupByLibrary.simpleMessage(
+      "기본 설정으로 복원되었습니다",
+    ),
+    "resetSettingsReconnectDesc": MessageLookupByLibrary.simpleMessage(
+      "실행 중인 연결이 끊기고 기본 설정으로 다시 연결됩니다.",
+    ),
     "resourceUpdateInterval": MessageLookupByLibrary.simpleMessage(
       "자동 업데이트 간격",
     ),
@@ -1013,6 +1026,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "restartCoreTip": MessageLookupByLibrary.simpleMessage("코어를 다시 시작하시겠습니까?"),
     "restore": MessageLookupByLibrary.simpleMessage("복원"),
     "restoreAllData": MessageLookupByLibrary.simpleMessage("모든 데이터 복원"),
+    "restoreDefaults": MessageLookupByLibrary.simpleMessage("기본값으로 복원"),
     "restoreOnlyConfig": MessageLookupByLibrary.simpleMessage("프로필만 복원"),
     "restoreSuccess": MessageLookupByLibrary.simpleMessage("복원 완료"),
     "result": MessageLookupByLibrary.simpleMessage("결과"),
