@@ -110,21 +110,6 @@ class _ToolViewState extends ConsumerState<ToolsView> {
           ),
         ),
       ),
-      _Destination(
-        appLocalizations.backupAndRestore,
-        HaraOpenRow(
-          label: appLocalizations.backupAndRestore,
-          target: const BackupAndRestore(),
-        ),
-      ),
-      if (system.isAndroid)
-        _Destination(
-          appLocalizations.accessControl,
-          HaraOpenRow(
-            label: appLocalizations.accessControl,
-            target: const AccessView(),
-          ),
-        ),
     ];
     final configuration = <_Destination>[
       _Destination(
@@ -152,8 +137,23 @@ class _ToolViewState extends ConsumerState<ToolsView> {
           target: const OnDemandView(),
         ),
       ),
+      if (system.isAndroid)
+        _Destination(
+          appLocalizations.accessControl,
+          HaraOpenRow(
+            label: appLocalizations.accessControl,
+            target: const AccessView(),
+          ),
+        ),
     ];
     final maintenance = <_Destination>[
+      _Destination(
+        appLocalizations.backupAndRestore,
+        HaraOpenRow(
+          label: appLocalizations.backupAndRestore,
+          target: const BackupAndRestore(),
+        ),
+      ),
       _Destination(
         appLocalizations.logs,
         HaraOpenRow(label: appLocalizations.logs, target: const LogsView()),
@@ -213,7 +213,12 @@ class _ToolViewState extends ConsumerState<ToolsView> {
           ].join('\n'),
         ),
         if (takeover.isNotEmpty)
-          _section(rows: [for (final item in takeover) HaraBoundToggle(item)]),
+          _section(
+            rows: [for (final item in takeover) HaraBoundToggle(item)],
+            footer: system.isDesktop
+                ? appLocalizations.systemProxySharedNote
+                : null,
+          ),
         _section(rows: [for (final item in daily) item.row]),
         _section(rows: [for (final item in configuration) item.row]),
         _section(rows: [for (final item in maintenance) item.row]),

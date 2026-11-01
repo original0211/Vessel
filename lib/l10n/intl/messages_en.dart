@@ -545,7 +545,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "detectionTip": MessageLookupByLibrary.simpleMessage(
       "Relies on a third-party API; for reference only",
     ),
-    "developerMode": MessageLookupByLibrary.simpleMessage("Developer mode"),
+    "developerMode": MessageLookupByLibrary.simpleMessage("Data maintenance"),
     "dialerProxy": MessageLookupByLibrary.simpleMessage("Dialer proxy"),
     "dialerProxyLoopStopped": m27,
     "direct": MessageLookupByLibrary.simpleMessage("Direct"),
@@ -935,6 +935,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "keepAliveIntervalDesc": MessageLookupByLibrary.simpleMessage(
       "TCP keep-alive interval",
     ),
+    "kernel": MessageLookupByLibrary.simpleMessage("Kernel"),
     "key": MessageLookupByLibrary.simpleMessage("Key"),
     "ko": MessageLookupByLibrary.simpleMessage("Korean"),
     "label": MessageLookupByLibrary.simpleMessage("Label"),
@@ -954,6 +955,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Obtain a profile from a subscription link or a proxy share link",
     ),
     "liquidGlass": MessageLookupByLibrary.simpleMessage("Liquid Glass"),
+    "listDisplay": MessageLookupByLibrary.simpleMessage("List display"),
     "listen": MessageLookupByLibrary.simpleMessage("Listen"),
     "listenRoutingMark": MessageLookupByLibrary.simpleMessage(
       "Listen routing mark",
@@ -1014,6 +1016,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "monthsAgoShort": m46,
     "more": MessageLookupByLibrary.simpleMessage("More"),
     "name": MessageLookupByLibrary.simpleMessage("Name"),
+    "nameResolution": MessageLookupByLibrary.simpleMessage("Resolution"),
     "network": MessageLookupByLibrary.simpleMessage("Network"),
     "networkAccessDeniedError": m47,
     "networkBadResponseError": m48,
@@ -1135,7 +1138,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "proxyGroup": MessageLookupByLibrary.simpleMessage("Proxy group"),
     "proxyGroupsCount": m57,
     "proxyProviders": MessageLookupByLibrary.simpleMessage("Proxy providers"),
-    "proxySettings": MessageLookupByLibrary.simpleMessage("Proxy settings"),
+    "proxySettings": MessageLookupByLibrary.simpleMessage(
+      "Proxy and speed test",
+    ),
     "proxyType": MessageLookupByLibrary.simpleMessage("Proxy type"),
     "pruneCache": MessageLookupByLibrary.simpleMessage("Prune cache"),
     "publicKey": MessageLookupByLibrary.simpleMessage("Public key"),
@@ -1515,6 +1520,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "system": MessageLookupByLibrary.simpleMessage("System"),
     "systemApp": MessageLookupByLibrary.simpleMessage("System apps"),
     "systemProxy": MessageLookupByLibrary.simpleMessage("System proxy"),
+    "systemProxySharedNote": MessageLookupByLibrary.simpleMessage(
+      "The system proxy is the same switch on the Settings and Network pages.",
+    ),
     "tapToAuthorize": MessageLookupByLibrary.simpleMessage("Tap to authorize"),
     "target": MessageLookupByLibrary.simpleMessage("Target"),
     "tcpConcurrent": MessageLookupByLibrary.simpleMessage("TCP concurrent"),

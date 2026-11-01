@@ -338,7 +338,7 @@
   "saturation": "채도",
   "brightness": "밝기",
   "hex": "16진수",
-  "developerMode": "개발자 모드",
+  "developerMode": "데이터 유지 관리",
   "crashDetected": "비정상 종료 감지됨",
   "crashDetectedTip": "앱이 두 번 연속 시작을 완료하지 못했습니다. 반복을 끊기 위해 프로필 {name}의 선택을 해제하고 자동 설정을 건너뛰었습니다. 언제든지 다시 선택할 수 있습니다.",
   "launchInterrupted": "시작이 완료되지 않음",
@@ -782,5 +782,9 @@
   "currentExit": "현재 출구",
   "coreNotRunning": "{core} 실행 중 아님",
   "advanced": "고급",
-  "proxySettings": "프록시 설정"
+  "proxySettings": "프록시 및 속도 테스트",
+  "kernel": "커널",
+  "listDisplay": "목록 표시",
+  "nameResolution": "이름 확인",
+  "systemProxySharedNote": "시스템 프록시는 설정 페이지와 네트워크 페이지에서 동일한 스위치입니다."
 }

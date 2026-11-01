@@ -338,7 +338,7 @@
   "saturation": "彩度",
   "brightness": "明度",
   "hex": "16進数",
-  "developerMode": "開発者モード",
+  "developerMode": "データ保守",
   "crashDetected": "クラッシュを検出しました",
   "crashDetectedTip": "アプリの起動が2回連続で完了しませんでした。クラッシュループを断ち切るため、プロファイル {name} の選択を解除し、今回の自動セットアップをスキップしました。いつでも選択し直せます。",
   "launchInterrupted": "起動が完了しませんでした",
@@ -782,5 +782,9 @@
   "currentExit": "現在の出口",
   "coreNotRunning": "{core} は停止中",
   "advanced": "詳細設定",
-  "proxySettings": "プロキシ設定"
+  "proxySettings": "プロキシと速度テスト",
+  "kernel": "カーネル",
+  "listDisplay": "リスト表示",
+  "nameResolution": "名前解決",
+  "systemProxySharedNote": "システムプロキシは、設定ページとネットワークページで同じスイッチです。"
 }

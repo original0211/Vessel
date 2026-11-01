@@ -338,7 +338,7 @@
   "saturation": "Saturation",
   "brightness": "Brightness",
   "hex": "Hex",
-  "developerMode": "Developer mode",
+  "developerMode": "Data maintenance",
   "crashDetected": "Crash detected",
   "crashDetectedTip": "The app failed to finish launching twice in a row. To break the loop, the profile {name} has been deselected and automatic setup was skipped. You can select it again at any time.",
   "launchInterrupted": "Launch did not finish",
@@ -782,5 +782,9 @@
   "currentExit": "Current exit",
   "coreNotRunning": "{core} not running",
   "advanced": "Advanced",
-  "proxySettings": "Proxy settings"
+  "proxySettings": "Proxy and speed test",
+  "kernel": "Kernel",
+  "listDisplay": "List display",
+  "nameResolution": "Resolution",
+  "systemProxySharedNote": "The system proxy is the same switch on the Settings and Network pages."
 }

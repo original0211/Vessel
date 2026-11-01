@@ -560,7 +560,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "detectionTip": MessageLookupByLibrary.simpleMessage(
       "Использует сторонний API; только для справки",
     ),
-    "developerMode": MessageLookupByLibrary.simpleMessage("Режим разработчика"),
+    "developerMode": MessageLookupByLibrary.simpleMessage(
+      "Обслуживание данных",
+    ),
     "dialerProxy": MessageLookupByLibrary.simpleMessage(
       "Прокси для подключения",
     ),
@@ -966,6 +968,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "keepAliveIntervalDesc": MessageLookupByLibrary.simpleMessage(
       "Интервал TCP keep-alive",
     ),
+    "kernel": MessageLookupByLibrary.simpleMessage("Ядро"),
     "key": MessageLookupByLibrary.simpleMessage("Ключ"),
     "ko": MessageLookupByLibrary.simpleMessage("Корейский"),
     "label": MessageLookupByLibrary.simpleMessage("Метка"),
@@ -985,6 +988,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Получить профиль по ссылке на подписку или на прокси",
     ),
     "liquidGlass": MessageLookupByLibrary.simpleMessage("Жидкое стекло"),
+    "listDisplay": MessageLookupByLibrary.simpleMessage("Отображение списка"),
     "listen": MessageLookupByLibrary.simpleMessage("Прослушивание"),
     "listenRoutingMark": MessageLookupByLibrary.simpleMessage(
       "Метка маршрутизации",
@@ -1055,6 +1059,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "monthsAgoShort": m46,
     "more": MessageLookupByLibrary.simpleMessage("Ещё"),
     "name": MessageLookupByLibrary.simpleMessage("Название"),
+    "nameResolution": MessageLookupByLibrary.simpleMessage("Разрешение имён"),
     "network": MessageLookupByLibrary.simpleMessage("Сеть"),
     "networkAccessDeniedError": m47,
     "networkBadResponseError": m48,
@@ -1180,7 +1185,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "proxyGroup": MessageLookupByLibrary.simpleMessage("Группа прокси"),
     "proxyGroupsCount": m57,
     "proxyProviders": MessageLookupByLibrary.simpleMessage("Провайдеры прокси"),
-    "proxySettings": MessageLookupByLibrary.simpleMessage("Настройки прокси"),
+    "proxySettings": MessageLookupByLibrary.simpleMessage(
+      "Прокси и тест скорости",
+    ),
     "proxyType": MessageLookupByLibrary.simpleMessage("Тип прокси"),
     "pruneCache": MessageLookupByLibrary.simpleMessage("Очистить кэш"),
     "publicKey": MessageLookupByLibrary.simpleMessage("Открытый ключ"),
@@ -1578,6 +1585,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "system": MessageLookupByLibrary.simpleMessage("Система"),
     "systemApp": MessageLookupByLibrary.simpleMessage("Системные приложения"),
     "systemProxy": MessageLookupByLibrary.simpleMessage("Системный прокси"),
+    "systemProxySharedNote": MessageLookupByLibrary.simpleMessage(
+      "Системный прокси — один и тот же переключатель на страницах настроек и сети.",
+    ),
     "tapToAuthorize": MessageLookupByLibrary.simpleMessage(
       "Нажмите, чтобы разрешить",
     ),

@@ -466,7 +466,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "detectionTip": MessageLookupByLibrary.simpleMessage(
       "サードパーティAPIに依存しているため、参考値です",
     ),
-    "developerMode": MessageLookupByLibrary.simpleMessage("開発者モード"),
+    "developerMode": MessageLookupByLibrary.simpleMessage("データ保守"),
     "dialerProxy": MessageLookupByLibrary.simpleMessage("ダイヤラープロキシ"),
     "dialerProxyLoopStopped": m27,
     "direct": MessageLookupByLibrary.simpleMessage("ダイレクト"),
@@ -803,6 +803,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "keepAliveIntervalDesc": MessageLookupByLibrary.simpleMessage(
       "TCPキープアライブ間隔",
     ),
+    "kernel": MessageLookupByLibrary.simpleMessage("カーネル"),
     "key": MessageLookupByLibrary.simpleMessage("キー"),
     "ko": MessageLookupByLibrary.simpleMessage("韓国語"),
     "label": MessageLookupByLibrary.simpleMessage("ラベル"),
@@ -820,6 +821,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "サブスクリプションリンクまたはプロキシの共有リンクからプロファイルを取得します",
     ),
     "liquidGlass": MessageLookupByLibrary.simpleMessage("リキッドグラス"),
+    "listDisplay": MessageLookupByLibrary.simpleMessage("リスト表示"),
     "listen": MessageLookupByLibrary.simpleMessage("リッスン"),
     "listenRoutingMark": MessageLookupByLibrary.simpleMessage("リッスンのルーティングマーク"),
     "listenRoutingMarkDesc": MessageLookupByLibrary.simpleMessage(
@@ -874,6 +876,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "monthsAgoShort": m46,
     "more": MessageLookupByLibrary.simpleMessage("その他"),
     "name": MessageLookupByLibrary.simpleMessage("名前"),
+    "nameResolution": MessageLookupByLibrary.simpleMessage("名前解決"),
     "network": MessageLookupByLibrary.simpleMessage("ネットワーク"),
     "networkAccessDeniedError": m47,
     "networkBadResponseError": m48,
@@ -983,7 +986,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "proxyGroup": MessageLookupByLibrary.simpleMessage("プロキシグループ"),
     "proxyGroupsCount": m57,
     "proxyProviders": MessageLookupByLibrary.simpleMessage("プロキシプロバイダー"),
-    "proxySettings": MessageLookupByLibrary.simpleMessage("プロキシ設定"),
+    "proxySettings": MessageLookupByLibrary.simpleMessage("プロキシと速度テスト"),
     "proxyType": MessageLookupByLibrary.simpleMessage("プロキシタイプ"),
     "pruneCache": MessageLookupByLibrary.simpleMessage("キャッシュを整理"),
     "publicKey": MessageLookupByLibrary.simpleMessage("公開鍵"),
@@ -1313,6 +1316,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "system": MessageLookupByLibrary.simpleMessage("システム"),
     "systemApp": MessageLookupByLibrary.simpleMessage("システムアプリ"),
     "systemProxy": MessageLookupByLibrary.simpleMessage("システムプロキシ"),
+    "systemProxySharedNote": MessageLookupByLibrary.simpleMessage(
+      "システムプロキシは、設定ページとネットワークページで同じスイッチです。",
+    ),
     "tapToAuthorize": MessageLookupByLibrary.simpleMessage("タップして許可"),
     "target": MessageLookupByLibrary.simpleMessage("宛先"),
     "tcpConcurrent": MessageLookupByLibrary.simpleMessage("TCP同時接続"),

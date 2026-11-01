@@ -338,7 +338,7 @@
   "saturation": "Saturation",
   "brightness": "Luminosité",
   "hex": "Hex",
-  "developerMode": "Mode développeur",
+  "developerMode": "Maintenance des données",
   "crashDetected": "Plantage détecté",
   "crashDetectedTip": "L’app n’a pas réussi à finir de démarrer deux fois de suite. Pour sortir de cette boucle, le profil {name} a été désélectionné et la configuration automatique a été ignorée. Vous pouvez le sélectionner de nouveau à tout moment.",
   "launchInterrupted": "Démarrage inachevé",
@@ -782,5 +782,9 @@
   "currentExit": "Sortie actuelle",
   "coreNotRunning": "{core} à l’arrêt",
   "advanced": "Avancé",
-  "proxySettings": "Paramètres du proxy"
+  "proxySettings": "Proxy et test de vitesse",
+  "kernel": "Noyau",
+  "listDisplay": "Affichage de la liste",
+  "nameResolution": "Résolution",
+  "systemProxySharedNote": "Le proxy système est le même interrupteur sur les pages Réglages et Réseau."
 }

@@ -338,7 +338,7 @@
   "saturation": "饱和度",
   "brightness": "亮度",
   "hex": "十六进制",
-  "developerMode": "开发者模式",
+  "developerMode": "数据维护",
   "crashDetected": "检测到崩溃",
   "crashDetectedTip": "应用连续两次未能完成启动。为打断崩溃循环，已取消选中配置 {name}，并跳过本次自动配置，你可以随时重新选中它。",
   "launchInterrupted": "启动未完成",
@@ -782,5 +782,9 @@
   "currentExit": "当前出口",
   "coreNotRunning": "{core} 未运行",
   "advanced": "高级",
-  "proxySettings": "代理设置"
+  "proxySettings": "代理与测速",
+  "kernel": "内核",
+  "listDisplay": "列表显示",
+  "nameResolution": "解析",
+  "systemProxySharedNote": "系统代理在设置页与「网络」页为同一开关。"
 }

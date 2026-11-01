@@ -338,7 +338,7 @@
   "saturation": "Saturación",
   "brightness": "Brillo",
   "hex": "Hex",
-  "developerMode": "Modo desarrollador",
+  "developerMode": "Mantenimiento de datos",
   "crashDetected": "Fallo detectado",
   "crashDetectedTip": "La app no pudo terminar de iniciarse dos veces seguidas. Para romper el ciclo, se ha deseleccionado el perfil {name} y se ha omitido la configuración automática. Puedes volver a seleccionarlo en cualquier momento.",
   "launchInterrupted": "El inicio no se completó",
@@ -782,5 +782,9 @@
   "currentExit": "Salida actual",
   "coreNotRunning": "{core} detenido",
   "advanced": "Avanzado",
-  "proxySettings": "Ajustes de proxy"
+  "proxySettings": "Proxy y prueba de velocidad",
+  "kernel": "Núcleo",
+  "listDisplay": "Visualización de la lista",
+  "nameResolution": "Resolución",
+  "systemProxySharedNote": "El proxy del sistema es el mismo interruptor en las páginas de Ajustes y Red."
 }

@@ -456,7 +456,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "detectionTip": MessageLookupByLibrary.simpleMessage(
       "서드파티 API에 의존하므로 참고용으로만 사용하세요",
     ),
-    "developerMode": MessageLookupByLibrary.simpleMessage("개발자 모드"),
+    "developerMode": MessageLookupByLibrary.simpleMessage("데이터 유지 관리"),
     "dialerProxy": MessageLookupByLibrary.simpleMessage("다이얼러 프록시"),
     "dialerProxyLoopStopped": m27,
     "direct": MessageLookupByLibrary.simpleMessage("직접"),
@@ -791,6 +791,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "keepAliveIntervalDesc": MessageLookupByLibrary.simpleMessage(
       "TCP 킵얼라이브 간격",
     ),
+    "kernel": MessageLookupByLibrary.simpleMessage("커널"),
     "key": MessageLookupByLibrary.simpleMessage("키"),
     "ko": MessageLookupByLibrary.simpleMessage("한국어"),
     "label": MessageLookupByLibrary.simpleMessage("레이블"),
@@ -808,6 +809,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "구독 링크 또는 프록시 공유 링크로 프로필 가져오기",
     ),
     "liquidGlass": MessageLookupByLibrary.simpleMessage("Liquid Glass"),
+    "listDisplay": MessageLookupByLibrary.simpleMessage("목록 표시"),
     "listen": MessageLookupByLibrary.simpleMessage("수신"),
     "listenRoutingMark": MessageLookupByLibrary.simpleMessage("수신 라우팅 마크"),
     "listenRoutingMarkDesc": MessageLookupByLibrary.simpleMessage(
@@ -862,6 +864,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "monthsAgoShort": m46,
     "more": MessageLookupByLibrary.simpleMessage("더 보기"),
     "name": MessageLookupByLibrary.simpleMessage("이름"),
+    "nameResolution": MessageLookupByLibrary.simpleMessage("이름 확인"),
     "network": MessageLookupByLibrary.simpleMessage("네트워크"),
     "networkAccessDeniedError": m47,
     "networkBadResponseError": m48,
@@ -967,7 +970,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "proxyGroup": MessageLookupByLibrary.simpleMessage("프록시 그룹"),
     "proxyGroupsCount": m57,
     "proxyProviders": MessageLookupByLibrary.simpleMessage("프록시 공급자"),
-    "proxySettings": MessageLookupByLibrary.simpleMessage("프록시 설정"),
+    "proxySettings": MessageLookupByLibrary.simpleMessage("프록시 및 속도 테스트"),
     "proxyType": MessageLookupByLibrary.simpleMessage("프록시 유형"),
     "pruneCache": MessageLookupByLibrary.simpleMessage("캐시 정리"),
     "publicKey": MessageLookupByLibrary.simpleMessage("공개 키"),
@@ -1291,6 +1294,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "system": MessageLookupByLibrary.simpleMessage("시스템"),
     "systemApp": MessageLookupByLibrary.simpleMessage("시스템 앱"),
     "systemProxy": MessageLookupByLibrary.simpleMessage("시스템 프록시"),
+    "systemProxySharedNote": MessageLookupByLibrary.simpleMessage(
+      "시스템 프록시는 설정 페이지와 네트워크 페이지에서 동일한 스위치입니다.",
+    ),
     "tapToAuthorize": MessageLookupByLibrary.simpleMessage("눌러서 허용"),
     "target": MessageLookupByLibrary.simpleMessage("대상"),
     "tcpConcurrent": MessageLookupByLibrary.simpleMessage("TCP 동시 연결"),

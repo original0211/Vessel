@@ -572,7 +572,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "detectionTip": MessageLookupByLibrary.simpleMessage(
       "Depende de una API de terceros; solo con fines informativos",
     ),
-    "developerMode": MessageLookupByLibrary.simpleMessage("Modo desarrollador"),
+    "developerMode": MessageLookupByLibrary.simpleMessage(
+      "Mantenimiento de datos",
+    ),
     "dialerProxy": MessageLookupByLibrary.simpleMessage("Proxy de marcación"),
     "dialerProxyLoopStopped": m27,
     "direct": MessageLookupByLibrary.simpleMessage("Directo"),
@@ -990,6 +992,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "keepAliveIntervalDesc": MessageLookupByLibrary.simpleMessage(
       "Intervalo de keep-alive TCP",
     ),
+    "kernel": MessageLookupByLibrary.simpleMessage("Núcleo"),
     "key": MessageLookupByLibrary.simpleMessage("Clave"),
     "ko": MessageLookupByLibrary.simpleMessage("Coreano"),
     "label": MessageLookupByLibrary.simpleMessage("Etiqueta"),
@@ -1009,6 +1012,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Obtén un perfil desde un enlace de suscripción o un enlace para compartir proxies",
     ),
     "liquidGlass": MessageLookupByLibrary.simpleMessage("Liquid Glass"),
+    "listDisplay": MessageLookupByLibrary.simpleMessage(
+      "Visualización de la lista",
+    ),
     "listen": MessageLookupByLibrary.simpleMessage("Escucha"),
     "listenRoutingMark": MessageLookupByLibrary.simpleMessage(
       "Marca de enrutamiento de escucha",
@@ -1081,6 +1087,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "monthsAgoShort": m46,
     "more": MessageLookupByLibrary.simpleMessage("Más"),
     "name": MessageLookupByLibrary.simpleMessage("Nombre"),
+    "nameResolution": MessageLookupByLibrary.simpleMessage("Resolución"),
     "network": MessageLookupByLibrary.simpleMessage("Red"),
     "networkAccessDeniedError": m47,
     "networkBadResponseError": m48,
@@ -1214,7 +1221,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "proxyProviders": MessageLookupByLibrary.simpleMessage(
       "Proveedores de proxies",
     ),
-    "proxySettings": MessageLookupByLibrary.simpleMessage("Ajustes de proxy"),
+    "proxySettings": MessageLookupByLibrary.simpleMessage(
+      "Proxy y prueba de velocidad",
+    ),
     "proxyType": MessageLookupByLibrary.simpleMessage("Tipo de proxy"),
     "pruneCache": MessageLookupByLibrary.simpleMessage("Depurar caché"),
     "publicKey": MessageLookupByLibrary.simpleMessage("Clave pública"),
@@ -1615,6 +1624,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "system": MessageLookupByLibrary.simpleMessage("Sistema"),
     "systemApp": MessageLookupByLibrary.simpleMessage("Apps del sistema"),
     "systemProxy": MessageLookupByLibrary.simpleMessage("Proxy del sistema"),
+    "systemProxySharedNote": MessageLookupByLibrary.simpleMessage(
+      "El proxy del sistema es el mismo interruptor en las páginas de Ajustes y Red.",
+    ),
     "tapToAuthorize": MessageLookupByLibrary.simpleMessage(
       "Toca para autorizar",
     ),

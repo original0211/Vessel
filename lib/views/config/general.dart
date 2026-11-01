@@ -5,11 +5,9 @@ import 'package:kfusion/core/singbox/singbox_binary.dart';
 import 'package:kfusion/core/singbox/singbox_runner.dart';
 import 'package:kfusion/enum/enum.dart';
 import 'package:kfusion/features/config_hub/config_hub.dart';
-import 'package:kfusion/features/form/form.dart';
 import 'package:kfusion/l10n/l10n.dart';
 import 'package:kfusion/models/models.dart';
 import 'package:kfusion/providers/providers.dart';
-import 'package:kfusion/views/config/on_demand.dart';
 import 'package:kfusion/widgets/widgets.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -479,13 +477,11 @@ class _HaraInputRow extends StatelessWidget {
   const _HaraInputRow({
     required this.label,
     required this.value,
-    this.note,
     required this.onTap,
   });
 
   final String label;
   final String value;
-  final String? note;
   final VoidCallback onTap;
 
   @override
@@ -503,10 +499,6 @@ class _HaraInputRow extends StatelessWidget {
           if (value.isNotEmpty) ...[
             const SizedBox(height: HaraSpace.profileMetaGap),
             Text(value, style: HaraText.profileMeta(context, palette.sub)),
-          ],
-          if (note != null) ...[
-            const SizedBox(height: HaraSpace.profileMetaGap),
-            Text(note!, style: HaraText.profileMeta(context, palette.sub)),
           ],
         ],
       ),
@@ -557,79 +549,6 @@ class _HaraText extends ConsumerWidget {
   }
 }
 
-/// A row that opens a page: an ink label, its value under it when it has
-/// one, and a sub arrow. The open follows the list row it replaces —
-/// sheet push or open container — and the result reaches [onChanged]
-/// the same way.
-class _HaraOpenRow extends StatelessWidget {
-  const _HaraOpenRow({
-    required this.label,
-    this.subtitle,
-    required this.target,
-    this.onChanged,
-  });
-
-  final String label;
-  final String? subtitle;
-  final Widget target;
-  final ValueChanged<dynamic>? onChanged;
-
-  Widget _content(BuildContext context) {
-    final palette = context.haraPalette;
-    return Row(
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: HaraText.nodeName(context, palette.ink, current: false),
-              ),
-              if (subtitle != null) ...[
-                const SizedBox(height: HaraSpace.profileMetaGap),
-                Text(
-                  subtitle!,
-                  style: HaraText.profileMeta(context, palette.sub),
-                ),
-              ],
-            ],
-          ),
-        ),
-        Text('→', style: HaraText.addRowArrow(context, palette.sub)),
-      ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final palette = context.haraPalette;
-    if (!context.isMobileView) {
-      return HaraRow(
-        onTap: () async {
-          final result = await showExtend<dynamic>(
-            context,
-            props: const ExtendProps(forceFull: true),
-            builder: (_) => target,
-          );
-          onChanged?.call(result);
-        },
-        child: _content(context),
-      );
-    }
-    return OpenContainer<dynamic>(
-      clipBehavior: Clip.none,
-      closedColor: palette.bg,
-      closedShape: AppShape.hara,
-      closedBuilder: (context, action) {
-        return HaraRow(onTap: action, child: _content(context));
-      },
-      onClosed: onChanged,
-      openBuilder: (_, _) => target,
-    );
-  }
-}
-
 /// The current profile's core kind, mirrored from the profile edit page.
 class CurrentProfileCoreKindItem extends ConsumerWidget {
   const CurrentProfileCoreKindItem({super.key});
@@ -651,80 +570,6 @@ class CurrentProfileCoreKindItem extends ConsumerWidget {
           : (value) {
               ref.read(coreKindsProvider.notifier).setKind(profile.id, value);
             },
-    );
-  }
-}
-
-class TestUrlItem extends ConsumerWidget {
-  const TestUrlItem({super.key});
-
-  @override
-  Widget build(BuildContext context, ref) {
-    final appLocalizations = context.appLocalizations;
-    final testUrl = ref.watch(
-      appSettingProvider.select((state) => state.testUrl),
-    );
-    return _HaraInputRow(
-      label: appLocalizations.testUrl,
-      value: testUrl,
-      note: appLocalizations.testUrlApplyNote,
-      onTap: () {
-        showConfigInputDialog(
-          context: context,
-          title: appLocalizations.testUrl,
-          value: testUrl,
-          resetValue: defaultTestUrl,
-          maxLength: TextInputLimits.url,
-          validator: (String? value) {
-            if (value == null || value.isEmpty) {
-              return appLocalizations.emptyTip(appLocalizations.testUrl);
-            }
-            if (!value.isUrl) {
-              return appLocalizations.urlTip(appLocalizations.testUrl);
-            }
-            return null;
-          },
-          onChanged: (String? value) {
-            if (value == null) {
-              return;
-            }
-            ref
-                .read(appSettingProvider.notifier)
-                .update((state) => state.copyWith(testUrl: value));
-          },
-        );
-      },
-    );
-  }
-}
-
-class HostsItem extends ConsumerWidget {
-  const HostsItem({super.key});
-
-  @override
-  Widget build(BuildContext context, ref) {
-    final appLocalizations = context.appLocalizations;
-    final hosts = ref.watch(
-      patchClashConfigProvider.select((state) => state.hosts),
-    );
-    return _HaraOpenRow(
-      label: 'Hosts',
-      subtitle:
-          '${hosts.isEmpty ? appLocalizations.none : appLocalizations.itemsCount(hosts.length)}'
-          ' · ${appLocalizations.mihomoOnly}',
-      target: MapEditView(
-        title: 'Hosts',
-        entries: hosts,
-        keyMaxLength: TextInputLimits.domain,
-        valueMaxLength: TextInputLimits.hostValue,
-        titleBuilder: (item) => Text(item.key),
-        subtitleBuilder: (item) => Text(item.value),
-      ),
-      onChanged: (value) {
-        ref
-            .read(patchClashConfigProvider.notifier)
-            .update((state) => state.copyWith(hosts: value));
-      },
     );
   }
 }
@@ -822,15 +667,6 @@ List<Widget> startupSettingItems() {
 class GeneralView extends ConsumerWidget {
   const GeneralView({super.key});
 
-  List<Widget> _startupItems(AppLocalizations appLocalizations) {
-    return [
-      _HaraOpenRow(
-        label: appLocalizations.onDemand,
-        target: const OnDemandView(),
-      ),
-    ];
-  }
-
   List<Widget> _inboundItems({required bool externalController}) {
     return [
       HaraToggle(
@@ -860,7 +696,6 @@ class GeneralView extends ConsumerWidget {
 
   List<Widget> _connectionItems() {
     return [
-      const TestUrlItem(),
       HaraToggle(
         _clashToggle(
           title: (l) => l.unifiedDelay,
@@ -936,19 +771,6 @@ class GeneralView extends ConsumerWidget {
           update: (state, value) => state.copyWith(ipv6: value),
         ),
       ),
-      const HostsItem(),
-      HaraToggle(
-        ConfigToggleItem(
-          title: (l) => l.appendSystemDns,
-          subtitle: (l) => l.mihomoOnly,
-          selector: networkSettingProvider.select(
-            (state) => state.appendSystemDns,
-          ),
-          onChanged: (ref, value) => ref
-              .read(networkSettingProvider.notifier)
-              .update((state) => state.copyWith(appendSystemDns: value)),
-        ),
-      ),
       HaraToggle(
         _clashToggle(
           title: (l) => l.geodataLoader,
@@ -989,14 +811,19 @@ class GeneralView extends ConsumerWidget {
     );
     final sections = <Widget>[
       HaraSection(
-        title: appLocalizations.startupAndBackground,
-        rows: _startupItems(appLocalizations),
-        footer: appLocalizations.onDemandDesc,
-      ),
-      HaraSection(
         title: appLocalizations.requestsAndUpdates,
         rows: _requestItems(),
         footer: appLocalizations.checkCertificateDesc,
+      ),
+      HaraSection(
+        title: appLocalizations.connection,
+        rows: _connectionItems(),
+        footer: appLocalizations.autoCloseConnectionsDesc,
+      ),
+      HaraSection(
+        title: appLocalizations.kernel,
+        rows: _coreItems(),
+        footer: appLocalizations.ipv6Desc,
       ),
       HaraSection(
         title: appLocalizations.inbound,
@@ -1005,16 +832,6 @@ class GeneralView extends ConsumerWidget {
           appLocalizations.externalControllerDesc,
           appLocalizations.mihomoOnlyNote,
         ].join('\n'),
-      ),
-      HaraSection(
-        title: appLocalizations.connection,
-        rows: _connectionItems(),
-        footer: appLocalizations.autoCloseConnectionsDesc,
-      ),
-      HaraSection(
-        title: appLocalizations.core,
-        rows: _coreItems(),
-        footer: appLocalizations.ipv6Desc,
       ),
       HaraSection(
         title: appLocalizations.logsAndDiagnostics,

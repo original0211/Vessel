@@ -2640,10 +2640,10 @@ class AppLocalizations {
     return Intl.message('Hex', name: 'hex', desc: '', args: []);
   }
 
-  /// `Developer mode`
+  /// `Data maintenance`
   String get developerMode {
     return Intl.message(
-      'Developer mode',
+      'Data maintenance',
       name: 'developerMode',
       desc: '',
       args: [],
@@ -6526,11 +6526,46 @@ class AppLocalizations {
     return Intl.message('Advanced', name: 'advanced', desc: '', args: []);
   }
 
-  /// `Proxy settings`
+  /// `Proxy and speed test`
   String get proxySettings {
     return Intl.message(
-      'Proxy settings',
+      'Proxy and speed test',
       name: 'proxySettings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kernel`
+  String get kernel {
+    return Intl.message('Kernel', name: 'kernel', desc: '', args: []);
+  }
+
+  /// `List display`
+  String get listDisplay {
+    return Intl.message(
+      'List display',
+      name: 'listDisplay',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Resolution`
+  String get nameResolution {
+    return Intl.message(
+      'Resolution',
+      name: 'nameResolution',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The system proxy is the same switch on the Settings and Network pages.`
+  String get systemProxySharedNote {
+    return Intl.message(
+      'The system proxy is the same switch on the Settings and Network pages.',
+      name: 'systemProxySharedNote',
       desc: '',
       args: [],
     );
