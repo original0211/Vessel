@@ -1,4 +1,5 @@
 import 'package:kfusion/ui/color.dart';
+import 'package:kfusion/ui/hara.dart';
 import 'package:kfusion/ui/metrics.dart';
 import 'package:kfusion/ui/typography.dart';
 import 'package:material_ui/material_ui.dart';
@@ -48,56 +49,55 @@ class SliderDefaultsM3 extends SliderThemeData {
   SliderDefaultsM3(this.context) : super(trackHeight: 16.0);
 
   final BuildContext context;
-  late final ColorScheme _colors = Theme.of(context).colorScheme;
+  late final HaraPalette _palette = context.haraPalette;
 
   @override
-  Color? get activeTrackColor => _colors.primary;
+  Color? get activeTrackColor => _palette.ink;
 
   @override
-  Color? get inactiveTrackColor => _colors.secondaryContainer;
+  Color? get inactiveTrackColor => _palette.line;
 
   @override
-  Color? get secondaryActiveTrackColor =>
-      _colors.primary.withValues(alpha: 0.54);
+  Color? get secondaryActiveTrackColor => _palette.ink.withValues(alpha: 0.54);
 
   @override
-  Color? get disabledActiveTrackColor => _colors.onSurface.opacity38;
+  Color? get disabledActiveTrackColor => _palette.dim;
 
   @override
-  Color? get disabledInactiveTrackColor => _colors.onSurface.opacity12;
+  Color? get disabledInactiveTrackColor => _palette.line;
 
   @override
-  Color? get disabledSecondaryActiveTrackColor => _colors.onSurface.opacity38;
+  Color? get disabledSecondaryActiveTrackColor => _palette.dim;
 
   @override
-  Color? get activeTickMarkColor => _colors.onPrimary;
+  Color? get activeTickMarkColor => _palette.bg;
 
   @override
-  Color? get inactiveTickMarkColor => _colors.onSecondaryContainer;
+  Color? get inactiveTickMarkColor => _palette.sub;
 
   @override
-  Color? get disabledActiveTickMarkColor => _colors.onInverseSurface;
+  Color? get disabledActiveTickMarkColor => _palette.bg;
 
   @override
-  Color? get disabledInactiveTickMarkColor => _colors.onSurface;
+  Color? get disabledInactiveTickMarkColor => _palette.dim;
 
   @override
-  Color? get thumbColor => _colors.primary;
+  Color? get thumbColor => _palette.ink;
 
   @override
-  Color? get disabledThumbColor => _colors.onSurface.opacity38;
+  Color? get disabledThumbColor => _palette.dim;
 
   @override
   Color? get overlayColor =>
       WidgetStateColor.resolveWith((Set<WidgetState> states) {
         if (states.contains(WidgetState.dragged)) {
-          return _colors.primary.opacity10;
+          return _palette.ink.opacity10;
         }
         if (states.contains(WidgetState.hovered)) {
-          return _colors.primary.withValues(alpha: 0.08);
+          return _palette.ink.withValues(alpha: 0.08);
         }
         if (states.contains(WidgetState.focused)) {
-          return _colors.primary.opacity10;
+          return _palette.ink.opacity10;
         }
 
         return Colors.transparent;
@@ -106,10 +106,10 @@ class SliderDefaultsM3 extends SliderThemeData {
   @override
   TextStyle? get valueIndicatorTextStyle => AppTextStyle.subheadline
       .of(context, emphasized: true)
-      .copyWith(color: _colors.onInverseSurface);
+      .copyWith(color: _palette.bg);
 
   @override
-  Color? get valueIndicatorColor => _colors.inverseSurface;
+  Color? get valueIndicatorColor => _palette.ink;
 
   @override
   SliderComponentShape? get valueIndicatorShape =>

@@ -199,21 +199,19 @@ class _OnDemandViewState extends ConsumerState<OnDemandView>
     required VoidCallback onPressed,
   }) {
     final appLocalizations = context.appLocalizations;
+    final palette = context.haraPalette;
     return CommonMinFilledButtonTheme(
       child: ElasticButton(
         child: FilledButton(
           style: FilledButton.styleFrom(
-            backgroundColor: authorized
-                ? null
-                : context.colorScheme.errorContainer,
-            foregroundColor: authorized
-                ? null
-                : context.colorScheme.onErrorContainer,
+            backgroundColor: palette.bg,
+            foregroundColor: authorized ? palette.ink : palette.vermilion,
             padding: const EdgeInsets.symmetric(
               horizontal: _authorizeButtonPadding,
             ),
             minimumSize: const Size(_minAuthorizeButtonWidth, 40),
             shape: AppShape.hara,
+            side: BorderSide(color: palette.line, width: HaraSpace.hairline),
           ),
           onPressed: onPressed,
           child: Stack(

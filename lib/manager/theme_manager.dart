@@ -64,17 +64,70 @@ ThemeData watchAppTheme(WidgetRef ref, Brightness brightness) {
   ) when cached == inputs) {
     return theme;
   }
+  final palette = HaraPalette.of(brightness, pureBlack: pureBlack);
   final theme = ThemeData(
     useMaterial3: true,
     pageTransitionsTheme: _pageTransitionsTheme,
     actionIconTheme: _actionIconTheme,
     colorScheme: colorScheme,
+    switchTheme: SwitchThemeData(
+      trackColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return palette.line;
+        }
+        if (states.contains(WidgetState.selected)) {
+          return palette.ink;
+        }
+        return palette.bg;
+      }),
+      trackOutlineColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return palette.ink;
+        }
+        return palette.line;
+      }),
+      thumbColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return palette.dim;
+        }
+        if (states.contains(WidgetState.selected)) {
+          return palette.bg;
+        }
+        return palette.sub;
+      }),
+    ),
+    checkboxTheme: CheckboxThemeData(
+      fillColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return palette.ink;
+        }
+        return Colors.transparent;
+      }),
+      checkColor: WidgetStateProperty.all(palette.bg),
+      side: BorderSide(color: palette.sub, width: HaraSpace.hairline),
+    ),
+    filledButtonTheme: FilledButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.disabled)) {
+            return palette.line;
+          }
+          return palette.bg;
+        }),
+        foregroundColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.disabled)) {
+            return palette.dim;
+          }
+          return palette.ink;
+        }),
+      ),
+    ),
     fontFamilyFallback: appFontFamilyFallback(
       platform: defaultTargetPlatform,
       locales: locales,
     ),
     extensions: [
-      HaraTheme(HaraPalette.of(brightness, pureBlack: pureBlack)),
+      HaraTheme(palette),
       if (brightness == Brightness.dark)
         ElevatedColorScheme(
           // Plain dark is pure black a level up, with the seed's tint that a

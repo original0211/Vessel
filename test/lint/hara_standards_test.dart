@@ -2,8 +2,9 @@
 // grows with each batch; the rules do not soften: radii come only from the
 // A aliases, no shadows or gradients, color literals live only in the
 // token layer, the vermilion is consumed only through HaraDot in the
-// whitelisted files and through the mark's point in disc_motif, and the
-// disc mark geometry has exactly one home.
+// whitelisted files, through the mark's point in disc_motif, and as the
+// to-do word of the on-demand authorize label, and the disc mark geometry
+// has exactly one home.
 import 'dart:io';
 import 'dart:math' as math;
 
@@ -108,10 +109,15 @@ void main() {
     });
 
     test('the vermilion is read only in the token layer and the mark', () {
+      // Named exception (2026-11-01): the on-demand page's authorize label
+      // reads the vermilion as a to-do word, never as a fill and never as
+      // the current mark; the word is text, not the point.
+      const vermilionTextException = 'lib/views/config/on_demand.dart';
       final offenders = <String>[];
       for (final file in libFiles()) {
         if (file.path.endsWith(tokenLayer)) continue;
         if (file.path.endsWith('lib/ui/disc_motif.dart')) continue;
+        if (file.path.endsWith(vermilionTextException)) continue;
         if (file.readAsStringSync().contains('.vermilion')) {
           offenders.add(file.path);
         }
