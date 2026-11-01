@@ -16,10 +16,11 @@ void main() {
       'DynamicColorPlugin',
     ];
     final offenders = <String>[];
-    for (final file in Directory('lib')
-        .listSync(recursive: true)
-        .whereType<File>()
-        .where((file) => file.path.endsWith('.dart'))) {
+    for (final file
+        in Directory('lib')
+            .listSync(recursive: true)
+            .whereType<File>()
+            .where((file) => file.path.endsWith('.dart'))) {
       if (file.path.contains('/generated/') ||
           file.path.endsWith('.g.dart') ||
           file.path.endsWith('.freezed.dart')) {
