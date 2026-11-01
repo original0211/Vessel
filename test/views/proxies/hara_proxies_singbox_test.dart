@@ -149,6 +149,7 @@ void main() {
     AsyncValue<Map<String, SingBoxPanelGroup>>? panelAsync,
     SingBoxClashApi? api,
     bool bearer = true,
+    bool expanded = true,
   }) async {
     tester.view.physicalSize = const Size(412, 800);
     tester.view.devicePixelRatio = 1;
@@ -203,6 +204,7 @@ void main() {
                     exitName: exitName,
                     first: true,
                     exitMarker: HaraExitMarker.dot,
+                    expanded: expanded,
                   ),
                 ],
               ),
@@ -407,6 +409,38 @@ void main() {
     await tester.pump(const Duration(seconds: 15));
     expect(api.puts, isEmpty);
     expect(container.read(selectedMapProvider), isEmpty);
+  });
+
+  testWidgets('a folded absent group keeps its note and hides its rows', (
+    tester,
+  ) async {
+    await pumpSection(
+      tester,
+      profile: absentProfile,
+      groups: absentGroups,
+      panel: absentPanel,
+      exitName: null,
+      expanded: false,
+    );
+    expect(find.text('Unavailable under sing-box'), findsOneWidget);
+    expect(find.text('⚡ CF前置'), findsNothing);
+    expect(find.text('DIRECT'), findsNothing);
+  });
+
+  testWidgets('a folded Fallback group still reads as an exit indicator', (
+    tester,
+  ) async {
+    await pumpSection(
+      tester,
+      profile: absentProfile,
+      groups: globalGroups,
+      panel: globalPanel,
+      exitName: 'SG-01',
+      expanded: false,
+    );
+    expect(find.text('→ IT-01'), findsOneWidget);
+    expect(find.text('SG-01'), findsNothing);
+    expect(find.text('IT-01'), findsNothing);
   });
 
   testWidgets('a failed panel fetch keeps the legacy presentation', (

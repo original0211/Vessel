@@ -4,6 +4,7 @@ import 'package:kfusion/enum/enum.dart';
 import 'package:kfusion/features/config_hub/singbox_action.dart';
 import 'package:kfusion/models/models.dart';
 import 'package:kfusion/providers/providers.dart';
+import 'package:kfusion/ui/icons/icons.dart';
 import 'package:kfusion/ui/ui.dart';
 import 'package:kfusion/views/proxies/card.dart';
 import 'package:material_ui/material_ui.dart';
@@ -18,12 +19,33 @@ class HaraProxyGroupSection extends ConsumerWidget {
     required this.exitName,
     required this.first,
     required this.exitMarker,
+    this.expanded = true,
+    this.onToggleFold,
+    this.pinExit = false,
+    this.headerCount,
   });
 
   final Group group;
   final String? exitName;
   final bool first;
   final HaraExitMarker exitMarker;
+
+  /// Whether the member rows are shown. A collapsed section renders only
+  /// its header, which then carries the group's current pick, member
+  /// count and best delay so the group stays readable while folded.
+  final bool expanded;
+
+  /// Toggles [expanded]; when null the header is not a fold control.
+  final VoidCallback? onToggleFold;
+
+  /// Renders the exit member first in its group, ahead of the configured
+  /// order. Only the plain order reading passes this; a delay-sorted
+  /// presentation keeps its own order.
+  final bool pinExit;
+
+  /// A count rendered in the expanded header, used by the search reading
+  /// to carry the group's hit count.
+  final int? headerCount;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -54,6 +76,17 @@ class HaraProxyGroupSection extends ConsumerWidget {
         saved == autoChild &&
         exitName != null &&
         (exitName == autoChild || exitName == childNow);
+    var members = group.all;
+    if (expanded && pinExit && exitName != null) {
+      final exitIndex = members.indexWhere((proxy) => proxy.name == exitName);
+      if (exitIndex > 0) {
+        members = [
+          members[exitIndex],
+          ...members.sublist(0, exitIndex),
+          ...members.sublist(exitIndex + 1),
+        ];
+      }
+    }
     return SliverMainAxisGroup(
       slivers: [
         SliverToBoxAdapter(
@@ -65,102 +98,241 @@ class HaraProxyGroupSection extends ConsumerWidget {
                     ? HaraSpace.titleToFirstGroup
                     : HaraSpace.groupGap,
               ),
-              if (nativeAuto)
-                Row(
-                  children: [
-                    Flexible(
-                      child: EmojiText(
-                        group.name,
-                        style: HaraText.sectionTitle(context, palette.dim),
-                        maxLines: 1,
-                      ),
-                    ),
-                    const SizedBox(width: HaraSpace.dotNameGap),
-                    Text(
-                      context.appLocalizations.auto,
-                      style: HaraText.inUse(context, palette.dim),
-                    ),
-                  ],
-                )
-              else if (absent)
-                Row(
-                  children: [
-                    Flexible(
-                      child: EmojiText(
-                        group.name,
-                        style: HaraText.sectionTitle(context, palette.dim),
-                        maxLines: 1,
-                      ),
-                    ),
-                    const SizedBox(width: HaraSpace.dotNameGap),
-                    Text(
-                      context.appLocalizations.unavailableUnderSingBox,
-                      style: HaraText.inUse(context, palette.dim),
-                    ),
-                  ],
-                )
-              else if (indicator)
-                Row(
-                  children: [
-                    Flexible(
-                      child: EmojiText(
-                        group.name,
-                        style: HaraText.sectionTitle(context, palette.dim),
-                        maxLines: 1,
-                      ),
-                    ),
-                    if (indicatorNow.isNotEmpty) ...[
-                      const SizedBox(width: HaraSpace.dotNameGap),
-                      Flexible(
-                        child: EmojiText(
-                          '→ $indicatorNow',
-                          style: HaraText.statusNode(context, palette.sub),
-                          maxLines: 1,
-                        ),
-                      ),
-                    ],
-                  ],
-                )
-              else
-                EmojiText(
-                  group.name,
-                  style: HaraText.sectionTitle(context, palette.dim),
-                  maxLines: 1,
-                ),
+              _header(
+                context,
+                ref,
+                palette,
+                nativeAuto: nativeAuto,
+                absent: absent,
+                indicator: indicator,
+                indicatorNow: indicatorNow,
+                autoChild: autoChild,
+                childNow: childNow,
+              ),
               const SizedBox(height: HaraSpace.sectionTitleGap),
               HaraHairline(color: palette.line),
             ],
           ),
         ),
-        SliverList.builder(
-          itemCount: group.all.length + (autoChild != null ? 1 : 0),
-          itemBuilder: (context, index) {
-            if (autoChild != null && index == 0) {
-              return _HaraAutoRow(
+        if (expanded)
+          SliverList.builder(
+            itemCount: members.length + (autoChild != null ? 1 : 0),
+            itemBuilder: (context, index) {
+              if (autoChild != null && index == 0) {
+                return _HaraAutoRow(
+                  group: group,
+                  childTag: autoChild,
+                  childNow: childNow,
+                  isExit: exitName == autoChild || exitName == childNow,
+                  exitMarker: exitMarker,
+                );
+              }
+              final proxy = members[autoChild != null ? index - 1 : index];
+              return _HaraProxyRow(
                 group: group,
-                childTag: autoChild,
-                childNow: childNow,
-                isExit: exitName == autoChild || exitName == childNow,
+                proxy: proxy,
+                isExit: indicator
+                    ? proxy.name == indicatorNow
+                    : !absent && proxy.name == exitName && !autoMarked,
                 exitMarker: exitMarker,
+                locked: nativeAuto || absent || indicator,
+                forceSelected: indicator
+                    ? proxy.name == indicatorNow
+                    : nativeAuto && proxy.name == panelGroup?.now,
               );
-            }
-            final proxy = group.all[autoChild != null ? index - 1 : index];
-            return _HaraProxyRow(
-              group: group,
-              proxy: proxy,
-              isExit: indicator
-                  ? proxy.name == indicatorNow
-                  : !absent && proxy.name == exitName && !autoMarked,
-              exitMarker: exitMarker,
-              locked: nativeAuto || absent || indicator,
-              forceSelected: indicator
-                  ? proxy.name == indicatorNow
-                  : nativeAuto && proxy.name == panelGroup?.now,
-            );
-          },
-        ),
+            },
+          ),
       ],
     );
+  }
+
+  Widget _header(
+    BuildContext context,
+    WidgetRef ref,
+    HaraPalette palette, {
+    required bool nativeAuto,
+    required bool absent,
+    required bool indicator,
+    required String indicatorNow,
+    required String? autoChild,
+    required String childNow,
+  }) {
+    final name = Flexible(
+      child: EmojiText(
+        group.name,
+        style: HaraText.sectionTitle(context, palette.dim),
+        maxLines: 1,
+      ),
+    );
+    final List<Widget> middle;
+    if (!expanded) {
+      middle = _foldedMeta(
+        context,
+        ref,
+        palette,
+        nativeAuto: nativeAuto,
+        absent: absent,
+        indicator: indicator,
+        indicatorNow: indicatorNow,
+        autoChild: autoChild,
+        childNow: childNow,
+      );
+    } else if (nativeAuto) {
+      middle = [
+        const SizedBox(width: HaraSpace.dotNameGap),
+        Text(
+          context.appLocalizations.auto,
+          style: HaraText.inUse(context, palette.dim),
+        ),
+      ];
+    } else if (absent) {
+      middle = [
+        const SizedBox(width: HaraSpace.dotNameGap),
+        Text(
+          context.appLocalizations.unavailableUnderSingBox,
+          style: HaraText.inUse(context, palette.dim),
+        ),
+      ];
+    } else if (indicator) {
+      middle = [
+        if (indicatorNow.isNotEmpty) ...[
+          const SizedBox(width: HaraSpace.dotNameGap),
+          Flexible(
+            child: EmojiText(
+              '→ $indicatorNow',
+              style: HaraText.statusNode(context, palette.sub),
+              maxLines: 1,
+            ),
+          ),
+        ],
+      ];
+    } else {
+      middle = const [];
+    }
+    final row = Row(
+      children: [
+        name,
+        ...middle,
+        if (expanded && headerCount != null) ...[
+          const Spacer(),
+          Text('$headerCount', style: HaraText.inUse(context, palette.dim)),
+        ],
+        if (onToggleFold != null) ...[
+          const SizedBox(width: HaraSpace.dotNameGap),
+          GlyphIcon(
+            expanded ? AppGlyphs.chevronUp : AppGlyphs.chevronDown,
+            size: 18,
+            color: palette.dim,
+          ),
+        ],
+      ],
+    );
+    if (onToggleFold == null) return row;
+    return InkWell(
+      customBorder: AppShape.hara,
+      onTap: onToggleFold,
+      child: row,
+    );
+  }
+
+  /// The folded header's reading: the group's current pick resolved to
+  /// its exit leaf, the member count, and the best delay on record. An
+  /// absent or indicator group keeps the mark its expanded header has.
+  List<Widget> _foldedMeta(
+    BuildContext context,
+    WidgetRef ref,
+    HaraPalette palette, {
+    required bool nativeAuto,
+    required bool absent,
+    required bool indicator,
+    required String indicatorNow,
+    required String? autoChild,
+    required String childNow,
+  }) {
+    if (absent) {
+      return [
+        const SizedBox(width: HaraSpace.dotNameGap),
+        Text(
+          context.appLocalizations.unavailableUnderSingBox,
+          style: HaraText.inUse(context, palette.dim),
+        ),
+      ];
+    }
+    if (indicator) {
+      return [
+        if (indicatorNow.isNotEmpty) ...[
+          const SizedBox(width: HaraSpace.dotNameGap),
+          Flexible(
+            child: EmojiText(
+              '→ $indicatorNow',
+              style: HaraText.statusNode(context, palette.sub),
+              maxLines: 1,
+            ),
+          ),
+        ],
+      ];
+    }
+    String? pick;
+    if (nativeAuto) {
+      final now = ref.watch(singBoxPanelGroupsProvider).value?[group.name]?.now;
+      pick = (now == null || now.isEmpty) ? group.now : now;
+    } else {
+      final selected = ref.watch(selectedProxyNameProvider(group.name));
+      if (selected != null && selected.isNotEmpty) {
+        final resolved = ref
+            .watch(realSelectedProxyStateProvider(selected))
+            .proxyName;
+        pick = resolved.isEmpty ? selected : resolved;
+      }
+    }
+    int? best;
+    for (final proxy in group.all) {
+      final delay = ref.watch(
+        delayProvider(proxyName: proxy.name, testUrl: group.testUrl),
+      );
+      if (delay != null && delay > 0 && (best == null || delay < best)) {
+        best = delay;
+      }
+    }
+    if (autoChild != null && childNow.isNotEmpty) {
+      final delay = ref.watch(
+        delayProvider(proxyName: childNow, testUrl: group.testUrl),
+      );
+      if (delay != null && delay > 0 && (best == null || delay < best)) {
+        best = delay;
+      }
+    }
+    return [
+      if (pick != null && pick.isNotEmpty) ...[
+        const SizedBox(width: HaraSpace.dotNameGap),
+        Flexible(
+          child: EmojiText(
+            '→ $pick',
+            style: HaraText.statusNode(context, palette.sub),
+            maxLines: 1,
+          ),
+        ),
+      ],
+      const Spacer(),
+      Text('${group.all.length}', style: HaraText.inUse(context, palette.dim)),
+      if (best != null) ...[
+        const SizedBox(width: 16),
+        Text.rich(
+          TextSpan(
+            children: [
+              TextSpan(
+                text: '$best',
+                style: HaraText.delay(context, palette.sub),
+              ),
+              TextSpan(
+                text: ' ms',
+                style: HaraText.delayUnit(context, palette.sub),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ];
   }
 }
 
