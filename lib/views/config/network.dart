@@ -530,7 +530,6 @@ List<Widget> networkOptionsItems({
   required bool isCustomInterfaceName,
 }) {
   return [
-    if (isDesktop) const HaraBoundToggle(TUNItem()),
     if (isMacOS) const AutoSetSystemDnsItem(),
     const TunStackItem(),
     // mihomo's DefaultSocketHook ignores interface-name on Android
@@ -549,30 +548,20 @@ class VpnSections extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appLocalizations = context.appLocalizations;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        HaraSection(
-          rows: const [HaraBoundToggle(VPNItem())],
-          footer: appLocalizations.vpnEnableDesc,
-          topGap: false,
-        ),
-        HaraSection(
-          topGap: true,
-          title: 'VPN',
-          rows: const [
-            HaraBoundToggle(VpnSystemProxyItem()),
-            BypassDomainItem(),
-            AllowBypassItem(),
-            Ipv6Item(),
-            DNSHijackingItem(),
-          ],
-          footer: [
-            appLocalizations.bypassDomainDesc,
-            appLocalizations.ipv6InboundDesc,
-          ].join('\n'),
-        ),
+    return HaraSection(
+      title: 'VPN',
+      rows: const [
+        BypassDomainItem(),
+        AllowBypassItem(),
+        Ipv6Item(),
+        DNSHijackingItem(),
       ],
+      footer: [
+        appLocalizations.vpnEnableDesc,
+        appLocalizations.bypassDomainDesc,
+        appLocalizations.ipv6InboundDesc,
+      ].join('\n'),
+      topGap: false,
     );
   }
 }
@@ -590,7 +579,10 @@ class SystemProxySection extends StatelessWidget {
         const BypassDomainItem(),
         if (system.isWindows) const LoopbackItem(),
       ],
-      footer: appLocalizations.bypassDomainDesc,
+      footer: [
+        appLocalizations.bypassDomainDesc,
+        appLocalizations.systemProxySharedNote,
+      ].join('\n'),
       topGap: false,
     );
   }
