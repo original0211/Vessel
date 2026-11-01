@@ -13,9 +13,9 @@
         android:translateX="7.8"
         android:translateY="7.8">
         <path
-            android:fillColor="#FFFFFF"
+            android:fillColor="#1A1A1A"
             android:pathData="M2.90,12.00 A5.5,5.5 0 0 1 8.40,6.50 L15.60,6.50 A5.5,5.5 0 0 1 21.10,12.00 L21.10,12.00 A5.5,5.5 0 0 1 15.60,17.50 L8.40,17.50 A5.5,5.5 0 0 1 2.90,12.00 Z"
-            android:strokeColor="#FFFFFF"
+            android:strokeColor="#1A1A1A"
             android:strokeLineCap="round"
             android:strokeLineJoin="round"
             android:strokeWidth="1.8" />
