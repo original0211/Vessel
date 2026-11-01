@@ -109,15 +109,21 @@ void main() {
     });
 
     test('the vermilion is read only in the token layer and the mark', () {
-      // Named exception (2026-11-01): the on-demand page's authorize label
-      // reads the vermilion as a to-do word, never as a fill and never as
-      // the current mark; the word is text, not the point.
-      const vermilionTextException = 'lib/views/config/on_demand.dart';
+      // Named exceptions: the on-demand page's authorize label
+      // (2026-11-01) and the general page's restore-defaults word
+      // (2026-11-02) read the vermilion as a word, never as a fill and
+      // never as the current mark; the word is text, not the point.
+      const vermilionTextExceptions = {
+        'lib/views/config/on_demand.dart',
+        'lib/views/config/general.dart',
+      };
       final offenders = <String>[];
       for (final file in libFiles()) {
         if (file.path.endsWith(tokenLayer)) continue;
         if (file.path.endsWith('lib/ui/disc_motif.dart')) continue;
-        if (file.path.endsWith(vermilionTextException)) continue;
+        if (vermilionTextExceptions.any((path) => file.path.endsWith(path))) {
+          continue;
+        }
         if (file.readAsStringSync().contains('.vermilion')) {
           offenders.add(file.path);
         }
