@@ -1,10 +1,8 @@
 import 'dart:convert';
 
 import 'package:kfusion/common/migration.dart';
-import 'package:kfusion/common/constant.dart';
 import 'package:kfusion/enum/enum.dart';
 import 'package:kfusion/models/models.dart';
-import 'package:kfusion/ui/color.dart';
 import 'package:material_ui/material_ui.dart' show ThemeMode;
 import 'package:flutter_test/flutter_test.dart';
 
@@ -178,7 +176,7 @@ void main() {
               'systemFontFamily': 'Beta Serif',
             };
 
-      test('starts theme colors over once and keeps the rest', () async {
+      test('stored theme colors fall away and the rest is kept', () async {
         final store = _FakeMigrationStore(
           configMap: customized(),
           version: Migration.currentVersion,
@@ -188,12 +186,18 @@ void main() {
         final config = await Migration(store: store).run();
 
         final theme = config.themeProps;
-        expect(theme.primaryColor, defaultPrimaryColor);
-        expect(theme.primaryColors, defaultPrimaryColors);
-        expect(theme.colorStyle, ColorStyle.vivid);
         expect(theme.themeMode, ThemeMode.dark);
         expect(theme.pureBlack, isTrue);
         expect(theme.liquidGlass, LiquidGlassMode.ultra);
+        final themeJson = theme.toJson();
+        for (final key in [
+          'primaryColor',
+          'primaryColors',
+          'colorStyle',
+          'schemeVariant',
+        ]) {
+          expect(themeJson, isNot(contains(key)), reason: key);
+        }
         expect(store.savedConfig, config);
         expect(store.version, Migration.currentVersion);
         expect(store.upgradeVersion, Migration.upgradeVersion);
@@ -206,14 +210,14 @@ void main() {
 
         final later = _FakeMigrationStore(
           configMap: jsonDecode(
-            jsonEncode(config.copyWith.themeProps(primaryColor: 0xFF123456)),
+            jsonEncode(config.copyWith.themeProps(themeMode: ThemeMode.light)),
           ),
           version: store.version,
           upgradeVersion: store.upgradeVersion,
         );
         final kept = await Migration(store: later).run();
 
-        expect(kept.themeProps.primaryColor, 0xFF123456);
+        expect(kept.themeProps.themeMode, ThemeMode.light);
         expect(later.events, ['getConfigMap', 'getVersion']);
       });
 
@@ -288,7 +292,7 @@ void main() {
 
         final config = await Migration(store: store).run();
 
-        expect(config.themeProps.primaryColor, 0xFF123456);
+        expect(config.themeProps.liquidGlass, LiquidGlassMode.standard);
         expect(store.upgradeVersion, 0);
       });
     });

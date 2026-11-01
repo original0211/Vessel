@@ -575,11 +575,6 @@ class AppLocalizations {
     return Intl.message('Theme mode', name: 'themeMode', desc: '', args: []);
   }
 
-  /// `Theme color`
-  String get themeColor {
-    return Intl.message('Theme color', name: 'themeColor', desc: '', args: []);
-  }
-
   /// `Auto`
   String get auto {
     return Intl.message('Auto', name: 'auto', desc: '', args: []);
@@ -2350,16 +2345,6 @@ class AppLocalizations {
     );
   }
 
-  /// `Are you sure you want to reset?`
-  String get resetTip {
-    return Intl.message(
-      'Are you sure you want to reset?',
-      name: 'resetTip',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Icon`
   String get icon {
     return Intl.message('Icon', name: 'icon', desc: '', args: []);
@@ -2660,21 +2645,6 @@ class AppLocalizations {
     return Intl.message('Pure black', name: 'pureBlack', desc: '', args: []);
   }
 
-  /// `Custom color`
-  String get customColor {
-    return Intl.message(
-      'Custom color',
-      name: 'customColor',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Color style`
-  String get colorStyle {
-    return Intl.message('Color style', name: 'colorStyle', desc: '', args: []);
-  }
-
   /// `Grid`
   String get grid {
     return Intl.message('Grid', name: 'grid', desc: '', args: []);
@@ -2708,31 +2678,6 @@ class AppLocalizations {
   /// `Hex`
   String get hex {
     return Intl.message('Hex', name: 'hex', desc: '', args: []);
-  }
-
-  /// `Monochrome`
-  String get monochromeScheme {
-    return Intl.message(
-      'Monochrome',
-      name: 'monochromeScheme',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Vivid`
-  String get vividStyle {
-    return Intl.message('Vivid', name: 'vividStyle', desc: '', args: []);
-  }
-
-  /// `Tinted`
-  String get tintedStyle {
-    return Intl.message('Tinted', name: 'tintedStyle', desc: '', args: []);
-  }
-
-  /// `Soft`
-  String get softStyle {
-    return Intl.message('Soft', name: 'softStyle', desc: '', args: []);
   }
 
   /// `Developer mode`

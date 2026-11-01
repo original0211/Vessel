@@ -2,7 +2,6 @@ import 'dart:math' as math;
 
 import 'package:kfusion/enum/enum.dart';
 import 'package:kfusion/providers/config.dart';
-import 'package:kfusion/providers/state.dart';
 import 'package:kfusion/widgets/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
@@ -161,133 +160,140 @@ class MiniScreenThumb extends StatelessWidget {
   }
 }
 
-class _ColorSchemeTween extends Tween<ColorScheme> {
-  _ColorSchemeTween({super.end});
-
-  @override
-  ColorScheme lerp(double t) => ColorScheme.lerp(begin!, end!, t);
-}
-
-/// The home page as the theme settings will draw it; its destinations can be
-/// tapped to try the tab animation.
-class ThemeLivePreview extends ConsumerStatefulWidget {
+/// The home screen as Vessel draws it, shown in both fields at once: the
+/// disc, the add-profile row, and the three destinations along the foot.
+class ThemeLivePreview extends ConsumerWidget {
   const ThemeLivePreview({super.key});
 
-  @override
-  ConsumerState<ThemeLivePreview> createState() => _ThemeLivePreviewState();
-}
-
-class _ThemeLivePreviewState extends ConsumerState<ThemeLivePreview>
-    with SingleTickerProviderStateMixin {
   static const double _phoneWidth = 168;
-  static const _duration = Duration(milliseconds: 300);
-
-  late final AnimationController _slide = AnimationController(
-    vsync: this,
-    duration: kTabScrollDuration,
-  );
-  late final CurvedAnimation _slideCurve = CurvedAnimation(
-    parent: _slide,
-    curve: Curves.easeOut,
-  );
-  int _selected = 0;
-  int? _previous;
 
   @override
-  void initState() {
-    super.initState();
-    ref.listenManual(
-      appSettingProvider.select((state) => state.tabAnimation),
-      (_, _) => _select((_selected + 1) % MiniScreen.destinationCount),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final pureBlack = ref.watch(
+      themeSettingProvider.select((state) => state.pureBlack),
     );
-  }
-
-  Future<void> _select(int index) async {
-    if (index == _selected) {
-      return;
-    }
-    final tabAnimation = ref.read(appSettingProvider).tabAnimation;
-    final fade = tabAnimation == TabAnimation.fade;
-    _slide.duration = fade ? fadeTabDuration : kTabScrollDuration;
-    _slideCurve.curve = fade ? fadeTabCurve : Curves.easeOut;
-    setState(() {
-      _previous = _selected;
-      _selected = index;
-    });
-    await _slide.forward(from: 0).orCancel.catchError((_) {});
-    if (mounted && _selected == index) {
-      setState(() => _previous = null);
-    }
-  }
-
-  @override
-  void dispose() {
-    _slideCurve.dispose();
-    _slide.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final lightScheme = ref.watch(genColorSchemeProvider(Brightness.light));
-    final darkScheme = ref.watch(genColorSchemeProvider(Brightness.dark));
-    final floatingBar = ref.watch(
-      appSettingProvider.select((state) => state.floatingNavigationBar),
-    );
-    final tabAnimation = ref.watch(
-      appSettingProvider.select((state) => state.tabAnimation),
-    );
-    final liquidGlass = ref.watch(
-      themeSettingProvider.select(
-        (state) => state.liquidGlass != LiquidGlassMode.none,
-      ),
-    );
-    final palette = context.haraPalette;
-    Widget phone(ColorScheme scheme, double width) => SizedBox(
+    final line = context.haraPalette.line;
+    Widget phone(HaraPalette palette, double width) => SizedBox(
       width: width,
       child: AspectRatio(
         aspectRatio: 9 / 17,
         child: CustomPaint(
-          foregroundPainter: _PreviewFramePainter(palette.line),
-          child: ClipRSuperellipse(
-            borderRadius: AppRadius.hara,
-            child: TweenAnimationBuilder<ColorScheme>(
-              tween: _ColorSchemeTween(end: scheme),
-              duration: _duration,
-              builder: (_, colorScheme, _) => AnimatedBuilder(
-                animation: _slideCurve,
-                builder: (_, _) => MiniScreen(
-                  key: ValueKey((floatingBar, liquidGlass)),
-                  colorScheme: colorScheme,
-                  floatingBar: floatingBar,
-                  liquidGlass: liquidGlass,
-                  selected: _selected,
-                  previous: _previous,
-                  progress: _previous == null ? 1 : _slideCurve.value,
-                  tabAnimation: tabAnimation,
-                  onSelect: _select,
-                ),
-              ),
-            ),
-          ),
+          foregroundPainter: _PreviewFramePainter(line),
+          child: CustomPaint(painter: _HomeSketchPainter(palette)),
         ),
       ),
     );
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 24),
-      alignment: Alignment.center,
+    return Padding(
+      padding: const EdgeInsets.only(top: HaraSpace.groupGap),
       child: LayoutBuilder(
         builder: (_, constraints) {
           final width = math.min(_phoneWidth, (constraints.maxWidth - 12) / 2);
           return Row(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 12,
-            children: [phone(lightScheme, width), phone(darkScheme, width)],
+            children: [
+              phone(HaraPalette.light, width),
+              phone(
+                HaraPalette.of(Brightness.dark, pureBlack: pureBlack),
+                width,
+              ),
+            ],
           );
         },
       ),
     );
   }
+}
+
+/// A hairline sketch of the home screen in one field: wordmark, disc with
+/// its point in ink, the add-profile row, and the foot's three destinations,
+/// the first of them current.
+class _HomeSketchPainter extends CustomPainter {
+  const _HomeSketchPainter(this.palette);
+
+  final HaraPalette palette;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final width = size.width;
+    final height = size.height;
+    final inset = width * 0.09;
+    canvas.drawRect(Offset.zero & size, Paint()..color = palette.bg);
+    canvas.drawRect(
+      Rect.fromLTWH(inset, height * 0.045, width * 0.16, height * 0.008),
+      Paint()..color = palette.ink,
+    );
+    final center = Offset(width / 2, height * 0.36);
+    final stroke = math.max(1.0, width * 0.008);
+    final ringRadius = width * 0.30 - stroke;
+    canvas.drawCircle(
+      center,
+      ringRadius,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = stroke
+        ..color = palette.sub,
+    );
+    canvas.drawCircle(
+      DiscGeometry.dotCenter(center, ringRadius),
+      DiscGeometry.dotRadius(ringRadius + stroke / 2),
+      Paint()..color = palette.ink,
+    );
+    final hairline = Paint()
+      ..strokeWidth = HaraSpace.hairline
+      ..color = palette.line;
+    canvas.drawLine(
+      Offset(inset, height * 0.80),
+      Offset(width - inset, height * 0.80),
+      hairline,
+    );
+    canvas.drawRect(
+      Rect.fromLTWH(inset, height * 0.825, width * 0.22, height * 0.007),
+      Paint()..color = palette.ink,
+    );
+    final arrowY = height * 0.8285;
+    canvas.drawPath(
+      Path()
+        ..moveTo(width * 0.862, arrowY - height * 0.006)
+        ..lineTo(width * 0.888, arrowY)
+        ..lineTo(width * 0.862, arrowY + height * 0.006),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = math.max(1.0, width * 0.007)
+        ..color = palette.sub,
+    );
+    canvas.drawLine(
+      Offset(0, height * 0.905),
+      Offset(width, height * 0.905),
+      hairline,
+    );
+    for (var i = 0; i < 3; i++) {
+      final cellCenter = width * (i * 2 + 1) / 6;
+      canvas.drawRect(
+        Rect.fromLTWH(
+          cellCenter - width * 0.065,
+          height * 0.945,
+          width * 0.13,
+          height * 0.007,
+        ),
+        Paint()..color = i == 0 ? palette.ink : palette.dim,
+      );
+    }
+    canvas.drawRect(
+      Rect.fromLTWH(
+        width / 6 - width * 0.05,
+        height * 0.962,
+        width * 0.10,
+        1.6,
+      ),
+      Paint()..color = palette.ink,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_HomeSketchPainter oldDelegate) =>
+      oldDelegate.palette != palette;
 }
 
 enum _MiniPage { dashboard, proxies, profiles, tools }

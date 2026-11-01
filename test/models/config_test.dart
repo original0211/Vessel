@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:kfusion/common/common.dart';
 import 'package:kfusion/enum/enum.dart';
 import 'package:kfusion/models/models.dart';
-import 'package:kfusion/ui/color.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:test/test.dart';
 
@@ -666,8 +665,6 @@ void main() {
   group('ThemeProps JSON round-trip', () {
     test('default values', () {
       const props = ThemeProps();
-      expect(props.primaryColor, null);
-      expect(props.primaryColors, defaultPrimaryColors);
       expect(props.themeMode, ThemeMode.system);
       expect(props.pureBlack, false);
       expect(props.textScale.scale, 1.0);
@@ -680,36 +677,37 @@ void main() {
 
     test('round-trip with custom values', () {
       const props = ThemeProps(
-        primaryColor: 0xFF123456,
         themeMode: ThemeMode.light,
         pureBlack: true,
         textScale: TextScale(enable: true, scale: 1.5),
       );
       final restored = roundTrip(() => props.toJson(), ThemeProps.fromJson);
-      expect(restored.primaryColor, 0xFF123456);
       expect(restored.themeMode, ThemeMode.light);
       expect(restored.pureBlack, true);
       expect(restored.textScale.scale, 1.5);
     });
 
-    test('reads an old scheme variant as the nearest color style', () {
-      ColorStyle styleOf(String variant) =>
-          ThemeProps.fromJson({'schemeVariant': variant}).colorStyle;
+    test('ignores the retired theme color keys of stored configs', () {
+      final restored = ThemeProps.fromJson({
+        'primaryColor': 0xFF123456,
+        'primaryColors': [0xFF123456, 0xFF795548],
+        'colorStyle': 'tinted',
+        'schemeVariant': 'monochrome',
+        'themeMode': 'dark',
+        'pureBlack': true,
+      });
 
-      expect(styleOf('content'), ColorStyle.vivid);
-      expect(styleOf('fidelity'), ColorStyle.vivid);
-      expect(styleOf('vibrant'), ColorStyle.vivid);
-      expect(styleOf('tonalSpot'), ColorStyle.soft);
-      expect(styleOf('neutral'), ColorStyle.soft);
-      expect(styleOf('monochrome'), ColorStyle.monochrome);
-      expect(
-        ThemeProps.fromJson({
-          'schemeVariant': 'monochrome',
-          'colorStyle': 'tinted',
-        }).colorStyle,
-        ColorStyle.tinted,
-      );
-      expect(const ThemeProps().toJson(), isNot(contains('schemeVariant')));
+      expect(restored.themeMode, ThemeMode.dark);
+      expect(restored.pureBlack, true);
+      final json = restored.toJson();
+      for (final key in [
+        'primaryColor',
+        'primaryColors',
+        'colorStyle',
+        'schemeVariant',
+      ]) {
+        expect(json, isNot(contains(key)), reason: key);
+      }
     });
 
     test('reads the old liquid glass switch as the standard tier', () {
@@ -919,10 +917,7 @@ void main() {
         appSettingProps: AppSettingProps(locale: 'en', autoLaunch: true),
         networkProps: NetworkProps(systemProxy: false),
         vpnProps: VpnProps(enable: false),
-        themeProps: ThemeProps(
-          primaryColor: 0xFF00FF00,
-          themeMode: ThemeMode.system,
-        ),
+        themeProps: ThemeProps(themeMode: ThemeMode.system),
         windowProps: WindowProps(width: 1280, height: 720),
       );
       final restored = roundTrip(() => config.toJson(), Config.fromJson);

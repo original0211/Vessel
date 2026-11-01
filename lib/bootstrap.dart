@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:dynamic_color/dynamic_color.dart';
 import 'package:kfusion/common/boot_guard.dart';
 import 'package:kfusion/common/boot_record.dart';
 import 'package:kfusion/common/common.dart';
@@ -10,7 +9,6 @@ import 'package:kfusion/common/migration.dart';
 import 'package:kfusion/common/tray.dart';
 import 'package:kfusion/common/window.dart';
 import 'package:kfusion/database/database.dart';
-import 'package:kfusion/enum/enum.dart';
 import 'package:kfusion/l10n/l10n.dart';
 import 'package:kfusion/models/models.dart';
 import 'package:kfusion/providers/providers.dart';
@@ -20,7 +18,6 @@ import 'package:kfusion/views/navigation.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:material_color_utilities/palettes/tonal_palette.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class Bootstrap {
@@ -43,34 +40,7 @@ class Bootstrap {
     windowPort = window;
     trayPort = appTray;
     navigationPort = navigation;
-    final dynamicColor = await _initDynamicColor();
-    return _initData(version, dynamicColor);
-  }
-
-  Future<DynamicColorSeeds> _initDynamicColor() async {
-    TonalPalette? primaryPalette;
-    Color? accentColor;
-    try {
-      primaryPalette = await _getSystemPrimaryPalette();
-    } catch (error) {
-      commonPrint.log(
-        'Failed to get core palette: $error',
-        logLevel: LogLevel.warning,
-      );
-    }
-    try {
-      accentColor = await DynamicColorPlugin.getAccentColor();
-    } catch (error) {
-      commonPrint.log(
-        'Failed to get accent color: $error',
-        logLevel: LogLevel.warning,
-      );
-    }
-    return (
-      lightSeed: primaryPalette != null ? Color(primaryPalette.get(40)) : null,
-      darkSeed: primaryPalette != null ? Color(primaryPalette.get(80)) : null,
-      accentColor: accentColor ?? const Color(defaultPrimaryColor),
-    );
+    return _initData(version);
   }
 
   /// Runs before migration and the database: a copy started from another
@@ -83,22 +53,7 @@ class Bootstrap {
     exit(0);
   }
 
-  Future<TonalPalette?> _getSystemPrimaryPalette() async {
-    final raw = await DynamicColorPlugin.channel.invokeMethod<List<dynamic>>(
-      DynamicColorPlugin.methodName,
-    );
-    if (raw == null || raw.length < TonalPalette.commonSize) {
-      return null;
-    }
-    return TonalPalette.fromList(
-      raw.sublist(0, TonalPalette.commonSize).cast<int>(),
-    );
-  }
-
-  Future<ProviderContainer> _initData(
-    int version,
-    DynamicColorSeeds dynamicColor,
-  ) async {
+  Future<ProviderContainer> _initData(int version) async {
     await _claimDataDirectory();
     globalState.packageInfo = await PackageInfo.fromPlatform();
     var config = await migration.run();
@@ -130,13 +85,6 @@ class Bootstrap {
       overrides: [...appStateOverrides, ...configOverrides],
     );
     globalState.container = container;
-    container
-        .read(dynamicColorProvider.notifier)
-        .seed(
-          lightSeed: dynamicColor.lightSeed,
-          darkSeed: dynamicColor.darkSeed,
-          accentColor: dynamicColor.accentColor,
-        );
     final profiles = await database.profilesDao.query().get();
     container.read(profilesProvider.notifier).reorder(profiles);
     await AppLocalizations.load(

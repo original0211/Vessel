@@ -1,6 +1,6 @@
 import 'dart:io';
+import 'dart:math' show max;
 
-import 'package:kfusion/common/constant.dart';
 import 'package:kfusion/common/feature.dart';
 
 import 'package:kfusion/enum/enum.dart';
@@ -73,177 +73,6 @@ void main() {
       await tester.tap(find.text('Auto'));
       await tester.pumpAndSettle();
       expect(readTheme().themeMode, ThemeMode.system);
-    });
-  });
-
-  group('primary color', () {
-    Finder swatch(int color) => find.byWidgetPredicate(
-      (widget) =>
-          widget is Semantics && widget.properties.label == Color(color).hex,
-    );
-
-    testWidgets('starts on the brand accent among the preset colors', (
-      tester,
-    ) async {
-      container
-          .read(themeSettingProvider.notifier)
-          .update((_) => defaultThemeProps);
-      await pumpThemeView(tester);
-
-      expect(readTheme().primaryColor, defaultPrimaryColor);
-      for (final color in defaultPrimaryColors) {
-        expect(swatch(color), findsOneWidget);
-      }
-      expect(find.byTooltip('Reset'), findsNothing);
-    });
-
-    testWidgets('picks a color and the style of its scheme', (tester) async {
-      await pumpThemeView(tester);
-
-      await tester.tap(swatch(0xFFAF52DE));
-      await tester.pumpAndSettle();
-      expect(readTheme().primaryColor, 0xFFAF52DE);
-
-      await tester.tap(
-        find.byWidgetPredicate(
-          (widget) =>
-              widget is Semantics && widget.properties.label == 'Follow system',
-        ),
-      );
-      await tester.pumpAndSettle();
-      expect(readTheme().primaryColor, isNull);
-
-      await tester.tap(find.text('Color style'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Soft').last);
-      await tester.pumpAndSettle();
-      expect(readTheme().colorStyle, ColorStyle.soft);
-    });
-
-    testWidgets('deletes a color from its context menu', (tester) async {
-      await pumpThemeView(tester);
-      await tester.tap(swatch(0xFFFF9500));
-      await tester.pumpAndSettle();
-
-      await tester.longPress(swatch(0xFFFF9500));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Delete'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Delete'));
-      await tester.pumpAndSettle();
-
-      expect(readTheme().primaryColors, isNot(contains(0xFFFF9500)));
-      expect(readTheme().primaryColor, defaultPrimaryColor);
-      expect(swatch(0xFFFF9500), findsNothing);
-    });
-
-    Future<void> editColor(WidgetTester tester, int color, String hex) async {
-      await tester.longPress(swatch(color));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Edit'));
-      await tester.pumpAndSettle();
-      await tester.enterText(
-        find.descendant(
-          of: find.byType(HexColorField),
-          matching: find.byType(TextField),
-        ),
-        hex,
-      );
-      await tester.pump();
-      await tester.tap(find.byTooltip('Confirm'));
-      await tester.pumpAndSettle();
-    }
-
-    testWidgets('edits a color in place from its context menu', (tester) async {
-      await pumpThemeView(tester);
-      await tester.tap(swatch(0xFFFF9500));
-      await tester.pumpAndSettle();
-      final index = readTheme().primaryColors.indexOf(0xFFFF9500);
-
-      await editColor(tester, 0xFFFF9500, '123456');
-
-      expect(readTheme().primaryColors, isNot(contains(0xFFFF9500)));
-      expect(readTheme().primaryColors[index], 0xFF123456);
-      expect(readTheme().primaryColor, 0xFF123456);
-      expect(swatch(0xFF123456), findsOneWidget);
-    });
-
-    testWidgets('merges a color edited into one already listed', (
-      tester,
-    ) async {
-      await pumpThemeView(tester);
-      await tester.tap(swatch(defaultPrimaryColor));
-      await tester.pumpAndSettle();
-      final count = readTheme().primaryColors.length;
-
-      await editColor(tester, 0xFFAF52DE, '00B4D8');
-
-      expect(readTheme().primaryColors, hasLength(count - 1));
-      expect(readTheme().primaryColors, isNot(contains(0xFFAF52DE)));
-      expect(readTheme().primaryColor, defaultPrimaryColor);
-      expect(swatch(defaultPrimaryColor), findsOneWidget);
-    });
-
-    testWidgets('adds a custom color once and selects it', (tester) async {
-      await pumpThemeView(tester);
-      final count = readTheme().primaryColors.length;
-
-      for (var i = 0; i < 2; i++) {
-        await tester.tap(find.byTooltip('Add'));
-        await tester.pumpAndSettle();
-        await tester.enterText(
-          find.descendant(
-            of: find.byType(HexColorField),
-            matching: find.byType(TextField),
-          ),
-          '123456',
-        );
-        await tester.pump();
-        await tester.tap(find.byTooltip('Confirm'));
-        await tester.pumpAndSettle();
-      }
-
-      expect(readTheme().primaryColors, hasLength(count + 1));
-      expect(readTheme().primaryColors.last, 0xFF123456);
-      expect(readTheme().primaryColor, 0xFF123456);
-      expect(swatch(0xFF123456), findsOneWidget);
-    });
-
-    testWidgets('keeps the custom color palette clear of the edge back '
-        'swipe', (tester) async {
-      const size = Size(400, 860);
-      container.read(viewSizeProvider.notifier).value = size;
-      tester.view.physicalSize = size;
-      tester.view.devicePixelRatio = 1;
-      tester.view.systemGestureInsets = const FakeViewPadding(
-        left: 30,
-        right: 30,
-      );
-      addTearDown(tester.view.reset);
-      await tester.pumpWidget(
-        UncontrolledProviderScope(
-          container: container,
-          child: const TestApp(child: ThemeView()),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      await tester.scrollUntilVisible(
-        find.byTooltip('Add'),
-        200,
-        scrollable: find.byType(Scrollable).first,
-      );
-      await tester.tap(find.byTooltip('Add'));
-      await tester.pumpAndSettle();
-
-      final pad = tester.getRect(
-        find.descendant(
-          of: find.byType(Palette),
-          matching: find.byType(AspectRatio),
-        ),
-      );
-      expect(pad.left, 30);
-      expect(pad.right, size.width - 30);
     });
   });
 
@@ -345,24 +174,6 @@ void main() {
       await tester.pumpAndSettle();
       expect(readSetting().tabAnimation, TabAnimation.slide);
     });
-
-    testWidgets('the preview switches to the destination tapped', (
-      tester,
-    ) async {
-      await pumpThemeView(tester);
-      Finder inPreview(Type type) => find.descendant(
-        of: find.byType(ThemeLivePreview),
-        matching: find.byType(type),
-      );
-      int selected() =>
-          tester.widgetList<MiniScreen>(inPreview(MiniScreen)).first.selected;
-
-      for (final destination in [2, 1]) {
-        await tester.tap(inPreview(GestureDetector).at(destination));
-        await tester.pumpAndSettle();
-        expect(selected(), destination);
-      }
-    });
   });
 
   group('preview ground', () {
@@ -445,17 +256,25 @@ void main() {
       }
     });
 
-    testWidgets('the live preview phones are square', (tester) async {
+    testWidgets('the live preview phones carry no rounded clip', (
+      tester,
+    ) async {
       await pumpThemeView(tester);
 
-      final clips = find.descendant(
-        of: find.byType(ThemeLivePreview),
-        matching: find.byType(ClipRSuperellipse),
+      expect(
+        find.descendant(
+          of: find.byType(ThemeLivePreview),
+          matching: find.byType(ClipRSuperellipse),
+        ),
+        findsNothing,
       );
-      expect(clips, findsNWidgets(2));
-      for (final clip in tester.widgetList<ClipRSuperellipse>(clips)) {
-        expect(clip.borderRadius, BorderRadius.zero);
-      }
+      expect(
+        find.descendant(
+          of: find.byType(ThemeLivePreview),
+          matching: find.byType(ClipRRect),
+        ),
+        findsNothing,
+      );
     });
 
     testWidgets('the choice rows mark the current value in ink', (
@@ -471,6 +290,83 @@ void main() {
         expect(check.color, isNot(palette.vermilion));
       }
     });
+  });
+
+  group('retired theme color controls', () {
+    testWidgets('the color controls are gone, the kept groups remain', (
+      tester,
+    ) async {
+      await pumpThemeView(tester);
+
+      expect(find.text('Theme color'), findsNothing);
+      expect(find.text('Color style'), findsNothing);
+      expect(find.text('Custom color'), findsNothing);
+      expect(find.text('Theme mode'), findsOneWidget);
+      expect(find.text('Pure black mode'), findsOneWidget);
+    });
+  });
+
+  group('live preview sketch', () {
+    Finder phones() => find.descendant(
+      of: find.byType(ThemeLivePreview),
+      matching: find.byType(AspectRatio),
+    );
+
+    Finder sketches() => find.descendant(
+      of: find.byType(ThemeLivePreview),
+      matching: find.byType(CustomPaint),
+    );
+
+    testWidgets('the two phones share a size and a top edge', (tester) async {
+      await pumpThemeView(tester);
+
+      final found = phones();
+      expect(found, findsNWidgets(2));
+      final first = tester.getRect(found.at(0));
+      final second = tester.getRect(found.at(1));
+      expect(first.size, second.size);
+      expect(first.top, second.top);
+      final previewTop = tester.getTopLeft(find.byType(ThemeLivePreview)).dy;
+      expect(first.top - previewTop, HaraSpace.groupGap);
+    });
+
+    testWidgets(
+      'each phone sketches the disc, its point in ink, and its field',
+      (tester) async {
+        await pumpThemeView(tester);
+
+        void expectSketch(int index, HaraPalette palette) {
+          final sketch = sketches().at(index * 2 + 1);
+          final size = tester.getSize(sketch);
+          final center = Offset(size.width / 2, size.height * 0.36);
+          final stroke = max(1.0, size.width * 0.008);
+          final ringRadius = size.width * 0.30 - stroke;
+          final dotCenter = DiscGeometry.dotCenter(center, ringRadius);
+          final dotRadius = DiscGeometry.dotRadius(ringRadius + stroke / 2);
+          expect(
+            sketch,
+            paints
+              ..rect(color: palette.bg)
+              ..circle(
+                x: center.dx,
+                y: center.dy,
+                radius: ringRadius,
+                style: PaintingStyle.stroke,
+                color: palette.sub,
+              )
+              ..circle(
+                x: dotCenter.dx,
+                y: dotCenter.dy,
+                radius: dotRadius,
+                color: palette.ink,
+              ),
+          );
+        }
+
+        expectSketch(0, HaraPalette.light);
+        expectSketch(1, HaraPalette.dark);
+      },
+    );
   });
 
   group('text scale', () {

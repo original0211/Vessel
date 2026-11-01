@@ -312,21 +312,9 @@ Map<String, dynamic> _$TextScaleToJson(_TextScale instance) =>
     <String, dynamic>{'enable': instance.enable, 'scale': instance.scale};
 
 _ThemeProps _$ThemePropsFromJson(Map<String, dynamic> json) => _ThemeProps(
-  primaryColor: (json['primaryColor'] as num?)?.toInt(),
-  primaryColors:
-      (json['primaryColors'] as List<dynamic>?)
-          ?.map((e) => (e as num).toInt())
-          .toList() ??
-      defaultPrimaryColors,
   themeMode:
       $enumDecodeNullable(_$ThemeModeEnumMap, json['themeMode']) ??
       ThemeMode.system,
-  colorStyle:
-      $enumDecodeNullable(
-        _$ColorStyleEnumMap,
-        _readColorStyle(json, 'colorStyle'),
-      ) ??
-      ColorStyle.vivid,
   pureBlack: json['pureBlack'] as bool? ?? false,
   sidebarBlur: json['sidebarBlur'] as bool? ?? true,
   liquidGlass:
@@ -342,10 +330,7 @@ _ThemeProps _$ThemePropsFromJson(Map<String, dynamic> json) => _ThemeProps(
 
 Map<String, dynamic> _$ThemePropsToJson(_ThemeProps instance) =>
     <String, dynamic>{
-      'primaryColor': instance.primaryColor,
-      'primaryColors': instance.primaryColors,
       'themeMode': _$ThemeModeEnumMap[instance.themeMode]!,
-      'colorStyle': _$ColorStyleEnumMap[instance.colorStyle]!,
       'pureBlack': instance.pureBlack,
       'sidebarBlur': instance.sidebarBlur,
       'liquidGlass': _$LiquidGlassModeEnumMap[instance.liquidGlass]!,
@@ -356,13 +341,6 @@ const _$ThemeModeEnumMap = {
   ThemeMode.system: 'system',
   ThemeMode.light: 'light',
   ThemeMode.dark: 'dark',
-};
-
-const _$ColorStyleEnumMap = {
-  ColorStyle.vivid: 'vivid',
-  ColorStyle.tinted: 'tinted',
-  ColorStyle.soft: 'soft',
-  ColorStyle.monochrome: 'monochrome',
 };
 
 const _$LiquidGlassModeEnumMap = {

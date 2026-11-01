@@ -13,15 +13,6 @@ Hct _hct(Color color) => Hct.fromInt(color.toARGB32());
 Matcher _grayish(Color material, double limit) =>
     lessThanOrEqualTo(max(limit, _hct(material).chroma + 0.01));
 
-const _accentStyles = {ColorStyle.vivid, ColorStyle.tinted};
-
-const _materialVariants = {
-  ColorStyle.vivid: DynamicSchemeVariant.content,
-  ColorStyle.tinted: DynamicSchemeVariant.content,
-  ColorStyle.soft: DynamicSchemeVariant.tonalSpot,
-  ColorStyle.monochrome: DynamicSchemeVariant.monochrome,
-};
-
 double _contrast(Color a, Color b) {
   final lighter = max(a.computeLuminance(), b.computeLuminance());
   final darker = min(a.computeLuminance(), b.computeLuminance());
@@ -47,136 +38,82 @@ void main() {
       Color(0xFF03A9F4),
       Color(0xFFE91E63),
     ]) {
-      for (final style in ColorStyle.values) {
-        for (final brightness in Brightness.values) {
-          final dark = brightness == Brightness.dark;
-          final scheme = seededColorScheme(
-            seedColor: seed,
-            brightness: brightness,
-            style: style,
-          );
-          final material = ColorScheme.fromSeed(
-            seedColor: seed,
-            brightness: brightness,
-            dynamicSchemeVariant: _materialVariants[style]!,
-          );
-          final reason = '$seed $style $brightness';
-          final gray = style != ColorStyle.tinted;
-          final surfaces = {
-            scheme.surfaceDim: material.surfaceDim,
-            scheme.surfaceContainerLowest: material.surfaceContainerLowest,
-            scheme.surfaceContainerLow: material.surfaceContainerLow,
-            scheme.surfaceContainer: material.surfaceContainer,
-            scheme.surfaceContainerHigh: material.surfaceContainerHigh,
-            scheme.surfaceContainerHighest: material.surfaceContainerHighest,
-          };
-          for (final MapEntry(key: ours, value: theirs) in surfaces.entries) {
-            if (gray) {
-              // Surface tones answer to the pinned ladder tests below;
-              // the light paper also pins its chroma, capped here.
-              expect(
-                _hct(ours).chroma,
-                dark ? _grayish(theirs, 3.1) : lessThanOrEqualTo(4.6),
-                reason: reason,
-              );
-            }
-          }
-          final papers = {
-            scheme.surface: material.surface,
-            scheme.surfaceBright: material.surfaceBright,
-          };
-          for (final MapEntry(key: ours, value: theirs) in papers.entries) {
-            if (gray) {
-              expect(
-                _hct(ours).chroma,
-                dark ? _grayish(theirs, 3.1) : lessThanOrEqualTo(4.6),
-                reason: reason,
-              );
-            }
-          }
+      for (final brightness in Brightness.values) {
+        final dark = brightness == Brightness.dark;
+        final scheme = seededColorScheme(
+          seedColor: seed,
+          brightness: brightness,
+        );
+        final material = ColorScheme.fromSeed(
+          seedColor: seed,
+          brightness: brightness,
+          dynamicSchemeVariant: DynamicSchemeVariant.content,
+        );
+        final reason = '$seed $brightness';
+        final surfaces = {
+          scheme.surfaceDim: material.surfaceDim,
+          scheme.surfaceContainerLowest: material.surfaceContainerLowest,
+          scheme.surfaceContainerLow: material.surfaceContainerLow,
+          scheme.surfaceContainer: material.surfaceContainer,
+          scheme.surfaceContainerHigh: material.surfaceContainerHigh,
+          scheme.surfaceContainerHighest: material.surfaceContainerHighest,
+        };
+        for (final MapEntry(key: ours, value: theirs) in surfaces.entries) {
+          // Surface tones answer to the pinned ladder tests below;
+          // the light paper also pins its chroma, capped here.
           expect(
-            _hct(scheme.primaryContainer).tone,
-            closeTo(dark ? 30 : 90, 1),
+            _hct(ours).chroma,
+            dark ? _grayish(theirs, 3.1) : lessThanOrEqualTo(4.6),
             reason: reason,
           );
-          expect(
-            _hct(scheme.primaryContainer).chroma,
-            lessThan(48.5),
-            reason: reason,
-          );
-          expect(
-            _hct(scheme.onPrimaryContainer).tone,
-            closeTo(dark ? 90 : 30, 1),
-            reason: reason,
-          );
-          if (!_accentStyles.contains(style)) {
-            expect(scheme.primary, material.primary, reason: reason);
-          }
-          expect(scheme.onSurface, material.onSurface, reason: reason);
         }
+        final papers = {
+          scheme.surface: material.surface,
+          scheme.surfaceBright: material.surfaceBright,
+        };
+        for (final MapEntry(key: ours, value: theirs) in papers.entries) {
+          expect(
+            _hct(ours).chroma,
+            dark ? _grayish(theirs, 3.1) : lessThanOrEqualTo(4.6),
+            reason: reason,
+          );
+        }
+        expect(
+          _hct(scheme.primaryContainer).tone,
+          closeTo(dark ? 30 : 90, 1),
+          reason: reason,
+        );
+        expect(
+          _hct(scheme.primaryContainer).chroma,
+          lessThan(48.5),
+          reason: reason,
+        );
+        expect(
+          _hct(scheme.onPrimaryContainer).tone,
+          closeTo(dark ? 90 : 30, 1),
+          reason: reason,
+        );
+        expect(scheme.onSurface, material.onSurface, reason: reason);
       }
     }
   });
 
-  test('vivid and tinted keep the seed as primary, lifted in dark', () {
+  test('the scheme keeps the seed as primary, lifted in dark', () {
     const blue = Color(0xFF007AFF);
-    for (final style in _accentStyles) {
-      final light = seededColorScheme(
-        seedColor: blue,
-        brightness: Brightness.light,
-        style: style,
-      );
-      final dark = seededColorScheme(
-        seedColor: blue,
-        brightness: Brightness.dark,
-        style: style,
-      );
-
-      expect(light.primary, blue, reason: '$style');
-      expect(light.onPrimary, Colors.white, reason: '$style');
-      expect(_hct(dark.primary).hue, closeTo(_hct(blue).hue, 1));
-      expect(_hct(dark.primary).tone, closeTo(_hct(blue).tone + 3, 0.5));
-      expect(dark.onPrimary, Colors.white, reason: '$style');
-    }
-
-    final soft = seededColorScheme(
+    final light = seededColorScheme(
       seedColor: blue,
       brightness: Brightness.light,
-      style: ColorStyle.soft,
     );
-    expect(_hct(soft.primary).tone, closeTo(40, 1));
-    expect(_hct(soft.primary).chroma, lessThan(_hct(blue).chroma * 0.6));
-  });
-
-  test('tinted washes the surfaces with the seed and keeps their tones', () {
-    const blue = Color(0xFF007AFF);
-    for (final brightness in Brightness.values) {
-      final vivid = seededColorScheme(seedColor: blue, brightness: brightness);
-      final tinted = seededColorScheme(
-        seedColor: blue,
-        brightness: brightness,
-        style: ColorStyle.tinted,
-      );
-      final reason = '$brightness';
-
-      expect(tinted.primary, vivid.primary, reason: reason);
-      for (final (ours, plain) in [
-        (tinted.surface, vivid.surface),
-        (tinted.surfaceContainer, vivid.surfaceContainer),
-        (tinted.surfaceContainerHighest, vivid.surfaceContainerHighest),
-      ]) {
-        expect(_hct(ours).chroma, greaterThan(5), reason: reason);
-        expect(_hct(ours).hue, closeTo(_hct(blue).hue, 15), reason: reason);
-        expect(_hct(ours).tone, closeTo(_hct(plain).tone, 0.6), reason: reason);
-      }
-    }
-
-    final graphite = seededColorScheme(
-      seedColor: const Color(0xFF8E8E93),
-      brightness: Brightness.light,
-      style: ColorStyle.tinted,
+    final dark = seededColorScheme(
+      seedColor: blue,
+      brightness: Brightness.dark,
     );
-    expect(_hct(graphite.surfaceContainer).chroma, lessThan(3.1));
+
+    expect(light.primary, blue);
+    expect(light.onPrimary, Colors.white);
+    expect(_hct(dark.primary).hue, closeTo(_hct(blue).hue, 1));
+    expect(_hct(dark.primary).tone, closeTo(_hct(blue).tone + 3, 0.5));
+    expect(dark.onPrimary, Colors.white);
   });
 
   test('a primary kept from the seed stays readable under its text', () {
@@ -264,24 +201,21 @@ void main() {
       Color(0xFFE91E63),
       Color(0xFF808080),
     ]) {
-      for (final style in ColorStyle.values) {
-        final scheme = seededColorScheme(
-          seedColor: seed,
-          brightness: Brightness.dark,
-          style: style,
-        );
-        final reason = '$seed $style';
-        for (final (pick, tone) in roles) {
-          expect(_hct(pick(scheme)).tone, closeTo(tone, 0.6), reason: reason);
-        }
-        for (final leveled in [scheme, scheme.toPureBlack(true)]) {
-          final steps = [
-            for (final level in SurfaceLevel.values)
-              _hct(level.colorOf(leveled)).tone,
-          ];
-          for (var i = 1; i < steps.length; i++) {
-            expect(steps[i] - steps[i - 1], greaterThan(4.5), reason: reason);
-          }
+      final scheme = seededColorScheme(
+        seedColor: seed,
+        brightness: Brightness.dark,
+      );
+      final reason = '$seed';
+      for (final (pick, tone) in roles) {
+        expect(_hct(pick(scheme)).tone, closeTo(tone, 0.6), reason: reason);
+      }
+      for (final leveled in [scheme, scheme.toPureBlack(true)]) {
+        final steps = [
+          for (final level in SurfaceLevel.values)
+            _hct(level.colorOf(leveled)).tone,
+        ];
+        for (var i = 1; i < steps.length; i++) {
+          expect(steps[i] - steps[i - 1], greaterThan(4.5), reason: reason);
         }
       }
     }
@@ -303,35 +237,30 @@ void main() {
       Color(0xFFE91E63),
       Color(0xFF808080),
     ]) {
-      for (final style in ColorStyle.values) {
-        final scheme = seededColorScheme(
-          seedColor: seed,
-          brightness: Brightness.light,
-          style: style,
-        );
-        final reason = '$seed $style';
-        for (final (pick, pin) in roles) {
-          final hct = _hct(pick(scheme));
-          expect(hct.tone, closeTo(pin.$3, 0.6), reason: reason);
-          if (style != ColorStyle.tinted) {
-            if (pin.$3 < 100) {
-              expect(hct.chroma, closeTo(pin.$2, 0.6), reason: reason);
-              if (pin.$2 > 0) {
-                // Hue readback drifts several degrees at paper chroma.
-                expect(hct.hue, closeTo(pin.$1, 5), reason: reason);
-              }
-            }
+      final scheme = seededColorScheme(
+        seedColor: seed,
+        brightness: Brightness.light,
+      );
+      final reason = '$seed';
+      for (final (pick, pin) in roles) {
+        final hct = _hct(pick(scheme));
+        expect(hct.tone, closeTo(pin.$3, 0.6), reason: reason);
+        if (pin.$3 < 100) {
+          expect(hct.chroma, closeTo(pin.$2, 0.6), reason: reason);
+          if (pin.$2 > 0) {
+            // Hue readback drifts several degrees at paper chroma.
+            expect(hct.hue, closeTo(pin.$1, 5), reason: reason);
           }
         }
-        final steps = [
-          for (final level in SurfaceLevel.values)
-            _hct(level.colorOf(scheme)).tone,
-        ];
-        // page < card, page < block, inset below page: the paper ladder.
-        expect(steps[1] - steps[0], greaterThan(2.5), reason: reason);
-        expect(steps[2] - steps[0], greaterThan(1.5), reason: reason);
-        expect(steps[0] - steps[3], greaterThan(2.5), reason: reason);
       }
+      final steps = [
+        for (final level in SurfaceLevel.values)
+          _hct(level.colorOf(scheme)).tone,
+      ];
+      // page < card, page < block, inset below page: the paper ladder.
+      expect(steps[1] - steps[0], greaterThan(2.5), reason: reason);
+      expect(steps[2] - steps[0], greaterThan(1.5), reason: reason);
+      expect(steps[0] - steps[3], greaterThan(2.5), reason: reason);
     }
     final paper = seededColorScheme(
       seedColor: const Color(0xFF00B4D8),

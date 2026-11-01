@@ -82,16 +82,16 @@ void main() {
   });
 
   group('ThemeSetting provider', () {
-    test('default value is dark mode', () {
+    test('default value is the standard dark field', () {
       final value = container.read(themeSettingProvider);
-      expect(value.primaryColor, null);
+      expect(value.pureBlack, false);
     });
 
     test('can update state', () {
       container
           .read(themeSettingProvider.notifier)
-          .update((_) => const ThemeProps(primaryColor: 0xFF123456));
-      expect(container.read(themeSettingProvider).primaryColor, 0xFF123456);
+          .update((_) => const ThemeProps(pureBlack: true));
+      expect(container.read(themeSettingProvider).pureBlack, true);
     });
   });
 

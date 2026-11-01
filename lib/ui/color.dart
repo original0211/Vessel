@@ -8,60 +8,34 @@ import 'package:material_color_utilities/material_color_utilities.dart'
         Hct,
         MaterialDynamicColors,
         SchemeContent,
-        SchemeMonochrome,
-        SchemeTonalSpot,
         TonalPalette,
         Variant;
 import 'package:material_ui/material_ui.dart';
-
-enum ColorStyle {
-  vivid,
-  tinted,
-  soft,
-  monochrome;
-
-  Variant get _variant => switch (this) {
-    vivid || tinted => Variant.content,
-    soft => Variant.tonalSpot,
-    monochrome => Variant.monochrome,
-  };
-}
 
 /// `.agents/surfaces.md` explains why each role this replaces leaves
 /// Material's value.
 ColorScheme seededColorScheme({
   required Color seedColor,
   required Brightness brightness,
-  ColorStyle style = ColorStyle.vivid,
 }) {
   final dark = brightness == Brightness.dark;
   final source = Hct.fromInt(seedColor.toARGB32());
-  final scheme = _dynamicScheme(source, dark, style);
+  final scheme = _dynamicScheme(source, dark);
   final primary = scheme.primaryPalette;
   final container = TonalPalette.of(
     primary.hue,
     min(primary.chroma, _primaryContainerChroma),
   );
-  final tint = style == ColorStyle.tinted
-      ? min(source.chroma / _tintDivisor, _maxTintChroma)
-      : null;
   Color neutral(DynamicColor role, double maxChroma) {
     final palette = role.palette(scheme);
     final paper = _lightPaperPin(role, dark);
     if (paper != null) {
-      final tinted = style == ColorStyle.tinted;
-      return Color(
-        Hct.from(
-          tinted ? palette.hue : paper.$1,
-          tinted ? (tint ?? min(palette.chroma, maxChroma)) : paper.$2,
-          paper.$3,
-        ).toInt(),
-      );
+      return Color(Hct.from(paper.$1, paper.$2, paper.$3).toInt());
     }
     return Color(
       Hct.from(
         palette.hue,
-        tint ?? min(palette.chroma, maxChroma),
+        min(palette.chroma, maxChroma),
         _darkSurfaceTone(role, dark) ?? role.getTone(scheme),
       ).toInt(),
     );
@@ -70,16 +44,13 @@ ColorScheme seededColorScheme({
   Color role(DynamicColor color) => Color(color.getArgb(scheme));
 
   final paperChroma = dark ? _surfaceChroma : _paperChroma;
-  final accent = switch (style) {
-    ColorStyle.vivid || ColorStyle.tinted => _accent(seedColor, source, dark),
-    ColorStyle.soft || ColorStyle.monochrome => null,
-  };
-  final primaryColor = accent?.primary ?? role(MaterialDynamicColors.primary);
+  final accent = _accent(seedColor, source, dark);
+  final seededPrimary = accent.primary;
   return ColorScheme(
     brightness: brightness,
-    primary: primaryColor,
-    onPrimary: accent?.onPrimary ?? role(MaterialDynamicColors.onPrimary),
-    surfaceTint: primaryColor,
+    primary: seededPrimary,
+    onPrimary: accent.onPrimary,
+    surfaceTint: seededPrimary,
     primaryContainer: Color(container.get(dark ? 30 : 90)),
     onPrimaryContainer: Color(container.get(dark ? 90 : 30)),
     primaryFixed: role(MaterialDynamicColors.primaryFixed),
@@ -196,10 +167,6 @@ const _surfaceChroma = 3.0;
 
 const _paperChroma = 1.5;
 
-const _tintDivisor = 6.0;
-
-const _maxTintChroma = 10.0;
-
 const _primaryContainerChroma = 48.0;
 
 const _minAccentTone = 35.0;
@@ -239,12 +206,12 @@ DynamicScheme? _lastScheme;
 // Palettes do not depend on brightness, and a seed's light and dark schemes
 // are built one after the other, so the second takes the first one's rather
 // than running the content variant's temperature analysis again.
-DynamicScheme _dynamicScheme(Hct source, bool dark, ColorStyle style) {
+DynamicScheme _dynamicScheme(Hct source, bool dark) {
   final last = _lastScheme;
   final scheme =
       last != null &&
           last.sourceColorArgb == source.toInt() &&
-          last.variant == style._variant
+          last.variant == Variant.content
       ? DynamicScheme(
           sourceColorHct: source,
           variant: last.variant,
@@ -255,23 +222,7 @@ DynamicScheme _dynamicScheme(Hct source, bool dark, ColorStyle style) {
           neutralPalette: last.neutralPalette,
           neutralVariantPalette: last.neutralVariantPalette,
         )
-      : switch (style) {
-          ColorStyle.vivid || ColorStyle.tinted => SchemeContent(
-            sourceColorHct: source,
-            isDark: dark,
-            contrastLevel: 0,
-          ),
-          ColorStyle.soft => SchemeTonalSpot(
-            sourceColorHct: source,
-            isDark: dark,
-            contrastLevel: 0,
-          ),
-          ColorStyle.monochrome => SchemeMonochrome(
-            sourceColorHct: source,
-            isDark: dark,
-            contrastLevel: 0,
-          ),
-        };
+      : SchemeContent(sourceColorHct: source, isDark: dark, contrastLevel: 0);
   return _lastScheme = scheme;
 }
 

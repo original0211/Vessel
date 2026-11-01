@@ -532,248 +532,6 @@ final class SuspendProvider extends $FunctionalProvider<bool, bool, bool>
 
 String _$suspendHash() => r'9ab9210f4f3c70f63d9858d492a9c09b3fb24bf1';
 
-@ProviderFor(DynamicColor)
-final dynamicColorProvider = DynamicColorProvider._();
-
-final class DynamicColorProvider
-    extends $NotifierProvider<DynamicColor, DynamicColorSeeds> {
-  DynamicColorProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'dynamicColorProvider',
-        isAutoDispose: false,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$dynamicColorHash();
-
-  @$internal
-  @override
-  DynamicColor create() => DynamicColor();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(DynamicColorSeeds value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<DynamicColorSeeds>(value),
-    );
-  }
-}
-
-String _$dynamicColorHash() => r'6706bed0ee92072cc5b2847d5504be55d3d51f10';
-
-abstract class _$DynamicColor extends $Notifier<DynamicColorSeeds> {
-  DynamicColorSeeds build();
-  @$mustCallSuper
-  @override
-  WhenComplete runBuild() {
-    final ref = this.ref as $Ref<DynamicColorSeeds, DynamicColorSeeds>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<DynamicColorSeeds, DynamicColorSeeds>,
-              DynamicColorSeeds,
-              Object?,
-              Object?
-            >;
-    return element.handleCreate(ref, build);
-  }
-}
-
-@ProviderFor(genColorScheme)
-final genColorSchemeProvider = GenColorSchemeFamily._();
-
-final class GenColorSchemeProvider
-    extends $FunctionalProvider<ColorScheme, ColorScheme, ColorScheme>
-    with $Provider<ColorScheme> {
-  GenColorSchemeProvider._({
-    required GenColorSchemeFamily super.from,
-    required (Brightness, {Color? color, bool ignoreConfig, bool? pureBlack})
-    super.argument,
-  }) : super(
-         retry: null,
-         name: r'genColorSchemeProvider',
-         isAutoDispose: true,
-         dependencies: null,
-         $allTransitiveDependencies: null,
-       );
-
-  @override
-  String debugGetCreateSourceHash() => _$genColorSchemeHash();
-
-  @override
-  String toString() {
-    return r'genColorSchemeProvider'
-        ''
-        '$argument';
-  }
-
-  @$internal
-  @override
-  $ProviderElement<ColorScheme> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
-
-  @override
-  ColorScheme create(Ref ref) {
-    final argument =
-        this.argument
-            as (Brightness, {Color? color, bool ignoreConfig, bool? pureBlack});
-    return genColorScheme(
-      ref,
-      argument.$1,
-      color: argument.color,
-      ignoreConfig: argument.ignoreConfig,
-      pureBlack: argument.pureBlack,
-    );
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(ColorScheme value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<ColorScheme>(value),
-    );
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is GenColorSchemeProvider && other.argument == argument;
-  }
-
-  @override
-  int get hashCode {
-    return argument.hashCode;
-  }
-}
-
-String _$genColorSchemeHash() => r'c6838e224d41780617f7338c5e56173a7620cd87';
-
-final class GenColorSchemeFamily extends $Family
-    with
-        $FunctionalFamilyOverride<
-          ColorScheme,
-          (Brightness, {Color? color, bool ignoreConfig, bool? pureBlack})
-        > {
-  GenColorSchemeFamily._()
-    : super(
-        retry: null,
-        name: r'genColorSchemeProvider',
-        dependencies: null,
-        $allTransitiveDependencies: null,
-        isAutoDispose: true,
-      );
-
-  GenColorSchemeProvider call(
-    Brightness brightness, {
-    Color? color,
-    bool ignoreConfig = false,
-    bool? pureBlack,
-  }) => GenColorSchemeProvider._(
-    argument: (
-      brightness,
-      color: color,
-      ignoreConfig: ignoreConfig,
-      pureBlack: pureBlack,
-    ),
-    from: this,
-  );
-
-  @override
-  String toString() => r'genColorSchemeProvider';
-}
-
-@ProviderFor(windowBlurRequest)
-final windowBlurRequestProvider = WindowBlurRequestProvider._();
-
-final class WindowBlurRequestProvider
-    extends
-        $FunctionalProvider<
-          WindowBlurRequest,
-          WindowBlurRequest,
-          WindowBlurRequest
-        >
-    with $Provider<WindowBlurRequest> {
-  WindowBlurRequestProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'windowBlurRequestProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$windowBlurRequestHash();
-
-  @$internal
-  @override
-  $ProviderElement<WindowBlurRequest> $createElement(
-    $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
-
-  @override
-  WindowBlurRequest create(Ref ref) {
-    return windowBlurRequest(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(WindowBlurRequest value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<WindowBlurRequest>(value),
-    );
-  }
-}
-
-String _$windowBlurRequestHash() => r'e22ea22957373c5b864e3fb80af56a2d08646666';
-
-@ProviderFor(currentBrightness)
-final currentBrightnessProvider = CurrentBrightnessProvider._();
-
-final class CurrentBrightnessProvider
-    extends $FunctionalProvider<Brightness, Brightness, Brightness>
-    with $Provider<Brightness> {
-  CurrentBrightnessProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'currentBrightnessProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$currentBrightnessHash();
-
-  @$internal
-  @override
-  $ProviderElement<Brightness> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
-
-  @override
-  Brightness create(Ref ref) {
-    return currentBrightness(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(Brightness value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<Brightness>(value),
-    );
-  }
-}
-
-String _$currentBrightnessHash() => r'ab56c47af4fcae773c8f9f81c91800c1e1890b70';
-
 @ProviderFor(currentGroupsState)
 final currentGroupsStateProvider = CurrentGroupsStateProvider._();
 
@@ -2194,6 +1952,178 @@ final class OverlayTopOffsetProvider
 }
 
 String _$overlayTopOffsetHash() => r'44c3b3c9f8f3af5e10ba91e0f2514f52f3c6ddac';
+
+@ProviderFor(genColorScheme)
+final genColorSchemeProvider = GenColorSchemeFamily._();
+
+final class GenColorSchemeProvider
+    extends $FunctionalProvider<ColorScheme, ColorScheme, ColorScheme>
+    with $Provider<ColorScheme> {
+  GenColorSchemeProvider._({
+    required GenColorSchemeFamily super.from,
+    required (Brightness, {bool? pureBlack}) super.argument,
+  }) : super(
+         retry: null,
+         name: r'genColorSchemeProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$genColorSchemeHash();
+
+  @override
+  String toString() {
+    return r'genColorSchemeProvider'
+        ''
+        '$argument';
+  }
+
+  @$internal
+  @override
+  $ProviderElement<ColorScheme> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  ColorScheme create(Ref ref) {
+    final argument = this.argument as (Brightness, {bool? pureBlack});
+    return genColorScheme(ref, argument.$1, pureBlack: argument.pureBlack);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ColorScheme value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ColorScheme>(value),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is GenColorSchemeProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$genColorSchemeHash() => r'e035ea5ff6b9beaf8963d9810f08da3a3410f22f';
+
+final class GenColorSchemeFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          ColorScheme,
+          (Brightness, {bool? pureBlack})
+        > {
+  GenColorSchemeFamily._()
+    : super(
+        retry: null,
+        name: r'genColorSchemeProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  GenColorSchemeProvider call(Brightness brightness, {bool? pureBlack}) =>
+      GenColorSchemeProvider._(
+        argument: (brightness, pureBlack: pureBlack),
+        from: this,
+      );
+
+  @override
+  String toString() => r'genColorSchemeProvider';
+}
+
+@ProviderFor(windowBlurRequest)
+final windowBlurRequestProvider = WindowBlurRequestProvider._();
+
+final class WindowBlurRequestProvider
+    extends
+        $FunctionalProvider<
+          WindowBlurRequest,
+          WindowBlurRequest,
+          WindowBlurRequest
+        >
+    with $Provider<WindowBlurRequest> {
+  WindowBlurRequestProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'windowBlurRequestProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$windowBlurRequestHash();
+
+  @$internal
+  @override
+  $ProviderElement<WindowBlurRequest> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  WindowBlurRequest create(Ref ref) {
+    return windowBlurRequest(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(WindowBlurRequest value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<WindowBlurRequest>(value),
+    );
+  }
+}
+
+String _$windowBlurRequestHash() => r'e22ea22957373c5b864e3fb80af56a2d08646666';
+
+@ProviderFor(currentBrightness)
+final currentBrightnessProvider = CurrentBrightnessProvider._();
+
+final class CurrentBrightnessProvider
+    extends $FunctionalProvider<Brightness, Brightness, Brightness>
+    with $Provider<Brightness> {
+  CurrentBrightnessProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'currentBrightnessProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$currentBrightnessHash();
+
+  @$internal
+  @override
+  $ProviderElement<Brightness> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  Brightness create(Ref ref) {
+    return currentBrightness(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Brightness value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Brightness>(value),
+    );
+  }
+}
+
+String _$currentBrightnessHash() => r'ab56c47af4fcae773c8f9f81c91800c1e1890b70';
 
 @ProviderFor(profilesState)
 final profilesStateProvider = ProfilesStateProvider._();

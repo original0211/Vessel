@@ -53,26 +53,14 @@ unchanged, as they carry state rather than structure.
 
 ## The Seeded Scheme
 
-`seededColorScheme` in `lib/ui/color.dart` builds every app scheme: Material's scheme for the seed and the
-`ColorStyle` picked in the theme settings, with three groups of roles replaced. Everything else stays Material,
-including `toPureBlack` applied after it.
-
-The four styles each change something a reader sees at once. Material's nine variants mostly moved secondary and
-tertiary, which the app barely shows, so most of them looked alike once surfaces stayed gray.
-
-| Style        | Material variant | Primary           | Surfaces                        |
-|--------------|------------------|-------------------|---------------------------------|
-| `vivid`      | content          | the seed          | near gray                       |
-| `tinted`     | content          | the seed          | the seed's hue, up to chroma 10 |
-| `soft`       | tonal spot       | Material's, muted | near gray                       |
-| `monochrome` | monochrome       | black or white    | gray                            |
-
+`seededColorScheme` in `lib/ui/color.dart` builds every app scheme from the one fixed seed
+(`defaultPrimaryColor`) through Material's content variant, with three groups of roles replaced. Everything
+else stays Material, including `toPureBlack` applied after it. The theme color settings and their styles were
+retired on 2026-11-01; the scheme's single form is the one those settings defaulted to.
 
 - **Surfaces stay near gray.** Each `surface*` role keeps Material's tone but its chroma is capped at 3, the light
   `surface` and `surfaceBright` at 1.5, and `outlineVariant` at 4. Material tints neutrals by the seed (content
-  divides the seed's chroma by 8), so a yellow, green, or rose seed tinted the whole page. `tinted` is that wash
-  chosen on purpose and made even: every surface takes the seed's hue at a sixth of its chroma, capped at 10, so a
-  gray seed stays gray and any vivid one tints about as much.
+  divides the seed's chroma by 8), so a yellow, green, or rose seed would tint the whole page.
 - **`primaryContainer` comes from the primary palette.** It is primary's hue at tone 90 in light and 30 in dark,
   with `onPrimaryContainer` at 30 and 90, and the pair's chroma is capped at 48. Content and fidelity otherwise put it
   at the seed's own tone: a yellow seed filled it with pure yellow, a red seed with something that read as an error,

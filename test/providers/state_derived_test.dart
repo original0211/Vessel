@@ -9,7 +9,6 @@ import 'package:kfusion/providers/app.dart';
 import 'package:kfusion/providers/config.dart';
 import 'package:kfusion/providers/database.dart';
 import 'package:kfusion/providers/state.dart';
-import 'package:kfusion/ui/color.dart';
 import 'package:kfusion/views/navigation.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -737,14 +736,13 @@ void main() {
         .update((state) => state.copyWith(themeMode: ThemeMode.system));
     expect(container.read(currentBrightnessProvider), Brightness.light);
 
-    final fallback = container.read(
-      genColorSchemeProvider(Brightness.light, ignoreConfig: true),
-    );
-    expect(fallback.brightness, Brightness.light);
+    final light = container.read(genColorSchemeProvider(Brightness.light));
+    expect(light.brightness, Brightness.light);
     final explicit = container.read(
-      genColorSchemeProvider(Brightness.dark, color: Colors.purple),
+      genColorSchemeProvider(Brightness.dark, pureBlack: true),
     );
     expect(explicit.brightness, Brightness.dark);
+    expect(explicit.surface, Colors.black);
 
     expect(
       container.read(realTestUrlProvider('https://custom.test')),
@@ -753,10 +751,7 @@ void main() {
   });
 
   test('a color scheme outlives the provider that generated it', () {
-    final provider = genColorSchemeProvider(
-      Brightness.dark,
-      color: Colors.teal,
-    );
+    final provider = genColorSchemeProvider(Brightness.dark);
     final first = container.read(provider);
     container.invalidate(provider);
 
@@ -764,7 +759,7 @@ void main() {
 
     container
         .read(themeSettingProvider.notifier)
-        .update((state) => state.copyWith(colorStyle: ColorStyle.soft));
+        .update((state) => state.copyWith(pureBlack: true));
     expect(container.read(provider), isNot(same(first)));
   });
 

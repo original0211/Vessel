@@ -1,5 +1,4 @@
 import 'package:kfusion/enum/enum.dart';
-import 'package:kfusion/ui/color.dart';
 import 'package:material_ui/material_ui.dart';
 
 import 'app_localizations.dart';
@@ -94,18 +93,6 @@ extension HotActionL10n on HotAction {
       HotAction.updateProfiles => appLocalizations.actionUpdateProfiles,
       HotAction.copyEnv => appLocalizations.copyEnvVar,
       HotAction.exit => appLocalizations.exit,
-    };
-  }
-}
-
-extension ColorStyleL10n on ColorStyle {
-  String get label {
-    final appLocalizations = currentAppLocalizations;
-    return switch (this) {
-      ColorStyle.vivid => appLocalizations.vividStyle,
-      ColorStyle.tinted => appLocalizations.tintedStyle,
-      ColorStyle.soft => appLocalizations.softStyle,
-      ColorStyle.monochrome => appLocalizations.monochromeScheme,
     };
   }
 }

@@ -1,8 +1,6 @@
-import 'package:kfusion/common/constant.dart';
 import 'package:kfusion/database/database.dart';
 import 'package:kfusion/enum/enum.dart';
 import 'package:kfusion/models/models.dart';
-import 'package:kfusion/ui/color.dart';
 
 import 'preferences.dart';
 import 'task.dart';
@@ -93,7 +91,7 @@ class Migration {
   static const upgradeVersion = 3;
 
   static const Map<int, Config Function(Config config)> _upgrades = {
-    1: _resetThemeColors,
+    1: _retireThemeColors,
     2: _keepGlassLook,
     3: _resetPorts,
   };
@@ -190,13 +188,9 @@ class Migration {
   }
 }
 
-Config _resetThemeColors(Config config) => config.copyWith(
-  themeProps: config.themeProps.copyWith(
-    primaryColor: defaultPrimaryColor,
-    primaryColors: defaultPrimaryColors,
-    colorStyle: ColorStyle.vivid,
-  ),
-);
+// Theme colors are no longer settings: stored values fall away when the
+// config is parsed, so the reset this step once did has nothing left to do.
+Config _retireThemeColors(Config config) => config;
 
 // The standard glass became the ultra tier when a lighter standard joined it.
 Config _keepGlassLook(Config config) =>

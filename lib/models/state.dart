@@ -1,5 +1,4 @@
 import 'package:kfusion/enum/enum.dart';
-import 'package:kfusion/ui/color.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -133,16 +132,6 @@ abstract class ProxyState with _$ProxyState {
     required List<String> bassDomain,
     required int port,
   }) = _ProxyState;
-}
-
-@freezed
-abstract class ThemeColorsSelectorState with _$ThemeColorsSelectorState {
-  const factory ThemeColorsSelectorState({
-    required int? primaryColor,
-    required List<int> primaryColors,
-    required ColorStyle colorStyle,
-    required bool isDefault,
-  }) = _ThemeColorsSelectorState;
 }
 
 @freezed

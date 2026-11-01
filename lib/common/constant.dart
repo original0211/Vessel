@@ -161,19 +161,6 @@ const pausedMaxDnsQueriesLength = maxDnsQueriesLength * 2;
 
 const trafficSampleLength = 30;
 
-// The brand accent first, then Apple's system colors in the order of
-// the macOS accent colors.
-const defaultPrimaryColors = [
-  defaultPrimaryColor,
-  0xFFAF52DE,
-  0xFFFF2D55,
-  0xFFFF3B30,
-  0xFFFF9500,
-  0xFFFFCC00,
-  0xFF34C759,
-  0xFF8E8E93,
-];
-
 const scriptTemplate = '''
 const main = (config) => {
   return config;

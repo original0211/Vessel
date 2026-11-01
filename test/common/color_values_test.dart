@@ -118,23 +118,7 @@ void main() {
     });
   });
 
-  group('the softer styles', () {
-    test('soft and monochrome take their primary from the material role, '
-        'not the seed accent', () {
-      for (final style in [ColorStyle.soft, ColorStyle.monochrome]) {
-        final scheme = seededColorScheme(
-          seedColor: const Color(0xFFCC2233),
-          brightness: Brightness.light,
-          style: style,
-        );
-        expect(
-          scheme.primary,
-          isNot(const Color(0xFFCC2233)),
-          reason: '$style',
-        );
-      }
-    });
-
+  group('the primary container', () {
     test('the primary container keeps the primary hue at the capped '
         'chroma', () {
       final scheme = seededColorScheme(
