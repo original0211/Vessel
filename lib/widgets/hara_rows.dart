@@ -169,12 +169,14 @@ class HaraInputRow extends StatelessWidget {
     required this.label,
     required this.value,
     this.leading,
+    this.note,
     required this.onTap,
   });
 
   final String label;
   final String value;
   final Widget? leading;
+  final String? note;
   final VoidCallback onTap;
 
   @override
@@ -201,6 +203,13 @@ class HaraInputRow extends StatelessWidget {
                   const SizedBox(height: HaraSpace.profileMetaGap),
                   Text(
                     value,
+                    style: HaraText.profileMeta(context, palette.sub),
+                  ),
+                ],
+                if (note != null) ...[
+                  const SizedBox(height: HaraSpace.profileMetaGap),
+                  Text(
+                    note!,
                     style: HaraText.profileMeta(context, palette.sub),
                   ),
                 ],
@@ -394,6 +403,7 @@ class HaraToggle extends ConsumerWidget {
     final palette = context.haraPalette;
     final appLocalizations = context.appLocalizations;
     final value = ref.watch(item.selector);
+    final subtitle = item.subtitle?.call(appLocalizations);
     return Semantics(
       toggled: value,
       child: HaraRow(
@@ -405,9 +415,25 @@ class HaraToggle extends ConsumerWidget {
               const SizedBox(width: 16),
             ],
             Expanded(
-              child: Text(
-                item.title(appLocalizations),
-                style: HaraText.nodeName(context, palette.ink, current: false),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item.title(appLocalizations),
+                    style: HaraText.nodeName(
+                      context,
+                      palette.ink,
+                      current: false,
+                    ),
+                  ),
+                  if (subtitle != null) ...[
+                    const SizedBox(height: HaraSpace.profileMetaGap),
+                    Text(
+                      subtitle,
+                      style: HaraText.profileMeta(context, palette.sub),
+                    ),
+                  ],
+                ],
               ),
             ),
             HaraToggleMark(
@@ -477,6 +503,7 @@ class HaraTextItem extends ConsumerWidget {
       label: label,
       value: value,
       leading: item.leading,
+      note: item.subtitle?.call(appLocalizations),
       onTap: () {
         showConfigInputDialog(
           context: context,

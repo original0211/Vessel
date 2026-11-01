@@ -466,4 +466,29 @@ void main() {
 
     await tester.pumpWidget(const SizedBox.shrink());
   });
+
+  testWidgets('the geo section carries the mihomo-only footer', (tester) async {
+    const size = Size(1000, 1000);
+    tester.view.physicalSize = size;
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final container = createContainer();
+    container.read(viewSizeProvider.notifier).update((_) => size);
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const TestApp(child: ResourcesView()),
+      ),
+    );
+    await pumpUntilFound(tester, find.text(GeoResource.MMDB.name));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Applies only while the core is mihomo.'), findsOneWidget);
+    expect(tester.takeException(), null);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+  });
 }

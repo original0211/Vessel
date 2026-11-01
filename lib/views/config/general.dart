@@ -21,6 +21,7 @@ class LogLevelItem extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     return ConfigOptionsItem<LogLevel>(
       title: (l) => l.logLevel,
+      subtitle: (l) => l.mihomoOnly,
       options: LogLevel.values,
       textBuilder: (logLevel) => logLevel.name,
       selector: patchClashConfigProvider.select((state) => state.logLevel),
@@ -478,11 +479,13 @@ class _HaraInputRow extends StatelessWidget {
   const _HaraInputRow({
     required this.label,
     required this.value,
+    this.note,
     required this.onTap,
   });
 
   final String label;
   final String value;
+  final String? note;
   final VoidCallback onTap;
 
   @override
@@ -500,6 +503,10 @@ class _HaraInputRow extends StatelessWidget {
           if (value.isNotEmpty) ...[
             const SizedBox(height: HaraSpace.profileMetaGap),
             Text(value, style: HaraText.profileMeta(context, palette.sub)),
+          ],
+          if (note != null) ...[
+            const SizedBox(height: HaraSpace.profileMetaGap),
+            Text(note!, style: HaraText.profileMeta(context, palette.sub)),
           ],
         ],
       ),
@@ -660,6 +667,7 @@ class TestUrlItem extends ConsumerWidget {
     return _HaraInputRow(
       label: appLocalizations.testUrl,
       value: testUrl,
+      note: appLocalizations.testUrlApplyNote,
       onTap: () {
         showConfigInputDialog(
           context: context,
@@ -701,9 +709,9 @@ class HostsItem extends ConsumerWidget {
     );
     return _HaraOpenRow(
       label: 'Hosts',
-      subtitle: hosts.isEmpty
-          ? appLocalizations.none
-          : appLocalizations.itemsCount(hosts.length),
+      subtitle:
+          '${hosts.isEmpty ? appLocalizations.none : appLocalizations.itemsCount(hosts.length)}'
+          ' · ${appLocalizations.mihomoOnly}',
       target: MapEditView(
         title: 'Hosts',
         entries: hosts,
@@ -742,11 +750,13 @@ class ExternalControllerSecretItem extends ConsumerWidget {
 
 ConfigToggleItem _clashToggle({
   required ConfigLabel title,
+  ConfigLabel? subtitle,
   required bool Function(PatchClashConfig state) select,
   required PatchClashConfig Function(PatchClashConfig state, bool value) update,
 }) {
   return ConfigToggleItem(
     title: title,
+    subtitle: subtitle,
     selector: patchClashConfigProvider.select(select),
     onChanged: (ref, value) => ref
         .read(patchClashConfigProvider.notifier)
@@ -854,6 +864,7 @@ class GeneralView extends ConsumerWidget {
       HaraToggle(
         _clashToggle(
           title: (l) => l.unifiedDelay,
+          subtitle: (l) => l.mihomoOnly,
           select: (state) => state.unifiedDelay,
           update: (state, value) => state.copyWith(unifiedDelay: value),
         ),
@@ -861,6 +872,7 @@ class GeneralView extends ConsumerWidget {
       HaraToggle(
         _clashToggle(
           title: (l) => l.tcpConcurrent,
+          subtitle: (l) => l.mihomoOnly,
           select: (state) => state.tcpConcurrent,
           update: (state, value) => state.copyWith(tcpConcurrent: value),
         ),
@@ -868,6 +880,7 @@ class GeneralView extends ConsumerWidget {
       HaraToggle(
         _clashToggle(
           title: (l) => l.findProcessMode,
+          subtitle: (l) => l.mihomoOnly,
           select: (state) => state.findProcessMode == FindProcessMode.always,
           update: (state, value) => state.copyWith(
             findProcessMode: value
@@ -917,7 +930,8 @@ class GeneralView extends ConsumerWidget {
       const CurrentProfileCoreKindItem(),
       HaraToggle(
         _clashToggle(
-          title: (l) => 'IPv6',
+          title: (l) => l.coreIpv6,
+          subtitle: (l) => l.mihomoOnly,
           select: (state) => state.ipv6,
           update: (state, value) => state.copyWith(ipv6: value),
         ),
@@ -926,6 +940,7 @@ class GeneralView extends ConsumerWidget {
       HaraToggle(
         ConfigToggleItem(
           title: (l) => l.appendSystemDns,
+          subtitle: (l) => l.mihomoOnly,
           selector: networkSettingProvider.select(
             (state) => state.appendSystemDns,
           ),
@@ -937,6 +952,7 @@ class GeneralView extends ConsumerWidget {
       HaraToggle(
         _clashToggle(
           title: (l) => l.geodataLoader,
+          subtitle: (l) => l.mihomoOnly,
           select: (state) =>
               state.geodataLoader == GeodataLoader.memconservative,
           update: (state, value) => state.copyWith(
@@ -985,7 +1001,10 @@ class GeneralView extends ConsumerWidget {
       HaraSection(
         title: appLocalizations.inbound,
         rows: _inboundItems(externalController: externalController),
-        footer: appLocalizations.externalControllerDesc,
+        footer: [
+          appLocalizations.externalControllerDesc,
+          appLocalizations.mihomoOnlyNote,
+        ].join('\n'),
       ),
       HaraSection(
         title: appLocalizations.connection,

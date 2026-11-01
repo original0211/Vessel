@@ -126,14 +126,20 @@ void main() {
     final l = currentAppLocalizations;
     await pumpView(tester);
 
-    expect(find.text(l.dnsOverrideDesc), findsOneWidget);
+    expect(
+      find.text('${l.dnsOverrideDesc} ${l.mihomoOnlyNote}'),
+      findsOneWidget,
+    );
     expect(find.byTooltip(l.addOverrideEntry), findsNothing);
 
     setKeys({DnsOverrideKey.ipv6});
     await tester.pumpAndSettle();
 
     expect(find.text(emptyLabel()), findsNothing);
-    expect(find.text(l.dnsOverrideDesc), findsOneWidget);
+    expect(
+      find.text('${l.dnsOverrideDesc} ${l.mihomoOnlyNote}'),
+      findsOneWidget,
+    );
     await tester.tap(find.byTooltip(l.addOverrideEntry));
     await tester.pumpAndSettle();
     expect(inSheet(l.addOverrideEntry), findsOneWidget);

@@ -688,6 +688,7 @@ class AccessControlPanel extends StatelessWidget {
                 _HaraBoundOptions<AccessSortType>(
                   ConfigOptionsItem<AccessSortType>(
                     title: (l) => l.sort,
+                    subtitle: (l) => l.accessListOnlyNote,
                     options: AccessSortType.values,
                     textBuilder: (type) => switch (type) {
                       AccessSortType.none => appLocalizations.defaultText,
@@ -710,6 +711,7 @@ class AccessControlPanel extends StatelessWidget {
                     HaraToggle(
                       ConfigToggleItem(
                         title: (l) => l.systemApp,
+                        subtitle: (l) => l.accessListOnlyNote,
                         selector: accessControlStateProvider.select(
                           (state) => !state.isFilterSystemApp,
                         ),
@@ -722,6 +724,7 @@ class AccessControlPanel extends StatelessWidget {
                     HaraToggle(
                       ConfigToggleItem(
                         title: (l) => l.noNetworkApp,
+                        subtitle: (l) => l.accessListOnlyNote,
                         selector: accessControlStateProvider.select(
                           (state) => !state.isFilterNonInternetApp,
                         ),
@@ -772,15 +775,32 @@ class _HaraBoundOptions<T> extends ConsumerWidget {
     final palette = context.haraPalette;
     final appLocalizations = context.appLocalizations;
     final value = ref.watch(item.selector);
+    final subtitle = item.subtitle?.call(appLocalizations);
     PopupOpen? openMenu;
     return HaraRow(
       onTap: () => openMenu?.call(),
       child: Row(
         children: [
           Expanded(
-            child: Text(
-              item.title(appLocalizations),
-              style: HaraText.nodeName(context, palette.ink, current: false),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  item.title(appLocalizations),
+                  style: HaraText.nodeName(
+                    context,
+                    palette.ink,
+                    current: false,
+                  ),
+                ),
+                if (subtitle != null) ...[
+                  const SizedBox(height: HaraSpace.profileMetaGap),
+                  Text(
+                    subtitle,
+                    style: HaraText.profileMeta(context, palette.sub),
+                  ),
+                ],
+              ],
             ),
           ),
           CommonPopupBox(

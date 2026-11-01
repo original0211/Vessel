@@ -103,6 +103,7 @@ class ConfigToggleItem extends _ConfigItem<bool> {
     required super.selector,
     required super.title,
     required super.onChanged,
+    super.subtitle,
     super.leading,
   });
 
@@ -167,6 +168,7 @@ class ConfigTextItem extends _ConfigItem<String> {
     this.validator,
     this.normalize,
     this.allowEmpty = false,
+    super.subtitle,
     super.leading,
   });
 

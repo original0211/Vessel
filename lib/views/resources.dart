@@ -223,6 +223,7 @@ class _ResourcesViewState extends ConsumerState<ResourcesView> {
                       for (final geoResource in GeoResource.values)
                         _GeoResourceItem(geoResource, preloaded: _fileInfos),
                     ],
+                    footer: appLocalizations.mihomoOnlyNote,
                   ),
                   const SizedBox(height: HaraSpace.groupGap),
                   HaraSection(

@@ -1,3 +1,4 @@
+import 'package:kfusion/common/common.dart';
 import 'package:kfusion/enum/enum.dart';
 import 'package:kfusion/l10n/l10n.dart';
 import 'package:kfusion/models/models.dart';
@@ -516,6 +517,26 @@ void main() {
           .accessControlProps
           .rejectList;
       expect(saved, ['com.example.browser', 'com.example.chat']);
+
+      await teardownView(tester);
+    });
+  });
+
+  group('list-only notes', () {
+    testWidgets('sort and both filters carry the page-list note', (
+      tester,
+    ) async {
+      seedAccessControl(const AccessControlProps(enable: true));
+
+      await pumpAccessView(tester);
+      await openBarMenu(tester);
+      await tester.tap(find.text(currentAppLocalizations.settings));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.text('Affects only the app list on this page.'),
+        findsNWidgets(3),
+      );
 
       await teardownView(tester);
     });

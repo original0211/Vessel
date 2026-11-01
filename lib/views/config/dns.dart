@@ -108,7 +108,8 @@ _DnsState _patchDns(PatchClashConfig config) =>
 PatchClashConfig _setPatchDns(PatchClashConfig config, _DnsState state) =>
     config.copyWith(dns: state.model, dnsOverrideKeys: state.keys);
 
-String _patchDnsDescription(AppLocalizations l) => l.dnsOverrideDesc;
+String _patchDnsDescription(AppLocalizations l) =>
+    '${l.dnsOverrideDesc} ${l.mihomoOnlyNote}';
 
 class DnsView extends OverrideView<DnsOverrideKey, Dns> {
   /// The keys written over the DNS of every subscription and file profile.

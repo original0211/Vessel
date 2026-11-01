@@ -137,7 +137,7 @@ class Ipv6Item extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     return HaraToggle(
       _vpnToggle(
-        title: (l) => 'IPv6',
+        title: (l) => l.vpnIpv6,
         select: (state) => state.ipv6,
         update: (state, value) => state.copyWith(ipv6: value),
       ),
@@ -203,6 +203,7 @@ class InterfaceNameModeItem extends ConsumerWidget {
     return HaraOptions(
       ConfigOptionsItem<InterfaceNameMode>(
         title: (l) => l.interfaceNameMode,
+        subtitle: (l) => l.mihomoOnly,
         options: InterfaceNameMode.values,
         textBuilder: (mode) => switch (mode) {
           InterfaceNameMode.clear => appLocalizations.interfaceNameModeClear,
@@ -228,6 +229,7 @@ class InterfaceNameItem extends ConsumerWidget {
     return HaraTextItem(
       ConfigTextItem(
         title: (l) => l.interfaceName,
+        subtitle: (l) => l.mihomoOnly,
         maxLength: TextInputLimits.name,
         selector: patchClashConfigProvider.select(
           (state) => state.interfaceName,
@@ -477,6 +479,7 @@ class TunSection extends ConsumerWidget {
       footer: [
         appLocalizations.bypassPrivateRouteDesc,
         appLocalizations.tunOverrideDesc,
+        appLocalizations.mihomoOnlyNote,
         ?spec.footerOf(listed, appLocalizations),
       ].join('\n'),
     );
@@ -659,6 +662,7 @@ class NetworkListView extends StatelessWidget {
                     isDesktop: system.isDesktop,
                     isLinux: system.isLinux,
                   ),
+                  footer: context.appLocalizations.mihomoOnlyNote,
                 ),
             ],
           );
