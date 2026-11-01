@@ -215,22 +215,32 @@ void main() {
     );
   });
 
-  testWidgets('the authorized button is square with the plain filled fill', (
-    tester,
-  ) async {
+  testWidgets('the authorized button is square on the field', (tester) async {
     await pumpView(
       tester,
       permission: WifiSsidPermission.granted,
       isMacOS: true,
     );
+    final context = tester.element(
+      find.widgetWithText(FilledButton, 'Authorized'),
+    );
+    final palette = context.haraPalette;
     final button = tester.widget<FilledButton>(
       find.widgetWithText(FilledButton, 'Authorized'),
     );
     expect(button.style?.shape?.resolve(<WidgetState>{}), AppShape.hara);
     expect(
       button.style?.backgroundColor?.resolve(<WidgetState>{}),
-      isNull,
-      reason: 'the authorized state falls back to the plain filled fill',
+      palette.bg,
+      reason: 'the authorized state fills with the field, not the accent',
+    );
+    expect(
+      button.style?.side?.resolve(<WidgetState>{}),
+      BorderSide(color: palette.line, width: HaraSpace.hairline),
+    );
+    expect(
+      button.style?.foregroundColor?.resolve(<WidgetState>{}),
+      palette.ink,
     );
   });
 

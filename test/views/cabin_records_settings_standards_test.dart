@@ -224,19 +224,33 @@ void main() {
       tester,
     ) async {
       await pumpTheme(tester);
-      final screens = tester
-          .widgetList<MiniScreen>(
+      final phones = tester
+          .widgetList<AspectRatio>(
             find.descendant(
               of: find.byType(ThemeLivePreview),
-              matching: find.byType(MiniScreen),
+              matching: find.byType(AspectRatio),
             ),
           )
           .toList();
-      expect(screens, hasLength(2));
-      expect(screens.map((screen) => screen.colorScheme.brightness).toSet(), {
-        Brightness.light,
-        Brightness.dark,
-      });
+      expect(phones, hasLength(2));
+      final sketches = tester
+          .widgetList<CustomPaint>(
+            find.descendant(
+              of: find.byType(ThemeLivePreview),
+              matching: find.byType(CustomPaint),
+            ),
+          )
+          .where((paint) => paint.painter != null)
+          .toList();
+      expect(sketches, hasLength(2));
+      expect(
+        find.byWidget(sketches[0]),
+        paints..rect(color: HaraPalette.light.bg),
+      );
+      expect(
+        find.byWidget(sketches[1]),
+        paints..rect(color: HaraPalette.dark.bg),
+      );
     });
 
     testWidgets('the live preview sits flat on the page field', (tester) async {
@@ -253,9 +267,10 @@ void main() {
       expect(plates, isEmpty);
     });
 
-    testWidgets('every swatch ring reads in the palette ink', (tester) async {
+    testWidgets('the retired swatches leave no rings on the page', (
+      tester,
+    ) async {
       await pumpTheme(tester);
-      final context = tester.element(find.byType(ThemeView));
       final rings = tester
           .widgetList<DecoratedBox>(find.byType(DecoratedBox))
           .where((box) {
@@ -264,12 +279,7 @@ void main() {
             return shape is CircleBorder && shape.side.width == 2.5;
           })
           .toList();
-      expect(rings, isNotEmpty);
-      for (final ring in rings) {
-        final shape =
-            (ring.decoration as ShapeDecoration).shape as CircleBorder;
-        expect(shape.side.color, context.haraPalette.ink);
-      }
+      expect(rings, isEmpty);
     });
 
     testWidgets('the cabin core compact switch is present exactly once', (
