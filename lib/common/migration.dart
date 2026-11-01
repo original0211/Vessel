@@ -1,5 +1,4 @@
 import 'package:kfusion/database/database.dart';
-import 'package:kfusion/enum/enum.dart';
 import 'package:kfusion/models/models.dart';
 
 import 'preferences.dart';
@@ -192,15 +191,10 @@ class Migration {
 // config is parsed, so the reset this step once did has nothing left to do.
 Config _retireThemeColors(Config config) => config;
 
-// The standard glass became the ultra tier when a lighter standard joined it.
-Config _keepGlassLook(Config config) =>
-    config.themeProps.liquidGlass == LiquidGlassMode.standard
-    ? config.copyWith(
-        themeProps: config.themeProps.copyWith(
-          liquidGlass: LiquidGlassMode.ultra,
-        ),
-      )
-    : config;
+// The ultra tier this step once moved the standard glass onto has itself
+// retired: a stored ultra value falls back to standard when the config is
+// parsed, so the move has nothing left to do.
+Config _keepGlassLook(Config config) => config;
 
 // Ports are fixed at their defaults now that the port form is gone; values a
 // stored config changed come back to the defaults on upgrade.

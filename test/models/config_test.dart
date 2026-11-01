@@ -128,7 +128,6 @@ void main() {
       expect(restored.autoRun, false);
       expect(restored.openLogs, false);
       expect(restored.closeConnections, true);
-      expect(restored.tabAnimation, TabAnimation.slide);
       expect(restored.autoCheckUpdate, true);
       expect(restored.sidebarExpanded, true);
       expect(restored.minimizeOnExit, true);
@@ -143,7 +142,7 @@ void main() {
         'developerMode': true,
         'tabAnimation': 'fade',
       });
-      expect(restored.tabAnimation, TabAnimation.fade);
+      expect(restored.toJson(), isNot(contains('tabAnimation')));
       expect(restored.autoCheckUpdate, true);
     });
 
@@ -281,21 +280,17 @@ void main() {
       expect(restored.filters, [const Filter(label: 'Asia', regex: 'hk`jp')]);
     });
 
-    test('a legacy isAnimateToPage sets the tab animation', () {
+    test('a legacy isAnimateToPage is ignored, the setting is retired', () {
       expect(
-        AppSettingProps.fromJson({'isAnimateToPage': false}).tabAnimation,
-        TabAnimation.fade,
-      );
-      expect(
-        AppSettingProps.fromJson({'isAnimateToPage': true}).tabAnimation,
-        TabAnimation.slide,
+        AppSettingProps.fromJson({'isAnimateToPage': false}),
+        const AppSettingProps(),
       );
       expect(
         AppSettingProps.fromJson({
           'isAnimateToPage': false,
-          'tabAnimation': 'slide',
-        }).tabAnimation,
-        TabAnimation.slide,
+          'tabAnimation': 'fade',
+        }),
+        const AppSettingProps(),
       );
     });
 
@@ -701,6 +696,7 @@ void main() {
       expect(modeOf(null), LiquidGlassMode.none);
       expect(modeOf(true), LiquidGlassMode.standard);
       expect(modeOf(false), LiquidGlassMode.none);
+      expect(modeOf('ultra'), LiquidGlassMode.standard);
       for (final mode in LiquidGlassMode.values) {
         expect(
           roundTrip(

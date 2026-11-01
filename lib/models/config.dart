@@ -184,13 +184,6 @@ Object? _readSidebarExpanded(Map<dynamic, dynamic> json, String key) {
   return json.containsKey(key) ? json[key] : json['showLabel'];
 }
 
-Object? _readTabAnimation(Map<dynamic, dynamic> json, String key) {
-  if (json.containsKey(key)) {
-    return json[key];
-  }
-  return json['isAnimateToPage'] == false ? TabAnimation.fade.name : null;
-}
-
 @freezed
 abstract class Filter with _$Filter {
   const factory Filter({required String label, required String regex}) =
@@ -214,9 +207,6 @@ abstract class AppSettingProps with _$AppSettingProps {
     @Default(false) bool openLogs,
     @Default(true) bool closeConnections,
     @Default(defaultTestUrl) String testUrl,
-    @Default(TabAnimation.slide)
-    @JsonKey(readValue: _readTabAnimation)
-    TabAnimation tabAnimation,
     @Default(true) bool autoCheckUpdate,
     @Default(true)
     @JsonKey(readValue: _readSidebarExpanded)
@@ -367,11 +357,13 @@ abstract class TextScale with _$TextScale {
       _$TextScaleFromJson(json);
 }
 
-// Older configs say whether glass is on.
+// Older configs say whether glass is on, and a stored ultra value falls
+// back to the standard tier it settles on now that tier is gone.
 Object? _readLiquidGlass(Map<dynamic, dynamic> json, String key) {
   return switch (json[key]) {
     true => LiquidGlassMode.standard.name,
     false => LiquidGlassMode.none.name,
+    'ultra' => LiquidGlassMode.standard.name,
     final value => value,
   };
 }

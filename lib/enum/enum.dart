@@ -747,9 +747,7 @@ enum RuleProviderBehavior { domain, ipcidr, classical }
 
 enum RuleProviderFormat { yaml, text, mrs }
 
-enum TabAnimation { slide, fade }
-
-enum LiquidGlassMode { none, standard, ultra }
+enum LiquidGlassMode { none, standard }
 
 enum Language { yaml, javaScript, json }
 

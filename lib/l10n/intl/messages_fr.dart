@@ -765,7 +765,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "externalLink": MessageLookupByLibrary.simpleMessage("Lien externe"),
     "extraLarge": MessageLookupByLibrary.simpleMessage("Très grande"),
-    "fade": MessageLookupByLibrary.simpleMessage("Fondu"),
     "failedCount": m30,
     "failedItem": m31,
     "fakeipFilter": MessageLookupByLibrary.simpleMessage("Filtre Fake-IP"),
@@ -874,9 +873,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "inputRuleContent": MessageLookupByLibrary.simpleMessage(
       "Saisissez le contenu de la règle",
     ),
-    "installedAppsPermissionDeniedMessage": MessageLookupByLibrary.simpleMessage(
-      "L’autorisation de la liste des apps a été refusée ; les apps installées ne peuvent donc pas être listées. Veuillez l’accorder manuellement dans les réglages du système.",
-    ),
+    "installedAppsPermissionDeniedMessage":
+        MessageLookupByLibrary.simpleMessage(
+          "L’autorisation de la liste des apps a été refusée ; les apps installées ne peuvent donc pas être listées. Veuillez l’accorder manuellement dans les réglages du système.",
+        ),
     "installedAppsPermissionDesc": MessageLookupByLibrary.simpleMessage(
       "Ce système masque la liste des apps installées tant que l’autorisation n’est pas accordée. Accordez-la pour configurer le proxy par app.",
     ),
@@ -1571,7 +1571,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "skipSrcAddress": MessageLookupByLibrary.simpleMessage(
       "Adresses sources ignorées",
     ),
-    "slide": MessageLookupByLibrary.simpleMessage("Glissement"),
     "sliders": MessageLookupByLibrary.simpleMessage("Curseurs"),
     "sniffer": MessageLookupByLibrary.simpleMessage("Sniffer"),
     "sort": MessageLookupByLibrary.simpleMessage("Trier"),
@@ -1622,9 +1621,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "system": MessageLookupByLibrary.simpleMessage("Système"),
     "systemApp": MessageLookupByLibrary.simpleMessage("Apps système"),
     "systemProxy": MessageLookupByLibrary.simpleMessage("Proxy système"),
-    "tabAnimation": MessageLookupByLibrary.simpleMessage(
-      "Animation des onglets",
-    ),
     "tapToAuthorize": MessageLookupByLibrary.simpleMessage(
       "Appuyez pour autoriser",
     ),
@@ -1670,7 +1666,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "udpTimeoutDesc": MessageLookupByLibrary.simpleMessage(
       "Le délai UDP est en secondes et ne fonctionne qu’avec les piles gvisor, system et mixed.",
     ),
-    "ultra": MessageLookupByLibrary.simpleMessage("Ultra"),
     "unavailableUnderSingBox": MessageLookupByLibrary.simpleMessage(
       "Indisponible sous sing-box",
     ),

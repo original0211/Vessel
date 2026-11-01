@@ -570,7 +570,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "externalControllerSecret": MessageLookupByLibrary.simpleMessage("外部控制器密钥"),
     "externalLink": MessageLookupByLibrary.simpleMessage("外部链接"),
     "extraLarge": MessageLookupByLibrary.simpleMessage("超大"),
-    "fade": MessageLookupByLibrary.simpleMessage("淡入"),
     "failedCount": m30,
     "failedItem": m31,
     "fakeipFilter": MessageLookupByLibrary.simpleMessage("Fake-IP过滤"),
@@ -1154,7 +1153,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "skipDomain": MessageLookupByLibrary.simpleMessage("跳过域名"),
     "skipDstAddress": MessageLookupByLibrary.simpleMessage("跳过目标地址"),
     "skipSrcAddress": MessageLookupByLibrary.simpleMessage("跳过来源地址"),
-    "slide": MessageLookupByLibrary.simpleMessage("滑动"),
     "sliders": MessageLookupByLibrary.simpleMessage("滑块"),
     "sniffer": MessageLookupByLibrary.simpleMessage("域名嗅探"),
     "sort": MessageLookupByLibrary.simpleMessage("排序"),
@@ -1191,7 +1189,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "system": MessageLookupByLibrary.simpleMessage("系统"),
     "systemApp": MessageLookupByLibrary.simpleMessage("系统应用"),
     "systemProxy": MessageLookupByLibrary.simpleMessage("系统代理"),
-    "tabAnimation": MessageLookupByLibrary.simpleMessage("选项卡动画"),
     "tapToAuthorize": MessageLookupByLibrary.simpleMessage("点击授权"),
     "target": MessageLookupByLibrary.simpleMessage("目标"),
     "tcpConcurrent": MessageLookupByLibrary.simpleMessage("TCP并发"),
@@ -1231,7 +1228,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "udpTimeoutDesc": MessageLookupByLibrary.simpleMessage(
       "UDP 超时以秒为单位，仅在 gvisor、system 和 mixed 栈生效。",
     ),
-    "ultra": MessageLookupByLibrary.simpleMessage("极致"),
     "unavailableUnderSingBox": MessageLookupByLibrary.simpleMessage(
       "sing-box 下不可用",
     ),

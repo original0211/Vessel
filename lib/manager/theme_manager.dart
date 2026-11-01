@@ -242,9 +242,7 @@ class _LiquidGlassSetting extends ConsumerWidget {
     );
     return LiquidGlassScope(
       enabled: mode != LiquidGlassMode.none,
-      quality: mode == LiquidGlassMode.ultra
-          ? LiquidGlassQuality.ultra
-          : LiquidGlassQuality.standard,
+      quality: LiquidGlassQuality.standard,
       child: LiquidGlassHost(
         enabled: mode != LiquidGlassMode.none,
         child: child,

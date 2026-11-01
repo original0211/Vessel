@@ -188,7 +188,7 @@ void main() {
         final theme = config.themeProps;
         expect(theme.themeMode, ThemeMode.dark);
         expect(theme.pureBlack, isTrue);
-        expect(theme.liquidGlass, LiquidGlassMode.ultra);
+        expect(theme.liquidGlass, LiquidGlassMode.standard);
         final themeJson = theme.toJson();
         for (final key in [
           'primaryColor',
@@ -198,13 +198,12 @@ void main() {
         ]) {
           expect(themeJson, isNot(contains(key)), reason: key);
         }
-        expect(store.savedConfig, config);
+        expect(store.savedConfig, isNull);
         expect(store.version, Migration.currentVersion);
         expect(store.upgradeVersion, Migration.upgradeVersion);
         expect(store.events, [
           'getConfigMap',
           'getVersion',
-          'saveConfig',
           'setUpgradeVersion',
         ]);
 
@@ -221,23 +220,27 @@ void main() {
         expect(later.events, ['getConfigMap', 'getVersion']);
       });
 
-      test('keeps standard glass on the ultra tier it became, once', () async {
-        Future<LiquidGlassMode> upgrade(String mode, int from) async {
-          final configMap = _createConfigMap();
-          (configMap['themeProps']! as Map<String, Object?>)['liquidGlass'] =
-              mode;
-          final store = _FakeMigrationStore(
-            configMap: configMap,
-            version: Migration.currentVersion,
-            upgradeVersion: from,
-          );
-          return (await Migration(store: store).run()).themeProps.liquidGlass;
-        }
+      test(
+        'glass settles on standard now the ultra tier has retired',
+        () async {
+          Future<LiquidGlassMode> upgrade(String mode, int from) async {
+            final configMap = _createConfigMap();
+            (configMap['themeProps']! as Map<String, Object?>)['liquidGlass'] =
+                mode;
+            final store = _FakeMigrationStore(
+              configMap: configMap,
+              version: Migration.currentVersion,
+              upgradeVersion: from,
+            );
+            return (await Migration(store: store).run()).themeProps.liquidGlass;
+          }
 
-        expect(await upgrade('standard', 1), LiquidGlassMode.ultra);
-        expect(await upgrade('none', 1), LiquidGlassMode.none);
-        expect(await upgrade('standard', 2), LiquidGlassMode.standard);
-      });
+          expect(await upgrade('standard', 1), LiquidGlassMode.standard);
+          expect(await upgrade('none', 1), LiquidGlassMode.none);
+          expect(await upgrade('standard', 2), LiquidGlassMode.standard);
+          expect(await upgrade('ultra', 2), LiquidGlassMode.standard);
+        },
+      );
 
       test('resets changed ports to the fixed defaults once', () async {
         final configMap = _createConfigMap();
@@ -283,17 +286,20 @@ void main() {
       });
 
       test('waits for the next launch when saving fails', () async {
+        final configMap = _createConfigMap();
+        (configMap['patchClashConfig']! as Map<String, Object?>)['mixed-port'] =
+            8899;
         final store = _FakeMigrationStore(
-          configMap: customized(),
+          configMap: configMap,
           version: Migration.currentVersion,
-          upgradeVersion: 0,
+          upgradeVersion: 2,
           configSaveResult: false,
         );
 
         final config = await Migration(store: store).run();
 
-        expect(config.themeProps.liquidGlass, LiquidGlassMode.standard);
-        expect(store.upgradeVersion, 0);
+        expect(config.patchClashConfig.mixedPort, 8899);
+        expect(store.upgradeVersion, 2);
       });
     });
 

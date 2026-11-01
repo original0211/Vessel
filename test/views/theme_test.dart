@@ -126,6 +126,12 @@ void main() {
       await tester.pumpAndSettle();
       expect(readTheme().liquidGlass, LiquidGlassMode.none);
     });
+
+    testWidgets('offers no ultra tier', (tester) async {
+      await pumpThemeView(tester);
+
+      expect(find.text('Ultra'), findsNothing);
+    });
   });
 
   group('pure black', () {
@@ -145,8 +151,6 @@ void main() {
   });
 
   group('home navigation', () {
-    AppSettingProps readSetting() => container.read(appSettingProvider);
-
     testWidgets('offers no bottom bar style or cabin core rows', (
       tester,
     ) async {
@@ -158,99 +162,114 @@ void main() {
       expect(find.text('Compact cabin core'), findsNothing);
     });
 
-    testWidgets('picks a sliding or fading tab switch', (tester) async {
+    testWidgets('offers no tab animation group', (tester) async {
       await pumpThemeView(tester);
 
-      expect(readSetting().tabAnimation, TabAnimation.slide);
-
-      await tester.tap(find.text('Fade'));
-      await tester.pumpAndSettle();
-      expect(readSetting().tabAnimation, TabAnimation.fade);
-
-      await tester.tap(find.text('Slide'));
-      await tester.pumpAndSettle();
-      expect(readSetting().tabAnimation, TabAnimation.slide);
+      expect(find.text('Tab animation'), findsNothing);
+      expect(find.text('Slide'), findsNothing);
+      expect(find.text('Fade'), findsNothing);
     });
   });
 
-  group('preview ground', () {
-    testWidgets('the mini screen ground is the field, not the page step', (
+  group('choice thumbnails', () {
+    // In page order: auto, light, dark, the pure black pair, the glass pair.
+    Finder thumbs() => find.byType(HomeSketchThumb);
+
+    Finder paintsOf(Finder thumb) =>
+        find.descendant(of: thumb, matching: find.byType(CustomPaint));
+
+    void expectField(Finder thumb, Color color) {
+      expect(
+        paintsOf(thumb).first,
+        paints..rect(
+          color: color,
+          rect: const Rect.fromLTWH(
+            0,
+            0,
+            HomeSketchThumb.width,
+            HomeSketchThumb.height,
+          ),
+        ),
+      );
+    }
+
+    testWidgets('every choice row carries one, all the same size', (
       tester,
     ) async {
-      Future<void> pumpScheme(ColorScheme scheme) async {
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Center(
-              child: SizedBox(
-                width: 200,
-                height: 400,
-                child: MiniScreen(colorScheme: scheme, floatingBar: false),
-              ),
-            ),
-          ),
+      await pumpThemeView(tester);
+
+      expect(thumbs(), findsNWidgets(7));
+      for (final thumb in tester.elementList(thumbs())) {
+        expect(
+          tester.getSize(find.byWidget(thumb.widget)),
+          HomeSketchThumb.size,
         );
       }
+    });
 
-      final light = ColorScheme.fromSeed(seedColor: Colors.blue);
-      await pumpScheme(light);
-      expect(
-        find.descendant(
-          of: find.byType(MiniScreen),
-          matching: find.byType(CustomPaint),
-        ),
-        paints..rect(
-          color: const Color(0xFFFFFFFF),
-          rect: const Rect.fromLTWH(0, 0, 200, 400),
-        ),
-      );
+    testWidgets('each thumbnail sketches on the field of its option', (
+      tester,
+    ) async {
+      await pumpThemeView(tester);
 
-      final dark = ColorScheme.fromSeed(
-        seedColor: Colors.blue,
-        brightness: Brightness.dark,
-      );
-      await pumpScheme(dark);
+      expectField(thumbs().at(1), const Color(0xFFFFFFFF));
+      expectField(thumbs().at(2), const Color(0xFF101010));
+
+      final auto = paintsOf(thumbs().at(0));
+      expect(auto, findsNWidgets(3));
+      expect(auto.at(0), paints..rect(color: const Color(0xFFFFFFFF)));
+      expect(auto.at(1), paints..rect(color: const Color(0xFF101010)));
+    });
+
+    testWidgets('the pure black thumbnail reads apart from the standard one', (
+      tester,
+    ) async {
+      await pumpThemeView(tester);
+      final pageLine = tester.element(find.byType(ThemeView)).haraPalette.line;
+
+      expectField(thumbs().at(3), const Color(0xFF101010));
+      expectField(thumbs().at(4), const Color(0xFF000000));
       expect(
-        find.descendant(
-          of: find.byType(MiniScreen),
-          matching: find.byType(CustomPaint),
-        ),
+        paintsOf(thumbs().at(3)).last,
+        paints..rect(color: pageLine, style: PaintingStyle.stroke),
+      );
+      expect(
+        paintsOf(thumbs().at(4)).last,
         paints..rect(
-          color: const Color(0xFF101010),
-          rect: const Rect.fromLTWH(0, 0, 200, 400),
+          color: HaraPalette.of(Brightness.dark, pureBlack: true).ink,
+          style: PaintingStyle.stroke,
         ),
       );
+    });
+
+    testWidgets('the standard glass thumbnail carries a second frame', (
+      tester,
+    ) async {
+      await pumpThemeView(tester);
+
+      expect(paintsOf(thumbs().at(5)), findsNWidgets(2));
+      expect(paintsOf(thumbs().at(6)), findsNWidgets(3));
     });
   });
 
   group('preview form', () {
-    testWidgets('the option thumbs are square and hairline-framed', (
-      tester,
-    ) async {
+    testWidgets('the option thumbs carry no rounded clip', (tester) async {
       await pumpThemeView(tester);
-      final palette = tester.element(find.byType(ThemeView)).haraPalette;
 
-      final thumbs = find.byType(MiniScreenThumb);
-      expect(thumbs, findsWidgets);
-      for (final thumb in tester.elementList(thumbs)) {
-        final scope = find.byWidget(thumb.widget);
-        final clip = find.descendant(
-          of: scope,
+      expect(
+        find.descendant(
+          of: find.byType(HomeSketchThumb),
           matching: find.byType(ClipRSuperellipse),
-        );
-        expect(
-          tester.widget<ClipRSuperellipse>(clip).borderRadius,
-          BorderRadius.zero,
-        );
-        final frame = find.descendant(
-          of: scope,
-          matching: find.byType(DecoratedBox),
-        );
-        final decoration =
-            tester.widget<DecoratedBox>(frame).decoration as ShapeDecoration;
-        final side = (decoration.shape as OutlinedBorder).side;
-        expect(side.color, palette.line);
-        expect(side.width, HaraSpace.hairline);
-      }
+        ),
+        findsNothing,
+      );
+      expect(
+        find.descendant(
+          of: find.byType(HomeSketchThumb),
+          matching: find.byType(ClipRRect),
+        ),
+        findsNothing,
+      );
     });
 
     testWidgets('the live preview phones carry no rounded clip', (

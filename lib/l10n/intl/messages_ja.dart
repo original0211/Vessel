@@ -622,7 +622,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "externalLink": MessageLookupByLibrary.simpleMessage("外部リンク"),
     "extraLarge": MessageLookupByLibrary.simpleMessage("特大"),
-    "fade": MessageLookupByLibrary.simpleMessage("フェード"),
     "failedCount": m30,
     "failedItem": m31,
     "fakeipFilter": MessageLookupByLibrary.simpleMessage("Fake-IPフィルター"),
@@ -1274,7 +1273,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "skipDomain": MessageLookupByLibrary.simpleMessage("スキップするドメイン"),
     "skipDstAddress": MessageLookupByLibrary.simpleMessage("スキップする宛先アドレス"),
     "skipSrcAddress": MessageLookupByLibrary.simpleMessage("スキップする送信元アドレス"),
-    "slide": MessageLookupByLibrary.simpleMessage("スライド"),
     "sliders": MessageLookupByLibrary.simpleMessage("スライダ"),
     "sniffer": MessageLookupByLibrary.simpleMessage("スニッファー"),
     "sort": MessageLookupByLibrary.simpleMessage("並べ替え"),
@@ -1315,7 +1313,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "system": MessageLookupByLibrary.simpleMessage("システム"),
     "systemApp": MessageLookupByLibrary.simpleMessage("システムアプリ"),
     "systemProxy": MessageLookupByLibrary.simpleMessage("システムプロキシ"),
-    "tabAnimation": MessageLookupByLibrary.simpleMessage("タブアニメーション"),
     "tapToAuthorize": MessageLookupByLibrary.simpleMessage("タップして許可"),
     "target": MessageLookupByLibrary.simpleMessage("宛先"),
     "tcpConcurrent": MessageLookupByLibrary.simpleMessage("TCP同時接続"),
@@ -1357,7 +1354,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "udpTimeoutDesc": MessageLookupByLibrary.simpleMessage(
       "UDP タイムアウトは秒単位で、gvisor・system・mixed スタックでのみ有効です。",
     ),
-    "ultra": MessageLookupByLibrary.simpleMessage("最高"),
     "unavailableUnderSingBox": MessageLookupByLibrary.simpleMessage(
       "sing-box では利用できません",
     ),

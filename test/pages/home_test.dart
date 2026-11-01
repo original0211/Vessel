@@ -854,9 +854,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('the fade tab switch cross-fades the pages in place', (
-    tester,
-  ) async {
+  testWidgets('the tab switch slides the pages across', (tester) async {
     tester.view.physicalSize = const Size(500, 800);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
@@ -885,9 +883,6 @@ void main() {
     addTearDown(container.dispose);
     globalState.container = container;
     container.read(viewSizeProvider.notifier).value = const Size(500, 800);
-    container
-        .read(appSettingProvider.notifier)
-        .update((state) => state.copyWith(tabAnimation: TabAnimation.fade));
 
     await tester.pumpWidget(
       UncontrolledProviderScope(
@@ -902,18 +897,15 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 60));
 
-    double opacityOf(String text) => tester
-        .widget<Opacity>(
-          find.ancestor(of: find.text(text), matching: find.byType(Opacity)),
-        )
-        .opacity;
-    expect(tester.getTopLeft(find.text('page:dashboard')).dx, start);
-    expect(tester.getTopLeft(find.text('page:tools')).dx, start);
-    expect(opacityOf('page:dashboard'), inExclusiveRange(0, 1));
     expect(
-      opacityOf('page:dashboard') + opacityOf('page:tools'),
-      moreOrLessEquals(1),
+      find.ancestor(
+        of: find.text('page:dashboard'),
+        matching: find.byType(Opacity),
+      ),
+      findsNothing,
     );
+    expect(tester.getTopLeft(find.text('page:dashboard')).dx, lessThan(start));
+    expect(tester.getTopLeft(find.text('page:tools')).dx, greaterThan(start));
 
     await tester.pumpAndSettle();
     expect(container.read(currentPageLabelProvider), PageLabel.tools);

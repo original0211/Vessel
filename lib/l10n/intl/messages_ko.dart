@@ -614,7 +614,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "externalLink": MessageLookupByLibrary.simpleMessage("외부 링크"),
     "extraLarge": MessageLookupByLibrary.simpleMessage("매우 크게"),
-    "fade": MessageLookupByLibrary.simpleMessage("페이드"),
     "failedCount": m30,
     "failedItem": m31,
     "fakeipFilter": MessageLookupByLibrary.simpleMessage("Fake-IP 필터"),
@@ -1250,7 +1249,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "skipDomain": MessageLookupByLibrary.simpleMessage("건너뛸 도메인"),
     "skipDstAddress": MessageLookupByLibrary.simpleMessage("건너뛸 목적지 주소"),
     "skipSrcAddress": MessageLookupByLibrary.simpleMessage("건너뛸 출발지 주소"),
-    "slide": MessageLookupByLibrary.simpleMessage("슬라이드"),
     "sliders": MessageLookupByLibrary.simpleMessage("슬라이더"),
     "sniffer": MessageLookupByLibrary.simpleMessage("스니퍼"),
     "sort": MessageLookupByLibrary.simpleMessage("정렬"),
@@ -1293,7 +1291,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "system": MessageLookupByLibrary.simpleMessage("시스템"),
     "systemApp": MessageLookupByLibrary.simpleMessage("시스템 앱"),
     "systemProxy": MessageLookupByLibrary.simpleMessage("시스템 프록시"),
-    "tabAnimation": MessageLookupByLibrary.simpleMessage("탭 애니메이션"),
     "tapToAuthorize": MessageLookupByLibrary.simpleMessage("눌러서 허용"),
     "target": MessageLookupByLibrary.simpleMessage("대상"),
     "tcpConcurrent": MessageLookupByLibrary.simpleMessage("TCP 동시 연결"),
@@ -1335,7 +1332,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "udpTimeoutDesc": MessageLookupByLibrary.simpleMessage(
       "UDP 시간 제한은 초 단위이며 gvisor, system, mixed 스택에서만 작동합니다.",
     ),
-    "ultra": MessageLookupByLibrary.simpleMessage("최고"),
     "unavailableUnderSingBox": MessageLookupByLibrary.simpleMessage(
       "sing-box에서 사용할 수 없음",
     ),

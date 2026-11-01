@@ -760,16 +760,6 @@ class AppLocalizations {
     return Intl.message('Core', name: 'core', desc: '', args: []);
   }
 
-  /// `Tab animation`
-  String get tabAnimation {
-    return Intl.message(
-      'Tab animation',
-      name: 'tabAnimation',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `A multi-platform proxy client based on ClashMeta, simple and easy to use, open-source and ad-free.`
   String get desc {
     return Intl.message(
@@ -1403,11 +1393,6 @@ class AppLocalizations {
   /// `Standard`
   String get standard {
     return Intl.message('Standard', name: 'standard', desc: '', args: []);
-  }
-
-  /// `Ultra`
-  String get ultra {
-    return Intl.message('Ultra', name: 'ultra', desc: '', args: []);
   }
 
   /// `Loose`
@@ -2613,16 +2598,6 @@ class AppLocalizations {
       desc: '',
       args: [],
     );
-  }
-
-  /// `Slide`
-  String get slide {
-    return Intl.message('Slide', name: 'slide', desc: '', args: []);
-  }
-
-  /// `Fade`
-  String get fade {
-    return Intl.message('Fade', name: 'fade', desc: '', args: []);
   }
 
   /// `Pure black`

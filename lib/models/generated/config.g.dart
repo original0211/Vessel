@@ -29,12 +29,6 @@ _AppSettingProps _$AppSettingPropsFromJson(Map<String, dynamic> json) =>
       openLogs: json['openLogs'] as bool? ?? false,
       closeConnections: json['closeConnections'] as bool? ?? true,
       testUrl: json['testUrl'] as String? ?? defaultTestUrl,
-      tabAnimation:
-          $enumDecodeNullable(
-            _$TabAnimationEnumMap,
-            _readTabAnimation(json, 'tabAnimation'),
-          ) ??
-          TabAnimation.slide,
       autoCheckUpdate: json['autoCheckUpdate'] as bool? ?? true,
       sidebarExpanded:
           _readSidebarExpanded(json, 'sidebarExpanded') as bool? ?? true,
@@ -93,7 +87,6 @@ Map<String, dynamic> _$AppSettingPropsToJson(_AppSettingProps instance) =>
       'openLogs': instance.openLogs,
       'closeConnections': instance.closeConnections,
       'testUrl': instance.testUrl,
-      'tabAnimation': _$TabAnimationEnumMap[instance.tabAnimation]!,
       'autoCheckUpdate': instance.autoCheckUpdate,
       'sidebarExpanded': instance.sidebarExpanded,
       'acceptedDisclaimerVersion': instance.acceptedDisclaimerVersion,
@@ -109,11 +102,6 @@ Map<String, dynamic> _$AppSettingPropsToJson(_AppSettingProps instance) =>
       'disabledServices': instance.disabledServices,
       'tableColumnWidths': instance.tableColumnWidths,
     };
-
-const _$TabAnimationEnumMap = {
-  TabAnimation.slide: 'slide',
-  TabAnimation.fade: 'fade',
-};
 
 const _$EditorFontSizeEnumMap = {
   EditorFontSize.standard: 'standard',
@@ -314,7 +302,6 @@ const _$ThemeModeEnumMap = {
 const _$LiquidGlassModeEnumMap = {
   LiquidGlassMode.none: 'none',
   LiquidGlassMode.standard: 'standard',
-  LiquidGlassMode.ultra: 'ultra',
 };
 
 _Config _$ConfigFromJson(Map<String, dynamic> json) => _Config(

@@ -245,7 +245,6 @@ class _HomePageViewState extends ConsumerState<_HomePageView> {
     if (index == -1) {
       return;
     }
-    final tabAnimation = ref.read(appSettingProvider).tabAnimation;
     final isMobile = ref.read(isMobileViewProvider);
     final slide = ++_slide;
     final page = _pageController.hasClients
@@ -270,11 +269,10 @@ class _HomePageViewState extends ConsumerState<_HomePageView> {
       });
       _pageController.jumpToPage(adjacent);
     }
-    final fade = tabAnimation == TabAnimation.fade;
     await _pageController.animateToPage(
       index,
-      duration: fade ? fadeTabDuration : kTabScrollDuration,
-      curve: fade ? fadeTabCurve : Curves.easeOut,
+      duration: kTabScrollDuration,
+      curve: Curves.easeOut,
     );
     if (mounted && slide == _slide && _order != null) {
       setState(() => _order = null);
@@ -297,11 +295,6 @@ class _HomePageViewState extends ConsumerState<_HomePageView> {
     final itemCount = ref.watch(
       currentNavigationItemsStateProvider.select((state) => state.value.length),
     );
-    final fade = ref.watch(
-      appSettingProvider.select(
-        (state) => state.tabAnimation == TabAnimation.fade,
-      ),
-    );
     return PageView.builder(
       controller: _pageController,
       physics: const NeverScrollableScrollPhysics(),
@@ -319,56 +312,8 @@ class _HomePageViewState extends ConsumerState<_HomePageView> {
         return _order?.indexOf(index) ?? index;
       },
       itemBuilder: (context, index) {
-        final page = widget.pageBuilder(context, _order?[index] ?? index);
-        return _FadeTabPage(
-          key: page.key,
-          controller: _pageController,
-          position: index,
-          enabled: fade,
-          child: page,
-        );
+        return widget.pageBuilder(context, _order?[index] ?? index);
       },
-    );
-  }
-}
-
-/// Cancels the page view's slide so a tab switch cross-fades in place, and
-/// wraps every page even when off so switching the setting keeps their state.
-class _FadeTabPage extends StatelessWidget {
-  const _FadeTabPage({
-    super.key,
-    required this.controller,
-    required this.position,
-    required this.enabled,
-    required this.child,
-  });
-
-  final PageController controller;
-  final int position;
-  final bool enabled;
-  final Widget child;
-
-  double get _delta {
-    if (!controller.hasClients || !controller.position.hasContentDimensions) {
-      return 0;
-    }
-    final page = controller.page ?? position.toDouble();
-    return (position - page).clamp(-1.0, 1.0);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: controller,
-      builder: (_, child) {
-        final offset = _delta;
-        final delta = enabled ? offset : 0.0;
-        return FractionalTranslation(
-          translation: Offset(-delta, 0),
-          child: Opacity(opacity: 1 - delta.abs(), child: child),
-        );
-      },
-      child: child,
     );
   }
 }

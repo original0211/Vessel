@@ -4,7 +4,6 @@ import 'package:kfusion/common/common.dart';
 import 'package:kfusion/enum/enum.dart';
 import 'package:kfusion/models/models.dart';
 import 'package:kfusion/providers/config.dart';
-import 'package:kfusion/providers/state.dart';
 import 'package:kfusion/ui/icons/icons.dart';
 import 'package:kfusion/views/theme_preview.dart';
 import 'package:kfusion/widgets/widgets.dart';
@@ -36,8 +35,6 @@ class ThemeView extends StatelessWidget {
                 _ThemeModeItem(),
                 SizedBox(height: HaraSpace.groupGap),
                 _PureBlackItem(),
-                SizedBox(height: HaraSpace.groupGap),
-                _TabAnimationItem(),
                 SizedBox(height: HaraSpace.groupGap),
                 _LiquidGlassItem(),
                 SizedBox(height: HaraSpace.groupGap),
@@ -157,17 +154,6 @@ class _ThemeModeItem extends ConsumerWidget {
     final themeMode = ref.watch(
       themeSettingProvider.select((state) => state.themeMode),
     );
-    final liquidGlass = ref.watch(_liquidGlassProvider);
-    final light = MiniScreen(
-      colorScheme: ref.watch(genColorSchemeProvider(Brightness.light)),
-      floatingBar: true,
-      liquidGlass: liquidGlass,
-    );
-    final dark = MiniScreen(
-      colorScheme: ref.watch(genColorSchemeProvider(Brightness.dark)),
-      floatingBar: true,
-      liquidGlass: liquidGlass,
-    );
     return PreviewChoiceGroup<ThemeMode>(
       info: Info(label: appLocalizations.themeMode, glyph: AppGlyphs.sun),
       value: themeMode,
@@ -175,19 +161,20 @@ class _ThemeModeItem extends ConsumerWidget {
         PreviewChoice(
           value: ThemeMode.system,
           label: appLocalizations.auto,
-          pictogram: MiniScreenThumb(
-            screen: MiniSplitScreen(light: light, dark: dark),
+          pictogram: const HomeSketchThumb(
+            palette: HaraPalette.light,
+            splitPalette: HaraPalette.dark,
           ),
         ),
         PreviewChoice(
           value: ThemeMode.light,
           label: appLocalizations.light,
-          pictogram: MiniScreenThumb(screen: light),
+          pictogram: const HomeSketchThumb(palette: HaraPalette.light),
         ),
         PreviewChoice(
           value: ThemeMode.dark,
           label: appLocalizations.dark,
-          pictogram: MiniScreenThumb(screen: dark),
+          pictogram: const HomeSketchThumb(palette: HaraPalette.dark),
         ),
       ],
       onChanged: (value) {
@@ -199,10 +186,6 @@ class _ThemeModeItem extends ConsumerWidget {
   }
 }
 
-final _liquidGlassProvider = themeSettingProvider.select(
-  (state) => state.liquidGlass != LiquidGlassMode.none,
-);
-
 class _PureBlackItem extends ConsumerWidget {
   const _PureBlackItem();
 
@@ -212,16 +195,7 @@ class _PureBlackItem extends ConsumerWidget {
     final pureBlack = ref.watch(
       themeSettingProvider.select((state) => state.pureBlack),
     );
-    final liquidGlass = ref.watch(_liquidGlassProvider);
-    Widget preview(bool pureBlack) => MiniScreenThumb(
-      screen: MiniScreen(
-        colorScheme: ref.watch(
-          genColorSchemeProvider(Brightness.dark, pureBlack: pureBlack),
-        ),
-        floatingBar: true,
-        liquidGlass: liquidGlass,
-      ),
-    );
+    final pureBlackPalette = HaraPalette.of(Brightness.dark, pureBlack: true);
     return PreviewChoiceGroup<bool>(
       info: Info(
         label: appLocalizations.pureBlackMode,
@@ -232,64 +206,21 @@ class _PureBlackItem extends ConsumerWidget {
         PreviewChoice(
           value: false,
           label: appLocalizations.standard,
-          pictogram: preview(false),
+          pictogram: const HomeSketchThumb(palette: HaraPalette.dark),
         ),
         PreviewChoice(
           value: true,
           label: appLocalizations.pureBlack,
-          pictogram: preview(true),
+          pictogram: HomeSketchThumb(
+            palette: pureBlackPalette,
+            frameColor: pureBlackPalette.ink,
+          ),
         ),
       ],
       onChanged: (value) {
         ref
             .read(themeSettingProvider.notifier)
             .update((state) => state.copyWith(pureBlack: value));
-      },
-    );
-  }
-}
-
-class _TabAnimationItem extends ConsumerWidget {
-  const _TabAnimationItem();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final appLocalizations = context.appLocalizations;
-    final tabAnimation = ref.watch(
-      appSettingProvider.select((state) => state.tabAnimation),
-    );
-    final liquidGlass = ref.watch(_liquidGlassProvider);
-    final colorScheme = context.colorScheme;
-    Widget switching(TabAnimation tabAnimation) => MiniScreenThumb(
-      screen: MiniScreen(
-        colorScheme: colorScheme,
-        floatingBar: true,
-        liquidGlass: liquidGlass,
-        selected: 1,
-        previous: 0,
-        progress: 0.55,
-        tabAnimation: tabAnimation,
-      ),
-    );
-    return PreviewChoiceGroup<TabAnimation>(
-      info: Info(label: appLocalizations.tabAnimation, glyph: AppGlyphs.motion),
-      value: tabAnimation,
-      choices: [
-        PreviewChoice(
-          value: TabAnimation.slide,
-          label: appLocalizations.slide,
-          pictogram: switching(TabAnimation.slide),
-        ),
-        PreviewChoice(
-          value: TabAnimation.fade,
-          label: appLocalizations.fade,
-          pictogram: switching(TabAnimation.fade),
-        ),
-      ],
-      onChanged: (value) {
-        ref
-            .read(appSettingProvider.notifier)
-            .update((state) => state.copyWith(tabAnimation: value));
       },
     );
   }
@@ -304,17 +235,7 @@ class _LiquidGlassItem extends ConsumerWidget {
     final mode = ref.watch(
       themeSettingProvider.select((state) => state.liquidGlass),
     );
-    final colorScheme = context.colorScheme;
-    // Floating either way, as a docked bar stays a fill, over the list page,
-    // whose rows run on under the bar where glass shows them.
-    Widget preview(bool liquidGlass) => MiniScreenThumb(
-      screen: MiniScreen(
-        colorScheme: colorScheme,
-        floatingBar: true,
-        liquidGlass: liquidGlass,
-        selected: 1,
-      ),
-    );
+    final palette = context.haraPalette;
     return PreviewChoiceGroup<LiquidGlassMode>(
       info: Info(
         label: appLocalizations.liquidGlass,
@@ -325,17 +246,12 @@ class _LiquidGlassItem extends ConsumerWidget {
         PreviewChoice(
           value: LiquidGlassMode.none,
           label: appLocalizations.none,
-          pictogram: preview(false),
+          pictogram: HomeSketchThumb(palette: palette),
         ),
         PreviewChoice(
           value: LiquidGlassMode.standard,
           label: appLocalizations.standard,
-          pictogram: preview(true),
-        ),
-        PreviewChoice(
-          value: LiquidGlassMode.ultra,
-          label: appLocalizations.ultra,
-          pictogram: preview(true),
+          pictogram: HomeSketchThumb(palette: palette, glass: true),
         ),
       ],
       onChanged: (value) {
