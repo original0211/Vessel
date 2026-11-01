@@ -2032,7 +2032,7 @@ return $default(_that.sortType,_that.cardType,_that.hideTimeoutProxies);case _:
 @JsonSerializable()
 
 class _ProxiesStyleProps implements ProxiesStyleProps {
-  const _ProxiesStyleProps({this.sortType = ProxiesSortType.none, @JsonKey(fromJson: proxyCardTypeSafeFromJson) this.cardType = ProxyCardType.standard, this.hideTimeoutProxies = false});
+  const _ProxiesStyleProps({this.sortType = ProxiesSortType.none, @JsonKey(fromJson: proxyCardTypeSafeFromJson) this.cardType = ProxyCardType.standard, this.hideTimeoutProxies = true});
   factory _ProxiesStyleProps.fromJson(Map<String, dynamic> json) => _$ProxiesStylePropsFromJson(json);
 
 @override@JsonKey() final  ProxiesSortType sortType;

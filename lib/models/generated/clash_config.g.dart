@@ -842,7 +842,7 @@ _PatchClashConfig _$PatchClashConfigFromJson(Map<String, dynamic> json) =>
       allowLan: json['allow-lan'] as bool? ?? false,
       logLevel:
           $enumDecodeNullable(_$LogLevelEnumMap, json['log-level']) ??
-          LogLevel.error,
+          LogLevel.info,
       ipv6: json['ipv6'] as bool? ?? false,
       findProcessMode:
           $enumDecodeNullable(
@@ -902,7 +902,7 @@ _PatchClashConfig _$PatchClashConfigFromJson(Map<String, dynamic> json) =>
             (k, e) => MapEntry(k, e as String),
           ) ??
           const {},
-      geoAutoUpdate: json['geo-auto-update'] as bool? ?? false,
+      geoAutoUpdate: json['geo-auto-update'] as bool? ?? true,
       geoUpdateInterval: (json['geo-update-interval'] as num?)?.toInt() ?? 24,
     );
 

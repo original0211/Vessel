@@ -237,7 +237,7 @@ _ProxiesStyleProps _$ProxiesStylePropsFromJson(Map<String, dynamic> json) =>
       cardType: json['cardType'] == null
           ? ProxyCardType.standard
           : proxyCardTypeSafeFromJson(json['cardType']),
-      hideTimeoutProxies: json['hideTimeoutProxies'] as bool? ?? false,
+      hideTimeoutProxies: json['hideTimeoutProxies'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$ProxiesStylePropsToJson(_ProxiesStyleProps instance) =>
