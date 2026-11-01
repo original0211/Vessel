@@ -143,6 +143,9 @@ void main() {
     container
         .read(delayDataSourceProvider.notifier)
         .setDelay(const Delay(url: testUrl, name: 'slow', value: -1));
+    container
+        .read(proxiesStyleSettingProvider.notifier)
+        .update((state) => state.copyWith(hideTimeoutProxies: false));
 
     expect(
       container.read(visibleGroupsStateProvider).value.single.all,

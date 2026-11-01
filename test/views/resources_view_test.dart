@@ -157,15 +157,15 @@ void main() {
       ),
       findsNothing,
     );
-    expect(autoUpdate(), isFalse);
-
-    await tester.tap(find.text(l10n.autoUpdate));
-    await tester.pumpAndSettle();
     expect(autoUpdate(), isTrue);
 
     await tester.tap(find.text(l10n.autoUpdate));
     await tester.pumpAndSettle();
     expect(autoUpdate(), isFalse);
+
+    await tester.tap(find.text(l10n.autoUpdate));
+    await tester.pumpAndSettle();
+    expect(autoUpdate(), isTrue);
 
     await tester.tap(find.text(l10n.resourceUpdateInterval));
     await tester.pumpAndSettle();

@@ -137,12 +137,6 @@ void main() {
 
     expect(
       container.read(proxiesStyleSettingProvider).hideTimeoutProxies,
-      isFalse,
-    );
-    await tester.tap(find.text(l10n.hideTimeoutProxies));
-    await tester.pumpAndSettle();
-    expect(
-      container.read(proxiesStyleSettingProvider).hideTimeoutProxies,
       isTrue,
     );
     await tester.tap(find.text(l10n.hideTimeoutProxies));
@@ -150,6 +144,12 @@ void main() {
     expect(
       container.read(proxiesStyleSettingProvider).hideTimeoutProxies,
       isFalse,
+    );
+    await tester.tap(find.text(l10n.hideTimeoutProxies));
+    await tester.pumpAndSettle();
+    expect(
+      container.read(proxiesStyleSettingProvider).hideTimeoutProxies,
+      isTrue,
     );
     expect(tester.takeException(), null);
   });

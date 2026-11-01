@@ -545,7 +545,7 @@ void main() {
         externalController: ExternalControllerStatus.open,
         secret: 'secret',
         unifiedDelay: false,
-        geoAutoUpdate: true,
+        geoAutoUpdate: false,
         geoUpdateInterval: 6,
         geoXUrl: {...defaultGeoXUrl, GeoResource.MMDB: 'https://mmdb.test'},
       );
@@ -922,6 +922,44 @@ void main() {
       });
       expect(config.windowProps, defaultWindowProps);
       expect(config.windowProps.size, defaultWindowSize);
+    });
+  });
+
+  group('Optimal defaults', () {
+    test('a fresh install takes the tuned defaults', () {
+      final config = Config.realFromJson(null);
+      expect(config.patchClashConfig.logLevel, LogLevel.info);
+      expect(config.patchClashConfig.geoAutoUpdate, isTrue);
+      expect(config.patchClashConfig.geoUpdateInterval, 24);
+      expect(config.proxiesStyleProps.hideTimeoutProxies, isTrue);
+
+      final filled = PatchClashConfig.fromJson(const {});
+      expect(filled.logLevel, LogLevel.info);
+      expect(filled.geoAutoUpdate, isTrue);
+      expect(ProxiesStyleProps.fromJson(const {}).hideTimeoutProxies, isTrue);
+    });
+
+    test('stored values win over the tuned defaults', () {
+      final stored = Config.realFromJson({
+        'themeProps': const ThemeProps().toJson(),
+        'patchClashConfig': {'log-level': 'error', 'geo-auto-update': false},
+        'proxiesStyleProps': {'hideTimeoutProxies': false},
+      });
+      expect(stored.patchClashConfig.logLevel, LogLevel.error);
+      expect(stored.patchClashConfig.geoAutoUpdate, isFalse);
+      expect(stored.proxiesStyleProps.hideTimeoutProxies, isFalse);
+    });
+
+    test('the defaults left alone stay at their shipped values', () {
+      final config = Config.realFromJson(null);
+      expect(config.appSettingProps.autoLaunch, isFalse);
+      expect(config.appSettingProps.silentLaunch, isFalse);
+      expect(config.appSettingProps.autoRun, isFalse);
+      expect(config.patchClashConfig.findProcessMode, FindProcessMode.off);
+      expect(config.patchClashConfig.ipv6, isFalse);
+      expect(config.vpnProps.ipv6, isFalse);
+      expect(config.vpnProps.dnsHijacking, isFalse);
+      expect(config.patchClashConfig.dns.enhancedMode, DnsMode.redirHost);
     });
   });
 
