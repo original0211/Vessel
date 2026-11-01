@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.45 (2026-11-01)
+
+**Bug Fixes**
+
+- The launcher icon renders again, with the ring and vermilion dot inside the icon safe zone (78be1eb)
+
 ## v0.2.44 (2026-11-01)
 
 **Features**

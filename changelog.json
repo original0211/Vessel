@@ -2,6 +2,23 @@
   "schemaVersion": 2,
   "versions": [
     {
+      "version": "0.2.45",
+      "tag": "v0.2.45",
+      "date": "2026-11-01",
+      "prerelease": false,
+      "groups": [
+        {
+          "type": "fix",
+          "entries": [
+            {
+              "id": "78be1eb",
+              "text": "The launcher icon renders again, with the ring and vermilion dot inside the icon safe zone"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "version": "0.2.44",
       "tag": "v0.2.44",
       "date": "2026-11-01",
