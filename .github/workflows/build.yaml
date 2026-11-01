@@ -362,6 +362,12 @@ jobs:
       - name: Setup Gradle
         if: startsWith(matrix.platform,'android')
         uses: gradle/actions/setup-gradle@v6
+      - name: Setup Java
+        if: startsWith(matrix.platform,'android')
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
 
       - name: Enable git long paths (Windows)
         if: startsWith(matrix.os, 'windows')
