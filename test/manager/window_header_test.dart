@@ -499,6 +499,91 @@ void main() {
     });
   });
 
+  group('WindowHeaderBar stands on the field', () {
+    ThemeData fieldTheme(Brightness brightness, {bool pureBlack = false}) {
+      final scheme = seededColorScheme(
+        seedColor: const Color(defaultPrimaryColor),
+        brightness: brightness,
+      ).toPureBlack(pureBlack);
+      return ThemeData(
+        useMaterial3: true,
+        colorScheme: scheme,
+        extensions: [
+          HaraTheme(HaraPalette.of(brightness, pureBlack: pureBlack)),
+        ],
+      ).withAppShapes.withAppSurfaces.withAppTypography;
+    }
+
+    Future<void> pumpThemedBar(
+      WidgetTester tester, {
+      required Brightness brightness,
+      bool pureBlack = false,
+      bool translucent = false,
+    }) async {
+      tester.view.physicalSize = const Size(900, 600);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      await tester.pumpWidget(
+        TestApp(
+          theme: fieldTheme(brightness, pureBlack: pureBlack),
+          child: WindowHeaderBar(
+            height: _windowsHeaderHeight,
+            translucent: translucent,
+            onDragStart: () {},
+            onDoubleTap: () {},
+          ),
+        ),
+      );
+      await tester.pump();
+    }
+
+    Color barColor(WidgetTester tester) {
+      final box = tester.widget<ColoredBox>(
+        find.descendant(
+          of: find.byType(WindowHeaderBar),
+          matching: find.byType(ColoredBox),
+        ),
+      );
+      return box.color;
+    }
+
+    for (final brightness in Brightness.values) {
+      testWidgets('the bar paints the field, not the chrome step '
+          '($brightness)', (tester) async {
+        await pumpThemedBar(tester, brightness: brightness);
+
+        final theme = Theme.of(tester.element(find.byType(WindowHeaderBar)));
+        expect(barColor(tester), HaraPalette.of(brightness).bg);
+        expect(barColor(tester), theme.scaffoldBackgroundColor);
+        expect(barColor(tester), isNot(theme.colorScheme.chromeSurface));
+      });
+    }
+
+    testWidgets('a pure black theme puts the bar on pure black', (
+      tester,
+    ) async {
+      await pumpThemedBar(tester, brightness: Brightness.dark, pureBlack: true);
+
+      expect(barColor(tester), Colors.black);
+    });
+
+    testWidgets('the blurred bar tints the field at the sidebar opacity', (
+      tester,
+    ) async {
+      await pumpThemedBar(
+        tester,
+        brightness: Brightness.light,
+        translucent: true,
+      );
+
+      expect(
+        barColor(tester),
+        HaraPalette.light.bg.withValues(alpha: kSidebarBlurOpacity),
+      );
+    });
+  });
+
   group('WindowHeaderLayout above the app navigator', () {
     Future<void> pumpLayout(WidgetTester tester) async {
       final caption = ValueNotifier(const WindowCaptionState());

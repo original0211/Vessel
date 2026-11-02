@@ -442,7 +442,7 @@ class WindowHeaderBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
+    final field = Theme.of(context).fieldColor;
     return Material(
       color: translucent ? Colors.transparent : null,
       shape: Border(bottom: Divider.createBorderSide(context)),
@@ -459,10 +459,8 @@ class WindowHeaderBar extends StatelessWidget {
                 onDoubleTap: onDoubleTap,
                 child: ColoredBox(
                   color: translucent
-                      ? colorScheme.chromeSurface.withValues(
-                          alpha: kSidebarBlurOpacity,
-                        )
-                      : colorScheme.chromeSurface,
+                      ? field.withValues(alpha: kSidebarBlurOpacity)
+                      : field,
                 ),
               ),
             ),
