@@ -18,21 +18,23 @@ code and designs come from.
 - **mihomo / Clash.Meta** — https://github.com/MetaCubeX/mihomo
   (vendored as the `core/Clash.Meta` git submodule, FlClash branch of
   https://github.com/chen08209/Clash.Meta)
-  Licensed under GPL-3.0. This is the only core shipped in P0/P1.
+  Licensed under GPL-3.0. One of the two cores shipped in the current
+  product; configurations pass through it with full fidelity.
 
-## Design input (later phases)
+## Design input
 
 - **Karing** by KaringX — https://github.com/KaringX/karing
   Licensed under GPL-3.0 with an additional term that derivative works may
   not use the Karing name or imply association with it.
-  No Karing code is included yet. From P1 on, KFusion will absorb Karing's
-  *designs* — all-format subscription compatibility, a single routing
-  template applied across subscriptions, beginner mode, and multi-device
-  sync. If Karing code is ever reused, it will be under GPL-3.0 and this
-  notice will be updated; the KFusion name does not use or imply Karing.
+  No Karing code is included. Vessel's all-format subscription import and
+  its single routing template applied across subscriptions are *designs*
+  informed by Karing; no Karing code or name is used. If Karing code is
+  ever reused, it will be under GPL-3.0 and this notice will be updated.
 
 - **sing-box** — https://github.com/SagerNet/sing-box (GPL-3.0)
-  Planned as the second core in P2; not included yet.
+  Ships as the second core: native sing-box JSON is used as-is, and
+  Clash configurations are converted at the node layer under one
+  built-in routing template — a contract subset, not a full port.
 
 ## Vessel itself
 
