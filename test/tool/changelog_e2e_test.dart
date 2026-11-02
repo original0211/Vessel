@@ -218,10 +218,10 @@ void main() {
       Git(workingDirectory: repo.path),
     ).build().changelog.versions;
 
-    expect(versions.map((version) => version.tag), ['v1.1.0', 'v1.0.0']);
+    expect(versions.map((version) => version.tag), ['v1.1.0', 'v0.2.48']);
     expect(isFrozenTag('v0.2.48'), isTrue);
     expect(isFrozenTag('v0.2.47'), isTrue);
-    expect(isFrozenTag('v1.0.0'), isFalse);
+    expect(isFrozenTag('v1.0.0'), isTrue);
   });
 
   test('recorded history survives a rewrite it cannot re-derive', () {
