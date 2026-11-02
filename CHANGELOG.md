@@ -1,5 +1,21 @@
 # Changelog
 
+## v1.0.0 (2026-11-02)
+
+**Features**
+
+- Two cores ship in one install: mihomo (Clash.Meta) takes configurations with full fidelity, sing-box works to a contract subset, and the two switch in Settings. Native sing-box JSON is used as-is; Clash configurations receive a node-layer conversion plus one built-in routing template, covering mainstream protocol nodes and selector and url-test groups, including renderer-generated two-level url-test groups and one level of user-nested groups. (5d40681)
+- Whatever sing-box cannot express is named, never silently dropped: unsupported protocols and group types, groups nested deeper than one level and reference cycles are listed item by item at import and at switch time, referential integrity is checked in full, and dangling references fail on the spot. The subscriptions screen carries a degradation count with an entry to the list. (5d40681)
+- Clash and sing-box configurations, subscriptions and share links import in one go: everything is parsed into a unified intermediate representation first, then rendered to the selected core. Profiles can be added four ways, by subscription link, by local file, by QR code scan and by universal import, and the clash://, clashmeta:// and flclash:// deep links are handled too. (5d40681)
+- The subscription list shows usage, expiry and the last update time of every profile; subscriptions refresh automatically, or all at once with a single tap. (5d40681)
+- Node picking is built for long lists: groups rest folded with only the group holding the current exit open, a folded group header shows the member count, the lowest latency inside the group and the node currently selected, and a chip bar plus a one-line search that filters across groups reach any group directly. The current exit pins to the top of its group, and one tap tests every latency. (5d40681)
+- Traffic is taken over by the system proxy or by TUN mode on Windows, and by a VPN service on Android; the Android side adds a Quick Settings tile, the Windows side a system tray icon and global hotkeys. (5d40681)
+- On-demand connection, on Android: the connection comes up automatically when conditions match, such as joining a particular Wi-Fi network, so the proxy is simply there when it is needed. (5d40681)
+- Access control, on Android: an allow list or an exclude list decides app by app whether traffic goes through the proxy. (5d40681)
+- Backup and restore are local. A one-tap reset at the bottom of the general page returns every setting to the tuned defaults; subscriptions, profiles and latency history are not touched, and a connection that is running drops and reconnects on the new configuration. (5d40681)
+- Settings are searchable: any item can be reached by name instead of by hunting through pages, and the index groups settings the way they are used. (5d40681)
+- The interface follows Kenya Hara’s “White · Emptiness”: a white container, hairline rules, no rounded corners and no shadows, and vermilion marking only what is current. Field colours come in light, dark and pure black and can follow the system, liquid glass is limited to off and standard, and the brand mark is one point, a thin ring with a single vermilion dot at 157 degrees. (5d40681)
+
 ## v0.2.48 (2026-11-02)
 
 **Features**
