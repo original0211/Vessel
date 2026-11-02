@@ -425,7 +425,7 @@ void main() {
   });
 
   group('theme page order', () {
-    testWidgets('text scaling stands over liquid glass', (tester) async {
+    testWidgets('liquid glass stands over text scaling', (tester) async {
       const size = Size(1000, 2400);
       tester.view.physicalSize = size;
       tester.view.devicePixelRatio = 1;
@@ -444,8 +444,8 @@ void main() {
       expect(find.text(l10n.textScale), findsOneWidget);
       expect(find.text(l10n.liquidGlass), findsOneWidget);
       expect(
-        dyOf(tester, l10n.textScale),
-        lessThan(dyOf(tester, l10n.liquidGlass)),
+        dyOf(tester, l10n.liquidGlass),
+        lessThan(dyOf(tester, l10n.textScale)),
       );
       expect(tester.takeException(), null);
     });
