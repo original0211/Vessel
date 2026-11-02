@@ -1,5 +1,5 @@
 name: kfusion
-description: Vessel - a proxy client for Android and Windows based on FlClash and the mihomo (Clash.Meta) core, open-source and ad-free.
+description: Vessel - a dual-core (mihomo + sing-box) proxy client for Android & Windows only, with a universal subscription import and routing-template config hub.
 publish_to: 'none'
 version: 1.0.0+2055
 environment:
