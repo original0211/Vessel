@@ -15,7 +15,7 @@ A self-built proxy client for **Android** and **Windows** only.
 
 ## 状态
 
-最新正式版 **v0.2.48**，见 [Releases](https://github.com/original0211/Vessel/releases)；应用内可检查更新，更新源即本仓 Releases。项目持续迭代中。
+最新正式版见 [Releases](https://github.com/original0211/Vessel/releases)；应用内可检查更新，更新源即本仓 Releases。项目持续迭代中。
 
 ## 特性
 
@@ -78,7 +78,7 @@ Vessel 以 [GPL-3.0](LICENSE) 发布。代理内核为 [mihomo / Clash.Meta](htt
 
 ### Status
 
-Latest stable release: **v0.2.48**, see [Releases](https://github.com/original0211/Vessel/releases). The app checks for updates against this repository's Releases. Development is ongoing.
+Latest stable release: see [Releases](https://github.com/original0211/Vessel/releases). The app checks for updates against this repository's Releases. Development is ongoing.
 
 ### Features
 
