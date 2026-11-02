@@ -23,7 +23,13 @@ use windows_service::{
     service_manager::{ServiceManager, ServiceManagerAccess},
 };
 
+// The service name is the SCM identity other components address, so it stays
+// frozen; only the display name shown in the Services console follows the
+// current brand. Registration deletes and recreates the service under the
+// same name on every install, so the new display name lands without an
+// orphaned entry.
 const SERVICE_NAME: &str = "KFusionHelperService";
+const SERVICE_DISPLAY_NAME: &str = "Vessel Helper Service";
 const SERVICE_TYPE: ServiceType = ServiceType::OWN_PROCESS;
 const SERVICE_OPERATION_TIMEOUT: Duration = Duration::from_secs(10);
 const SERVICE_POLL_INTERVAL: Duration = Duration::from_millis(100);
@@ -157,7 +163,7 @@ fn install_service(owner_pid: u32) -> Result<()> {
     let executable_path = std::env::current_exe().context("resolve helper executable path")?;
     let service_info = ServiceInfo {
         name: OsString::from(SERVICE_NAME),
-        display_name: OsString::from(SERVICE_NAME),
+        display_name: OsString::from(SERVICE_DISPLAY_NAME),
         service_type: SERVICE_TYPE,
         start_type: ServiceStartType::AutoStart,
         error_control: ServiceErrorControl::Normal,

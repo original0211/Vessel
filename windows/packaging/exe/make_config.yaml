@@ -4,6 +4,9 @@ app_name: Vessel
 publisher: original0211
 publisher_url: https://github.com/original0211/Vessel
 display_name: Vessel
+# Pinned explicitly: the packaging toolchain otherwise derives the install
+# folder from the package name instead of the display name.
+install_dir_name: '{autopf64}\Vessel'
 executable_name: KFusion.exe
 output_base_file_name: KFusion.exe
 # Resolved against the project root: flutter_distributor turns this into an
