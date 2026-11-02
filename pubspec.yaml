@@ -1,7 +1,7 @@
 name: kfusion
 description: Vessel - a dual-core (mihomo + sing-box) proxy client for Android & Windows only, with a universal subscription import and routing-template config hub.
 publish_to: 'none'
-version: 1.0.0+2055
+version: 1.0.1+2056
 environment:
   sdk: '>=3.10.0 <4.0.0'
 
