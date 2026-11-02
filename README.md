@@ -4,9 +4,9 @@
 
 # Vessel（器）
 
-取 FlClash 与 Karing 之长的自研代理客户端，只做 **Android** 与 **Windows**。
+自研代理客户端，只做 **Android** 与 **Windows**。
 
-A self-built proxy client for **Android** and **Windows**, taking the strengths of FlClash and Karing.
+A self-built proxy client for **Android** and **Windows** only.
 
 [![License](https://img.shields.io/badge/license-GPL--3.0-blue?style=flat-square)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/original0211/Vessel?style=flat-square)](https://github.com/original0211/Vessel/releases/latest)
@@ -22,7 +22,7 @@ A self-built proxy client for **Android** and **Windows**, taking the strengths 
 - **双核同装**：mihomo（Clash.Meta）全保真直通；sing-box 为契约子集（见「已知取舍」）。两核同在一个安装内，设置中一键切换。
 - **sing-box 契约**：原生 sing-box JSON 原样直用；Clash 配置只做节点层转换并套用一套内置分流模板，承接主流协议节点与选择 / 测速组，包括渲染器自生成的双层测速组与一层用户嵌套组。
 - **降级必点名**：sing-box 无法表达的项（不支持的协议与组型、嵌套超过一层的组、引用成环等）在导入与切换时逐项列入降级清单，不静默丢弃；引用完整性全量校验，悬空引用当场报错。订阅屏有降级计数与清单入口。
-- **万能导入**：Clash、sing-box 配置、订阅与分享链接一次导入——先解析为统一中间表示，再渲染到所选内核。添加配置有四种入口：订阅链接、本地文件、二维码扫描、万能导入；另支持深度链接 `clash://`、`clashmeta://`、`flclash://`。
+- **万能导入**：Clash、sing-box 配置、订阅与分享链接一次导入——先解析为统一中间表示，再渲染到所选内核。添加配置有四种入口：订阅链接、本地文件、二维码扫描、万能导入；另支持深度链接 `clash://`、`clashmeta://`。
 - **订阅管理**：列表显示用量、到期与最后更新时间；支持自动更新与一键全量更新。
 - **节点选择**：分组默认折叠、只展开当前出口所在组，折叠组头显示成员数、组内最低延迟与当前选定节点；顶部分组导航条与一行搜索直达任意组，搜索跨组过滤；组内当前出口置顶；一键测试全部延迟。
 - **接管方式**：Windows 提供系统代理与 TUN 模式；Android 以 VPN 服务运行。
@@ -51,7 +51,7 @@ A self-built proxy client for **Android** and **Windows**, taking the strengths 
 | Windows amd64 | `Vessel-<版本>-windows-amd64-setup.exe`（安装版）/ `Vessel-<版本>-windows-amd64.zip`（便携版） |
 | Windows arm64 | `Vessel-<版本>-windows-arm64-setup.exe` / `Vessel-<版本>-windows-arm64.zip` |
 
-每版附 `SHA256SUMS` 供校验。Android 应用 ID 为 `com.kfusion.app`，可与 FlClash 并存安装、互不共用数据。
+每版附 `SHA256SUMS` 供校验。Android 应用 ID 为 `com.kfusion.app`。
 
 ## 从源码构建
 
@@ -68,13 +68,13 @@ dart setup.dart android   # 或 windows
 
 ## 许可与致谢
 
-Vessel 以 [GPL-3.0](LICENSE) 发布。基于 [FlClash](https://github.com/chen08209/FlClash)（chen08209）二次开发；代理内核为 [mihomo / Clash.Meta](https://github.com/MetaCubeX/mihomo) 与 [sing-box](https://github.com/SagerNet/sing-box)；全格式导入与路由模板的设计借鉴 [Karing](https://github.com/KaringX/karing)（KaringX，未使用其代码与名称）。完整归属见 [NOTICE.md](NOTICE.md)。
+Vessel 以 [GPL-3.0](LICENSE) 发布。代理内核为 [mihomo / Clash.Meta](https://github.com/MetaCubeX/mihomo) 与 [sing-box](https://github.com/SagerNet/sing-box)。完整归属见 [NOTICE.md](NOTICE.md)。
 
 ---
 
 ## English
 
-**Vessel** is a self-built proxy client for **Android** and **Windows** only, taking the strengths of FlClash and Karing.
+**Vessel** is a self-built proxy client for **Android** and **Windows** only.
 
 ### Status
 
@@ -85,7 +85,7 @@ Latest stable release: **v0.2.48**, see [Releases](https://github.com/original02
 - **Two cores in one install**: mihomo (Clash.Meta) passes configurations through with full fidelity; sing-box is a contract subset (see "Known trade-offs"). Switch cores in Settings.
 - **The sing-box contract**: native sing-box JSON is used as-is; Clash configurations get a node-layer conversion plus one built-in routing template, covering mainstream protocol nodes and selector / url-test groups, including renderer-generated two-level url-test groups and one level of user-nested groups.
 - **Degradation is always named**: anything sing-box cannot express (unsupported protocols or group types, groups nested deeper than one level, reference cycles, …) is listed item by item in a degradation list at import and switch time — never silently dropped. Referential integrity is fully checked; dangling references fail on the spot. The subscriptions screen shows a degradation count with an entry to the list.
-- **Universal import**: Clash and sing-box configurations, subscriptions and share links are imported in one go — parsed into a unified intermediate representation first, then rendered to the selected core. Profiles can be added four ways: subscription link, local file, QR code scan, and universal import; deep links `clash://`, `clashmeta://` and `flclash://` are also supported.
+- **Universal import**: Clash and sing-box configurations, subscriptions and share links are imported in one go — parsed into a unified intermediate representation first, then rendered to the selected core. Profiles can be added four ways: subscription link, local file, QR code scan, and universal import; deep links `clash://` and `clashmeta://` are also supported.
 - **Subscription management**: the list shows usage, expiry and last-update time; automatic updates and one-tap update-all are supported.
 - **Node picking**: groups are folded by default — only the group holding the current exit is expanded; a folded group header shows its member count, its lowest in-group latency and its currently selected node. A group chip bar and a one-line search reach any group, with cross-group filtering while searching; the current exit is pinned to the top of its group; one tap tests all latencies.
 - **Traffic takeover**: system proxy and TUN mode on Windows; a VPN service on Android.
@@ -114,7 +114,7 @@ Get the latest build from [Releases](https://github.com/original0211/Vessel/rele
 | Windows amd64 | `Vessel-<version>-windows-amd64-setup.exe` (installer) / `Vessel-<version>-windows-amd64.zip` (portable) |
 | Windows arm64 | `Vessel-<version>-windows-arm64-setup.exe` / `Vessel-<version>-windows-arm64.zip` |
 
-Each release ships a `SHA256SUMS` file for verification. The Android application id is `com.kfusion.app`, so Vessel installs alongside FlClash and shares no data with it.
+Each release ships a `SHA256SUMS` file for verification. The Android application id is `com.kfusion.app`.
 
 ### Build from source
 
@@ -131,4 +131,4 @@ See [.github/workflows/build.yaml](.github/workflows/build.yaml) for the pipelin
 
 ### License and acknowledgements
 
-Vessel is released under [GPL-3.0](LICENSE). It is developed on top of [FlClash](https://github.com/chen08209/FlClash) by chen08209; the proxy cores are [mihomo / Clash.Meta](https://github.com/MetaCubeX/mihomo) and [sing-box](https://github.com/SagerNet/sing-box); the all-format import and routing-template designs are informed by [Karing](https://github.com/KaringX/karing) by KaringX (no Karing code or name is used). Full attribution lives in [NOTICE.md](NOTICE.md).
+Vessel is released under [GPL-3.0](LICENSE). The proxy cores are [mihomo / Clash.Meta](https://github.com/MetaCubeX/mihomo) and [sing-box](https://github.com/SagerNet/sing-box). Full attribution lives in [NOTICE.md](NOTICE.md).
