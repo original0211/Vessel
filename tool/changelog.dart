@@ -66,8 +66,9 @@ int _release(String root, ArgResults command) {
     ),
   );
   _printWarnings(result.warnings);
-  _writeData(root, result.changelog);
-  _writeMarkdown(root, result.changelog);
+  final changelog = _withHistory(root, result.changelog);
+  _writeData(root, changelog);
+  _writeMarkdown(root, changelog);
   stdout.writeln('Wrote $changelogMarkdownPath and $changelogDataPath');
   return 0;
 }
@@ -97,7 +98,7 @@ int _build(String root, ArgResults command) {
   }
   final result = ChangelogBuilder(git).build(pending: pending);
   _printWarnings(result.warnings);
-  _writeData(root, result.changelog);
+  _writeData(root, _withHistory(root, result.changelog));
   stdout.writeln('Wrote $changelogDataPath');
   return 0;
 }
@@ -174,6 +175,9 @@ int _verify(String root) {
 
   final unreachable = <String>[];
   for (final version in changelog.versions) {
+    if (isFrozenTag(version.tag)) {
+      continue;
+    }
     if (!git.tagIsReachable(version.tag)) {
       if (git.tagExists(version.tag)) {
         unreachable.add(version.tag);
@@ -247,6 +251,14 @@ Set<String> _fingerprint(ChangelogVersion version) => <String>{
   for (final group in version.groups)
     for (final entry in group.entries) '${group.type.id}:${entry.id}',
 };
+
+Changelog _withHistory(String root, Changelog derived) {
+  final file = resolve(root, changelogDataPath);
+  if (!file.existsSync()) {
+    return derived;
+  }
+  return withRecordedHistory(derived, decodeChangelog(file.readAsStringSync()));
+}
 
 void _writeData(String root, Changelog changelog) {
   final file = resolve(root, changelogDataPath);

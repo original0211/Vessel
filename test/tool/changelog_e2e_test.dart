@@ -69,7 +69,10 @@ void main() {
     git(['checkout', '--quiet', '--orphan', 'frozen-history']);
     commit('chore: optimize commented policy');
     git(['tag', 'v0.8.96']);
-    final builder = ChangelogBuilder(Git(workingDirectory: repo.path));
+    final builder = ChangelogBuilder(
+      Git(workingDirectory: repo.path),
+      boundary: 'v0.8.96',
+    );
     expect(builder.build().changelog.versions, isEmpty);
 
     commit('fix: new release fix');
@@ -206,5 +209,40 @@ void main() {
     ).warnings;
 
     expect(warnings.single, contains('not a conventional commit'));
+  });
+
+  test('the default boundary keeps the closed 0.x line frozen', () {
+    git(['tag', 'v0.2.48', 'v1.0.0']);
+
+    final versions = ChangelogBuilder(
+      Git(workingDirectory: repo.path),
+    ).build().changelog.versions;
+
+    expect(versions.map((version) => version.tag), ['v1.1.0', 'v1.0.0']);
+    expect(isFrozenTag('v0.2.48'), isTrue);
+    expect(isFrozenTag('v0.2.47'), isTrue);
+    expect(isFrozenTag('v1.0.0'), isFalse);
+  });
+
+  test('recorded history survives a rewrite it cannot re-derive', () {
+    ChangelogVersion version(String tag) => ChangelogVersion(
+      version: tag.substring(1),
+      tag: tag,
+      date: '2026-01-02',
+      groups: const <ChangelogGroup>[],
+    );
+    final derived = Changelog(versions: [version('v1.0.0')]);
+    final recorded = Changelog(
+      versions: [version('v1.0.0'), version('v0.9.1'), version('v0.2.48')],
+    );
+
+    final merged = withRecordedHistory(derived, recorded);
+
+    expect(merged.versions.map((version) => version.tag), [
+      'v1.0.0',
+      'v0.9.1',
+      'v0.2.48',
+    ]);
+    expect(merged.versions.first, same(derived.versions.single));
   });
 }

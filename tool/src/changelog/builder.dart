@@ -6,9 +6,8 @@ import 'models.dart';
 import 'parser.dart';
 import 'render.dart';
 
-/// Versions up to and including this tag are frozen: they predate the
-/// structured pipeline and are kept verbatim at the bottom of `CHANGELOG.md`.
-const frozenBoundaryTag = 'v0.8.96';
+/// Versions up to and including this tag are frozen: the 0.x line is closed and its tags retired, so its sections are kept verbatim, not re-derived.
+const frozenBoundaryTag = 'v0.2.48';
 
 const changelogDataPath = 'changelog.json';
 
@@ -159,6 +158,25 @@ String markdownHead(String content) {
 /// a version missing from `changelog.json` outright would otherwise pass and
 /// only surface at the end of the release, when `render` finds no notes for the
 /// tag being published.
+bool isFrozenTag(String tag) {
+  final parsed = VersionTag.tryParse(tag);
+  final boundaryTag = VersionTag.tryParse(frozenBoundaryTag);
+  return parsed != null &&
+      boundaryTag != null &&
+      parsed.compareTo(boundaryTag) <= 0;
+}
+
+Changelog withRecordedHistory(Changelog derived, Changelog recorded) {
+  final covered = <String>{for (final version in derived.versions) version.tag};
+  return Changelog(
+    versions: <ChangelogVersion>[
+      ...derived.versions,
+      for (final version in recorded.versions)
+        if (!covered.contains(version.tag)) version,
+    ],
+  );
+}
+
 List<String> missingReleaseTags(Changelog recorded, Changelog derived) {
   final known = <String>{for (final version in recorded.versions) version.tag};
   return <String>[
