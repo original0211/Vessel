@@ -6,7 +6,7 @@ import 'package:kfusion/models/changelog.dart';
 
 import 'common.dart';
 
-const releaseChangelogJsonMarker = '<!-- flclash:changelog:json';
+const releaseChangelogJsonMarker = '<!-- vessel:changelog:json';
 
 const _releaseChangelogJsonEndMarker = '-->';
 

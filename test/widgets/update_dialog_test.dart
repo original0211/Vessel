@@ -20,12 +20,12 @@ const _payload =
     '"Override scripts"}]}]}]}';
 
 const _bulletsOnly =
-    '<!-- flclash:changelog:begin -->\n'
+    '<!-- vessel:changelog:begin -->\n'
     '- Override scripts\n'
-    '<!-- flclash:changelog:end -->\n';
+    '<!-- vessel:changelog:end -->\n';
 
 String _bodyWith(String payload) =>
-    '$_bulletsOnly\n<!-- flclash:changelog:json\n$payload\n-->\n';
+    '$_bulletsOnly\n<!-- vessel:changelog:json\n$payload\n-->\n';
 
 Map<String, dynamic> release(String? body) => <String, dynamic>{
   'tag_name': 'v0.8.96',
