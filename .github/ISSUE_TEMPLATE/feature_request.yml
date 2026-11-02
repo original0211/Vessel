@@ -36,7 +36,5 @@ body:
       options:
         - label: Android
         - label: Windows
-        - label: MacOS
-        - label: Linux
     validations:
       required: true

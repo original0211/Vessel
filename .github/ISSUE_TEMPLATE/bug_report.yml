@@ -39,8 +39,6 @@ body:
       options:
         - Android
         - Windows
-        - MacOS
-        - Linux
     validations:
       required: true
   - type: input
