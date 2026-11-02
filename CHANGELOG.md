@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.0.1 (2026-11-02)
+
+**Features**
+
+- On the theme page, liquid glass now stands above text scaling: the glass section moves up the page and text scaling settles at the foot. Both sections keep their options, thumbnails and stored values exactly as they were — only their order changes. (1ed293d)
+
+**Bug Fixes**
+
+- The desktop window’s title bar no longer crosses the window in beige: its drag area and blur tint now stand on the palette field itself, so the bar follows light, dark and pure black together with every page. (45c624d)
+
 ## v1.0.0 (2026-11-02)
 
 **Features**
