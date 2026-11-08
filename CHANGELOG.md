@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.1.0 (2026-11-09)
+
+**Features**
+
+- The home screen’s exit row now opens the IP quality sheet: the exit detail view that was already built — address, place and quality readouts — is finally reachable with a tap on the exit line instead of standing wired to nothing. The subscription card’s progress bar also gives up its leftover accent colour and takes the ink of the rest of the page. (1741187)
+
 ## v1.0.1 (2026-11-02)
 
 **Features**
