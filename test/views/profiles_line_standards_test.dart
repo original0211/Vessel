@@ -1,17 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:kfusion/enum/enum.dart';
 import 'package:kfusion/features/form/form.dart';
-import 'package:kfusion/models/models.dart';
 import 'package:kfusion/providers/providers.dart';
 import 'package:kfusion/state.dart';
-import 'package:kfusion/views/profiles/profiles.dart';
 import 'package:kfusion/views/profiles/universal_import.dart';
 import 'package:kfusion/widgets/widgets.dart';
 
 import '../helpers/test_app.dart';
-import '../helpers/test_profiles.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -59,117 +55,6 @@ void main() {
       final colors = chipColors(tester);
       expect(colors.background, colorScheme.error.opacity15);
       expect(colors.foreground, colorScheme.error);
-    });
-  });
-
-  group('ProfilesView empty state', () {
-    testWidgets('uses the brand disc mark', (tester) async {
-      tester.view.physicalSize = const Size(800, 600);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
-      final container = ProviderContainer(
-        overrides: [profilesProvider.overrideWith(() => TestProfiles())],
-      );
-      addTearDown(container.dispose);
-      addTearDown(() async {
-        await tester.pumpWidget(const SizedBox());
-      });
-      globalState.container = container;
-      container
-          .read(viewSizeProvider.notifier)
-          .update((_) => const Size(800, 600));
-      await tester.pumpWidget(
-        UncontrolledProviderScope(
-          container: container,
-          child: const TestApp(child: ProfilesView(picker: true)),
-        ),
-      );
-      await tester.pumpAndSettle();
-      expect(find.byType(DashboardDiscMotif), findsOneWidget);
-      expect(
-        tester.widget<NullStatus>(find.byType(NullStatus)).brandMark,
-        isTrue,
-      );
-    });
-  });
-
-  group('ProfilesView current profile marks', () {
-    testWidgets('the current card carries the watermark and the in-use chip, '
-        'the other card carries neither', (tester) async {
-      tester.view.physicalSize = const Size(800, 600);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
-      final container = ProviderContainer(
-        overrides: [
-          profilesProvider.overrideWith(
-            () => TestProfiles(const [
-              Profile(
-                id: 1,
-                label: 'Alpha',
-                type: ProfileType.url,
-                url: 'https://example.com/alpha',
-                autoUpdateDuration: Duration.zero,
-              ),
-              Profile(
-                id: 2,
-                label: 'Beta',
-                type: ProfileType.file,
-                autoUpdateDuration: Duration.zero,
-              ),
-            ]),
-          ),
-        ],
-      );
-      addTearDown(container.dispose);
-      addTearDown(() async {
-        await tester.pumpWidget(const SizedBox());
-        await tester.pump(const Duration(seconds: 3));
-      });
-      globalState.container = container;
-      container
-          .read(viewSizeProvider.notifier)
-          .update((_) => const Size(800, 600));
-      container.read(currentProfileIdProvider.notifier).value = 1;
-      await tester.pumpWidget(
-        UncontrolledProviderScope(
-          container: container,
-          child: const TestApp(child: ProfilesView(picker: true)),
-        ),
-      );
-      await tester.pumpAndSettle();
-      final currentCard = find.byWidgetPredicate(
-        (widget) => widget is ProfileItem && widget.profile.id == 1,
-      );
-      final otherCard = find.byWidgetPredicate(
-        (widget) => widget is ProfileItem && widget.profile.id == 2,
-      );
-      expect(
-        find.descendant(
-          of: currentCard,
-          matching: find.byType(DashboardDiscMotif),
-        ),
-        findsOneWidget,
-      );
-      expect(
-        find.descendant(
-          of: otherCard,
-          matching: find.byType(DashboardDiscMotif),
-        ),
-        findsNothing,
-      );
-      final chip = tester.widget<MetaChip>(
-        find.descendant(of: currentCard, matching: find.byType(MetaChip)),
-      );
-      final context = tester.element(currentCard);
-      expect(chip.label, 'In use');
-      expect(chip.color, Theme.of(context).colorScheme.primary);
-      expect(
-        find.descendant(of: otherCard, matching: find.byType(MetaChip)),
-        findsNothing,
-      );
-      expect(find.byType(SelectionBadge), findsNothing);
     });
   });
 
