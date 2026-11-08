@@ -777,7 +777,7 @@ SingBoxRenderResult renderSingBox(
     inbounds.add({
       'type': 'tun',
       'tag': 'tun-in',
-      'interface_name': 'kfusion-tun',
+      'interface_name': 'vessel-tun',
       'address': ['172.19.0.1/30'],
       'auto_route': true,
       'strict_route': true,

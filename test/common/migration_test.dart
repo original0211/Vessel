@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:kfusion/common/constant.dart';
 import 'package:kfusion/common/migration.dart';
 import 'package:kfusion/enum/enum.dart';
 import 'package:kfusion/models/models.dart';
@@ -266,6 +267,81 @@ void main() {
         expect(patch.redirPort, 0);
         expect(patch.tproxyPort, 0);
         expect(store.upgradeVersion, Migration.upgradeVersion);
+      });
+
+      test('renames a TUN device still holding the retired default', () async {
+        final configMap = _createConfigMap();
+        final patch = configMap['patchClashConfig']! as Map<String, Object?>;
+        (patch['tun']! as Map<String, Object?>)['device'] = 'KFusion';
+        final store = _FakeMigrationStore(
+          configMap: configMap,
+          version: Migration.currentVersion,
+          upgradeVersion: 3,
+        );
+
+        final config = await Migration(store: store).run();
+
+        expect(config.patchClashConfig.tun.device, appName);
+        expect(store.savedConfig?.patchClashConfig.tun.device, appName);
+        expect(store.upgradeVersion, Migration.upgradeVersion);
+      });
+
+      test('keeps a TUN device name the user picked', () async {
+        final configMap = _createConfigMap();
+        final patch = configMap['patchClashConfig']! as Map<String, Object?>;
+        (patch['tun']! as Map<String, Object?>)['device'] = 'Homelab';
+        final store = _FakeMigrationStore(
+          configMap: configMap,
+          version: Migration.currentVersion,
+          upgradeVersion: 3,
+        );
+
+        final config = await Migration(store: store).run();
+
+        expect(config.patchClashConfig.tun.device, 'Homelab');
+        expect(store.savedConfig, isNull);
+        expect(store.upgradeVersion, Migration.upgradeVersion);
+      });
+
+      test('leaves an absent TUN device unwritten', () async {
+        final configMap = _createConfigMap();
+        final patch = configMap['patchClashConfig']! as Map<String, Object?>;
+        (patch['tun']! as Map<String, Object?>).remove('device');
+        final store = _FakeMigrationStore(
+          configMap: configMap,
+          version: Migration.currentVersion,
+          upgradeVersion: 3,
+        );
+
+        final config = await Migration(store: store).run();
+
+        expect(config.patchClashConfig.tun.device, appName);
+        expect(store.savedConfig, isNull);
+        expect(store.upgradeVersion, Migration.upgradeVersion);
+      });
+
+      test('renames the TUN device once and later launches skip it', () async {
+        final configMap = _createConfigMap();
+        final patch = configMap['patchClashConfig']! as Map<String, Object?>;
+        (patch['tun']! as Map<String, Object?>)['device'] = 'KFusion';
+        final store = _FakeMigrationStore(
+          configMap: configMap,
+          version: Migration.currentVersion,
+          upgradeVersion: 3,
+        );
+
+        final migrated = await Migration(store: store).run();
+
+        final later = _FakeMigrationStore(
+          configMap: jsonDecode(jsonEncode(migrated)) as Map<String, Object?>,
+          version: Migration.currentVersion,
+          upgradeVersion: store.upgradeVersion,
+        );
+        final kept = await Migration(store: later).run();
+
+        expect(kept.patchClashConfig.tun.device, appName);
+        expect(later.savedConfig, isNull);
+        expect(later.events, ['getConfigMap', 'getVersion']);
       });
 
       test('a new install only records it', () async {

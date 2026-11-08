@@ -1,6 +1,7 @@
 import 'package:kfusion/database/database.dart';
 import 'package:kfusion/models/models.dart';
 
+import 'constant.dart';
 import 'preferences.dart';
 import 'task.dart';
 
@@ -87,12 +88,13 @@ class Migration {
 
   /// One-off setting changes for upgrades, apart from [currentVersion], which
   /// backups carry and an older app refuses when it is newer than its own.
-  static const upgradeVersion = 3;
+  static const upgradeVersion = 4;
 
   static const Map<int, Config Function(Config config)> _upgrades = {
     1: _retireThemeColors,
     2: _keepGlassLook,
     3: _resetPorts,
+    4: _renameLegacyTunDevice,
   };
 
   Future<Config> run() async {
@@ -207,6 +209,20 @@ Config _resetPorts(Config config) => config.copyWith(
     tproxyPort: 0,
   ),
 );
+
+Config _renameLegacyTunDevice(Config config) {
+  final tun = config.patchClashConfig.tun;
+  if (tun.device != _legacyTunDevice) {
+    return config;
+  }
+  return config.copyWith(
+    patchClashConfig: config.patchClashConfig.copyWith(
+      tun: tun.copyWith(device: appName),
+    ),
+  );
+}
+
+const _legacyTunDevice = 'KFusion';
 
 bool _isV0(Map<String, Object?>? configMap) =>
     configMap?['proxiesStyle'] != null;

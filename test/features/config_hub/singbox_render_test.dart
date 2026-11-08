@@ -220,6 +220,7 @@ void main() {
             )
             as Map;
     expect(tun['address'], ['172.19.0.1/30']);
+    expect(tun['interface_name'], 'vessel-tun');
   });
 
   test('every contract node type renders; off-contract types degrade', () {
