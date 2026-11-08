@@ -234,16 +234,12 @@ _ProxiesStyleProps _$ProxiesStylePropsFromJson(Map<String, dynamic> json) =>
       sortType:
           $enumDecodeNullable(_$ProxiesSortTypeEnumMap, json['sortType']) ??
           ProxiesSortType.none,
-      cardType: json['cardType'] == null
-          ? ProxyCardType.standard
-          : proxyCardTypeSafeFromJson(json['cardType']),
       hideTimeoutProxies: json['hideTimeoutProxies'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$ProxiesStylePropsToJson(_ProxiesStyleProps instance) =>
     <String, dynamic>{
       'sortType': _$ProxiesSortTypeEnumMap[instance.sortType]!,
-      'cardType': _$ProxyCardTypeEnumMap[instance.cardType]!,
       'hideTimeoutProxies': instance.hideTimeoutProxies,
     };
 
@@ -251,12 +247,6 @@ const _$ProxiesSortTypeEnumMap = {
   ProxiesSortType.none: 'none',
   ProxiesSortType.delay: 'delay',
   ProxiesSortType.name: 'name',
-};
-
-const _$ProxyCardTypeEnumMap = {
-  ProxyCardType.loose: 'loose',
-  ProxyCardType.standard: 'standard',
-  ProxyCardType.compact: 'compact',
 };
 
 _TextScale _$TextScaleFromJson(Map<String, dynamic> json) => _TextScale(

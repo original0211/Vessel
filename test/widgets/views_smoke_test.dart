@@ -5,6 +5,7 @@ import 'package:kfusion/views/config/dns.dart';
 import 'package:kfusion/views/config/general.dart';
 import 'package:kfusion/views/config/network.dart';
 import 'package:kfusion/views/config/on_demand.dart';
+import 'package:kfusion/views/profiles/hara_profiles.dart';
 import 'package:kfusion/views/theme.dart';
 import 'package:kfusion/views/views.dart';
 import 'package:material_ui/material_ui.dart';
@@ -17,7 +18,7 @@ import '../helpers/test_profiles.dart';
 
 void main() {
   final cases = <String, Widget>{
-    'profiles': const ProfilesView(),
+    'profiles': const HaraProfilesView(),
     'resources': const ResourcesView(),
     'logs': const LogsView(),
     'tools': const ToolsView(),

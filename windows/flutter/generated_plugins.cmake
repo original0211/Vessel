@@ -5,7 +5,6 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   app_links
   connectivity_plus
-  dynamic_color
   file_selector_windows
   proxy
   screen_retriever_windows

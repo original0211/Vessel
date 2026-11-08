@@ -585,7 +585,6 @@ void main() {
     test('default values', () {
       const props = ProxiesStyleProps();
       expect(props.sortType, ProxiesSortType.none);
-      expect(props.cardType, ProxyCardType.standard);
     });
 
     test('round-trip with custom values', () {
@@ -605,31 +604,6 @@ void main() {
         'sortType': 'delay',
       });
       expect(restored.sortType, ProxiesSortType.delay);
-      expect(restored.cardType, ProxyCardType.standard);
-    });
-
-    test('reads the card sizes saved under their former names', () {
-      for (final (saved, cardType) in [
-        ('expand', ProxyCardType.loose),
-        ('shrink', ProxyCardType.standard),
-        ('min', ProxyCardType.compact),
-        ('nonsense', ProxyCardType.standard),
-      ]) {
-        expect(
-          ProxiesStyleProps.fromJson({'cardType': saved}).cardType,
-          cardType,
-        );
-      }
-    });
-
-    test('round-trips every card size under its own name', () {
-      for (final cardType in ProxyCardType.values) {
-        final restored = roundTrip(
-          () => ProxiesStyleProps(cardType: cardType).toJson(),
-          ProxiesStyleProps.fromJson,
-        );
-        expect(restored.cardType, cardType);
-      }
     });
 
     test('round-trip keeps the timed-out node filter', () {

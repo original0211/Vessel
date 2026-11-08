@@ -50,7 +50,7 @@ const _dirtyNetwork = NetworkProps(
   appendSystemDns: true,
 );
 
-const _dirtyProxiesStyle = ProxiesStyleProps(cardType: ProxyCardType.compact);
+const _dirtyProxiesStyle = ProxiesStyleProps(sortType: ProxiesSortType.delay);
 
 const _dirtyPatch = PatchClashConfig(
   allowLan: true,
@@ -125,7 +125,6 @@ void main() {
       expect(result.vpnProps, defaultVpnProps);
       expect(result.vpnProps.accessControlProps, defaultAccessControlProps);
       expect(result.proxiesStyleProps, defaultProxiesStyleProps);
-      expect(result.proxiesStyleProps.cardType, ProxyCardType.standard);
       expect(result.patchClashConfig, defaultClashConfig);
     });
 

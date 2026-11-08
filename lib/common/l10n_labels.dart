@@ -56,17 +56,6 @@ extension ModeL10n on Mode {
   }
 }
 
-extension ProxyCardTypeL10n on ProxyCardType {
-  String get label {
-    final appLocalizations = currentAppLocalizations;
-    return switch (this) {
-      ProxyCardType.loose => appLocalizations.loose,
-      ProxyCardType.standard => appLocalizations.standard,
-      ProxyCardType.compact => appLocalizations.compact,
-    };
-  }
-}
-
 extension HotActionL10n on HotAction {
   String get label {
     final appLocalizations = currentAppLocalizations;

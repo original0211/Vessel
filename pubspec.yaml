@@ -23,7 +23,6 @@ dependencies:
   shared_preferences_platform_interface: ^2.4.2
   window:
     path: plugins/window
-  dynamic_color: ^2.1.0
   proxy:
     path: plugins/proxy
   launch_at_startup:

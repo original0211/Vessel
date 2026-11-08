@@ -322,22 +322,10 @@ abstract class NetworkProps with _$NetworkProps {
       json == null ? const NetworkProps() : _$NetworkPropsFromJson(json);
 }
 
-ProxyCardType proxyCardTypeSafeFromJson(Object? cardType) {
-  return switch (cardType) {
-    'loose' || 'expand' => ProxyCardType.loose,
-    'standard' || 'shrink' => ProxyCardType.standard,
-    'compact' || 'min' => ProxyCardType.compact,
-    _ => ProxyCardType.standard,
-  };
-}
-
 @freezed
 abstract class ProxiesStyleProps with _$ProxiesStyleProps {
   const factory ProxiesStyleProps({
     @Default(ProxiesSortType.none) ProxiesSortType sortType,
-    @Default(ProxyCardType.standard)
-    @JsonKey(fromJson: proxyCardTypeSafeFromJson)
-    ProxyCardType cardType,
     @Default(true) bool hideTimeoutProxies,
   }) = _ProxiesStyleProps;
 

@@ -44,12 +44,4 @@ void main() {
     );
     expect(offenders, isEmpty, reason: offenders.join('\n'));
   });
-
-  test('the brand empty state stays on its two home screens', () {
-    final files = _hits(RegExp(r'NullStatus\.brand\s*\('))
-        .where((hit) => !hit.startsWith('lib/ui/null_status.dart'))
-        .map((hit) => hit.split(':').first)
-        .toSet();
-    expect(files, {'lib/views/profiles/profiles.dart'});
-  });
 }

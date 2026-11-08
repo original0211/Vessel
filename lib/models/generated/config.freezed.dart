@@ -1831,7 +1831,7 @@ as bool,
 /// @nodoc
 mixin _$ProxiesStyleProps {
 
- ProxiesSortType get sortType;@JsonKey(fromJson: proxyCardTypeSafeFromJson) ProxyCardType get cardType; bool get hideTimeoutProxies;
+ ProxiesSortType get sortType; bool get hideTimeoutProxies;
 /// Create a copy of ProxiesStyleProps
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1845,20 +1845,20 @@ $ProxiesStylePropsCopyWith<ProxiesStyleProps> get copyWith => _$ProxiesStyleProp
 @override
 bool operator ==(Object other) {
   final _this = this as ProxiesStyleProps;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProxiesStyleProps&&(identical(other.sortType, _this.sortType) || other.sortType == _this.sortType)&&(identical(other.cardType, _this.cardType) || other.cardType == _this.cardType)&&(identical(other.hideTimeoutProxies, _this.hideTimeoutProxies) || other.hideTimeoutProxies == _this.hideTimeoutProxies));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProxiesStyleProps&&(identical(other.sortType, _this.sortType) || other.sortType == _this.sortType)&&(identical(other.hideTimeoutProxies, _this.hideTimeoutProxies) || other.hideTimeoutProxies == _this.hideTimeoutProxies));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as ProxiesStyleProps;
-  return Object.hash(runtimeType,_this.sortType,_this.cardType,_this.hideTimeoutProxies);
+  return Object.hash(runtimeType,_this.sortType,_this.hideTimeoutProxies);
 }
 
 @override
 String toString() {
   final _this = this as ProxiesStyleProps;
-  return 'ProxiesStyleProps(sortType: ${_this.sortType}, cardType: ${_this.cardType}, hideTimeoutProxies: ${_this.hideTimeoutProxies})';
+  return 'ProxiesStyleProps(sortType: ${_this.sortType}, hideTimeoutProxies: ${_this.hideTimeoutProxies})';
 }
 
 
@@ -1869,7 +1869,7 @@ abstract mixin class $ProxiesStylePropsCopyWith<$Res>  {
   factory $ProxiesStylePropsCopyWith(ProxiesStyleProps value, $Res Function(ProxiesStyleProps) _then) = _$ProxiesStylePropsCopyWithImpl;
 @useResult
 $Res call({
- ProxiesSortType sortType,@JsonKey(fromJson: proxyCardTypeSafeFromJson) ProxyCardType cardType, bool hideTimeoutProxies
+ ProxiesSortType sortType, bool hideTimeoutProxies
 });
 
 
@@ -1886,11 +1886,10 @@ class _$ProxiesStylePropsCopyWithImpl<$Res>
 
 /// Create a copy of ProxiesStyleProps
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? sortType = null,Object? cardType = null,Object? hideTimeoutProxies = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? sortType = null,Object? hideTimeoutProxies = null,}) {
   return _then(ProxiesStyleProps(
 sortType: null == sortType ? _self.sortType : sortType // ignore: cast_nullable_to_non_nullable
-as ProxiesSortType,cardType: null == cardType ? _self.cardType : cardType // ignore: cast_nullable_to_non_nullable
-as ProxyCardType,hideTimeoutProxies: null == hideTimeoutProxies ? _self.hideTimeoutProxies : hideTimeoutProxies // ignore: cast_nullable_to_non_nullable
+as ProxiesSortType,hideTimeoutProxies: null == hideTimeoutProxies ? _self.hideTimeoutProxies : hideTimeoutProxies // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -1976,10 +1975,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ProxiesSortType sortType, @JsonKey(fromJson: proxyCardTypeSafeFromJson)  ProxyCardType cardType,  bool hideTimeoutProxies)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ProxiesSortType sortType,  bool hideTimeoutProxies)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ProxiesStyleProps() when $default != null:
-return $default(_that.sortType,_that.cardType,_that.hideTimeoutProxies);case _:
+return $default(_that.sortType,_that.hideTimeoutProxies);case _:
   return orElse();
 
 }
@@ -1997,10 +1996,10 @@ return $default(_that.sortType,_that.cardType,_that.hideTimeoutProxies);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ProxiesSortType sortType, @JsonKey(fromJson: proxyCardTypeSafeFromJson)  ProxyCardType cardType,  bool hideTimeoutProxies)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ProxiesSortType sortType,  bool hideTimeoutProxies)  $default,) {final _that = this;
 switch (_that) {
 case _ProxiesStyleProps():
-return $default(_that.sortType,_that.cardType,_that.hideTimeoutProxies);case _:
+return $default(_that.sortType,_that.hideTimeoutProxies);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -2017,10 +2016,10 @@ return $default(_that.sortType,_that.cardType,_that.hideTimeoutProxies);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ProxiesSortType sortType, @JsonKey(fromJson: proxyCardTypeSafeFromJson)  ProxyCardType cardType,  bool hideTimeoutProxies)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ProxiesSortType sortType,  bool hideTimeoutProxies)?  $default,) {final _that = this;
 switch (_that) {
 case _ProxiesStyleProps() when $default != null:
-return $default(_that.sortType,_that.cardType,_that.hideTimeoutProxies);case _:
+return $default(_that.sortType,_that.hideTimeoutProxies);case _:
   return null;
 
 }
@@ -2032,11 +2031,10 @@ return $default(_that.sortType,_that.cardType,_that.hideTimeoutProxies);case _:
 @JsonSerializable()
 
 class _ProxiesStyleProps implements ProxiesStyleProps {
-  const _ProxiesStyleProps({this.sortType = ProxiesSortType.none, @JsonKey(fromJson: proxyCardTypeSafeFromJson) this.cardType = ProxyCardType.standard, this.hideTimeoutProxies = true});
+  const _ProxiesStyleProps({this.sortType = ProxiesSortType.none, this.hideTimeoutProxies = true});
   factory _ProxiesStyleProps.fromJson(Map<String, dynamic> json) => _$ProxiesStylePropsFromJson(json);
 
 @override@JsonKey() final  ProxiesSortType sortType;
-@override@JsonKey(fromJson: proxyCardTypeSafeFromJson) final  ProxyCardType cardType;
 @override@JsonKey() final  bool hideTimeoutProxies;
 
 /// Create a copy of ProxiesStyleProps
@@ -2052,18 +2050,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProxiesStyleProps&&(identical(other.sortType, sortType) || other.sortType == sortType)&&(identical(other.cardType, cardType) || other.cardType == cardType)&&(identical(other.hideTimeoutProxies, hideTimeoutProxies) || other.hideTimeoutProxies == hideTimeoutProxies));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProxiesStyleProps&&(identical(other.sortType, sortType) || other.sortType == sortType)&&(identical(other.hideTimeoutProxies, hideTimeoutProxies) || other.hideTimeoutProxies == hideTimeoutProxies));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,sortType,cardType,hideTimeoutProxies);
+    return Object.hash(runtimeType,sortType,hideTimeoutProxies);
 }
 
 @override
 String toString() {
-    return 'ProxiesStyleProps(sortType: $sortType, cardType: $cardType, hideTimeoutProxies: $hideTimeoutProxies)';
+    return 'ProxiesStyleProps(sortType: $sortType, hideTimeoutProxies: $hideTimeoutProxies)';
 }
 
 
@@ -2074,7 +2072,7 @@ abstract mixin class _$ProxiesStylePropsCopyWith<$Res> implements $ProxiesStyleP
   factory _$ProxiesStylePropsCopyWith(_ProxiesStyleProps value, $Res Function(_ProxiesStyleProps) _then) = __$ProxiesStylePropsCopyWithImpl;
 @override @useResult
 $Res call({
- ProxiesSortType sortType,@JsonKey(fromJson: proxyCardTypeSafeFromJson) ProxyCardType cardType, bool hideTimeoutProxies
+ ProxiesSortType sortType, bool hideTimeoutProxies
 });
 
 
@@ -2091,11 +2089,10 @@ class __$ProxiesStylePropsCopyWithImpl<$Res>
 
 /// Create a copy of ProxiesStyleProps
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? sortType = null,Object? cardType = null,Object? hideTimeoutProxies = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? sortType = null,Object? hideTimeoutProxies = null,}) {
   return _then(_ProxiesStyleProps(
 sortType: null == sortType ? _self.sortType : sortType // ignore: cast_nullable_to_non_nullable
-as ProxiesSortType,cardType: null == cardType ? _self.cardType : cardType // ignore: cast_nullable_to_non_nullable
-as ProxyCardType,hideTimeoutProxies: null == hideTimeoutProxies ? _self.hideTimeoutProxies : hideTimeoutProxies // ignore: cast_nullable_to_non_nullable
+as ProxiesSortType,hideTimeoutProxies: null == hideTimeoutProxies ? _self.hideTimeoutProxies : hideTimeoutProxies // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }

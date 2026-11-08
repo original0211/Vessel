@@ -194,8 +194,6 @@ enum RestoreOption { all, onlyProfiles }
 
 enum ProxiesLayout { loose, standard, tight }
 
-enum ProxyCardType { loose, standard, compact }
-
 enum DnsMode {
   normal,
   @JsonValue('fake-ip')
