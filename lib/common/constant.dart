@@ -148,6 +148,8 @@ const keyboardModifierListEquality = SetEquality<KeyboardModifier>();
 
 const proxiesListStoreKey = PageStorageKey<String>('proxies_list');
 const toolsStoreKey = PageStorageKey<String>('tools');
+const profilesStoreKey = PageStorageKey<String>('profiles');
+
 const defaultPrimaryColor = 0xFF00B4D8;
 
 const maxLogsLength = 5000;

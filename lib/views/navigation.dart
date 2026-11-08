@@ -3,7 +3,6 @@ import 'package:kfusion/enum/enum.dart';
 import 'package:kfusion/models/models.dart';
 import 'package:kfusion/ui/icons/app_glyphs.dart';
 import 'package:kfusion/views/dashboard/hara_dashboard.dart';
-import 'package:kfusion/views/profiles/hara_profiles.dart';
 import 'package:kfusion/views/views.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -31,7 +30,7 @@ class Navigation implements NavigationPort {
         glyph: AppGlyphs.profiles,
         label: PageLabel.profiles,
         builder: (_) =>
-            const HaraProfilesView(key: GlobalObjectKey(PageLabel.profiles)),
+            const ProfilesView(key: GlobalObjectKey(PageLabel.profiles)),
       ),
       NavigationItem(
         glyph: AppGlyphs.tools,
