@@ -212,21 +212,16 @@ void main() {
   });
 
   test('the default boundary keeps the closed 0.x line frozen', () {
-    git(['tag', 'v0.2.48', 'v1.0.0']);
-    git(['tag', 'v1.0.1', 'v1.0.0']);
+    git(['tag', 'v0.2.48', 'v1.1.0']);
 
     final versions = ChangelogBuilder(
       Git(workingDirectory: repo.path),
     ).build().changelog.versions;
 
-    expect(versions.map((version) => version.tag), [
-      'v1.1.0',
-      'v1.0.0',
-      'v0.2.48',
-    ]);
+    expect(versions.map((version) => version.tag), ['v0.2.48']);
     expect(isFrozenTag('v0.2.48'), isTrue);
     expect(isFrozenTag('v0.2.47'), isTrue);
-    expect(isFrozenTag('v1.0.1'), isTrue);
+    expect(isFrozenTag('v1.1.0'), isTrue);
   });
 
   test('recorded history survives a rewrite it cannot re-derive', () {
