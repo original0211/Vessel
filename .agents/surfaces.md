@@ -43,9 +43,11 @@ unchanged, as they carry state rather than structure.
   darkens a dark page, so a dark sheet at the page's own tone read as more of the page rather than a layer over it,
   a covered sheet's peek vanished, and on black the edge and corners went with it. Light mode keeps its levels,
   because the scrim already sets a light sheet apart.
-- What floats over content, dialogs, menus, popups, the mobile dock, toasts, takes `SurfaceLevel.floatingOf`: `card`
+- What floats over content, dialogs, the mobile dock, toasts, takes `SurfaceLevel.floatingOf`: `card`
   in light, `block` in dark. A shadow does not show on a dark page, so a float has to come out lighter than the cards
-  it covers, and its content scopes to that level so a block inside still steps away from it.
+  it covers, and its content scopes to that level so a block inside still steps away from it. Menus and popups are
+  the exception: they stand on the field itself (`fieldColor`, the page's `HaraPalette.bg`), square-cornered with
+  a hairline rim and no shadow, and their content scopes to the page level.
 - Shadows mark what floats, plus the dashboard cards. Cards in a scrolling list have none; a grid of proxies with a
   blurred shadow each costs raster time for no extra layering. A render object that paints a shadow itself draws it
   with `drawRSuperellipse`, as `ShapeDecoration` does: Impeller blurs a superellipse in one analytic pass, but a path

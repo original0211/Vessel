@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Logo glyph: two bars and a dot on a 30° lattice, pitch 61.76, radius 23.16.
-     The Android notification drawables ic.xml and ic_service.xml carry the same geometry as fill paths. -->
+<!-- Upstream logo-glyph draft: two bars and a dot on a 30° lattice, pitch 61.76, radius 23.16.
+     This is not the shipping Vessel mark. The brand mark is candidate 3, "一点": a thin ring with a
+     single vermilion dot, the launcher rendering taking the dot at raw radius 15 on this 240 grid.
+     The Android notification drawables ic.xml and ic_service.xml carry that ring-and-dot mark as fill
+     paths, not this draft's geometry; the icon generator still reads this file only for the macOS
+     tray status_1 monochrome variant, and macOS is not a shipping platform. -->
 <svg width="240" height="240" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
   <title>glyph</title>
   <g stroke-width="46.32" stroke-linecap="round">

@@ -44,7 +44,7 @@ body:
   - type: input
     attributes:
       label: 操作系统版本 / OS Version
-      description: 请提供你的操作系统版本，Linux请额外提供桌面环境及窗口系统 / Please provide your OS version, for Linux, please also provide the desktop environment and window system
+      description: 请提供你的操作系统版本 / Please provide your OS version
     validations:
       required: true
   - type: textarea
