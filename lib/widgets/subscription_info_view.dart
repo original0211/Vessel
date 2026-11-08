@@ -29,6 +29,7 @@ class SubscriptionInfoView extends StatelessWidget {
     if (info == null || info.total == 0) {
       return const SizedBox.shrink();
     }
+    final palette = context.haraPalette;
     final use = info.upload + info.download;
     final total = info.total;
     final progress = (use / total).clamp(0.0, 1.0).toDouble();
@@ -80,7 +81,8 @@ class SubscriptionInfoView extends StatelessWidget {
         LinearProgressIndicator(
           minHeight: 4,
           value: progress,
-          backgroundColor: context.colorScheme.primary.opacity15,
+          color: palette.ink,
+          backgroundColor: palette.line,
         ),
       ],
     );

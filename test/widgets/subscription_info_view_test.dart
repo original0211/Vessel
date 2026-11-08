@@ -85,6 +85,45 @@ void main() {
     );
   });
 
+  testWidgets('the progress bar reads ink over the hairline, not primary', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        builder: (context, child) => wrapAppScopes(context, child!),
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          AppUiLocalizations.delegate,
+          ...GlobalMaterialLocalizations.delegates,
+        ],
+        supportedLocales: AppLocalizations.delegate.supportedLocales,
+        home: const Scaffold(
+          body: SizedBox(
+            width: 300,
+            child: SubscriptionInfoView(
+              subscriptionInfo: SubscriptionInfo(
+                upload: 1024,
+                total: 1073741824,
+                expire: 4102444800,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(tester.takeException(), isNull);
+    final context = tester.element(find.byType(SubscriptionInfoView));
+    final palette = context.haraPalette;
+    final indicator = tester.widget<LinearProgressIndicator>(
+      find.byType(LinearProgressIndicator),
+    );
+    expect(indicator.color, palette.ink);
+    expect(indicator.backgroundColor, palette.line);
+    expect(indicator.color, isNot(context.colorScheme.primary));
+    expect(indicator.backgroundColor, isNot(context.colorScheme.primary));
+  });
+
   testWidgets('shows full subscription details in information rows', (
     tester,
   ) async {

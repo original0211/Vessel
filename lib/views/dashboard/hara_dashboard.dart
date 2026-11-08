@@ -7,6 +7,7 @@ import 'package:kfusion/core/core.dart';
 import 'package:kfusion/enum/enum.dart';
 import 'package:kfusion/features/config_hub/core_kind.dart';
 import 'package:kfusion/features/config_hub/singbox_action.dart';
+import 'package:kfusion/features/ip_quality/ip_quality_sheet.dart';
 import 'package:kfusion/features/ip_quality/labels.dart';
 import 'package:kfusion/models/models.dart';
 import 'package:kfusion/providers/ip_quality.dart';
@@ -946,6 +947,7 @@ class _HaraDashboardState extends ConsumerState<HaraDashboard>
             showValues && ipInfo != null && exitParts.isNotEmpty,
             exitParts.join(' · '),
           );
+    final sheetIp = showValues ? ipInfo?.ip : null;
     final kernelRow = valueOf(showValues, _coreName(runningCore ?? activeKind));
     // The counters are mihomo-fed; under sing-box they would misreport zero.
     final totalShow = (total.up + total.down).traffic;
@@ -954,33 +956,41 @@ class _HaraDashboardState extends ConsumerState<HaraDashboard>
       totalShow.value,
       totalShow.unit,
     );
-    final rows = <(String, (String, Color, String?))>[
-      (appLocalizations.delay, delayRow),
-      (appLocalizations.ipExit, exitRow),
-      (appLocalizations.core, kernelRow),
-      (appLocalizations.totalTraffic, sessionRow),
+    final rows = <(String, (String, Color, String?), VoidCallback?)>[
+      (appLocalizations.delay, delayRow, null),
+      (
+        appLocalizations.ipExit,
+        exitRow,
+        sheetIp == null ? null : () => showIpQualitySheet(context, ip: sheetIp),
+      ),
+      (appLocalizations.core, kernelRow, null),
+      (appLocalizations.totalTraffic, sessionRow, null),
     ];
     return Column(
       children: [
-        for (final (label, value) in rows) ...[
+        for (final (label, value, onTap) in rows) ...[
           const HaraHairline(),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: HaraSpace.dataRowVertical,
-            ),
-            child: Row(
-              children: [
-                Text(label, style: HaraText.dataKey(context, palette.sub)),
-                const Spacer(),
-                Text(value.$1, style: HaraText.dataValue(context, value.$2)),
-                if (value.$3 != null) ...[
-                  const SizedBox(width: 6),
-                  Text(
-                    value.$3!,
-                    style: HaraText.dataUnit(context, palette.sub),
-                  ),
+          InkWell(
+            customBorder: AppShape.hara,
+            onTap: onTap,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: HaraSpace.dataRowVertical,
+              ),
+              child: Row(
+                children: [
+                  Text(label, style: HaraText.dataKey(context, palette.sub)),
+                  const Spacer(),
+                  Text(value.$1, style: HaraText.dataValue(context, value.$2)),
+                  if (value.$3 != null) ...[
+                    const SizedBox(width: 6),
+                    Text(
+                      value.$3!,
+                      style: HaraText.dataUnit(context, palette.sub),
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
         ],
