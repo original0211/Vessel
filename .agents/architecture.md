@@ -1308,7 +1308,7 @@ directives, so consumers continue to import the same public API:
 - `CommonAction`: update check and common UI operations.
 - `SetupAction`: config setup and TUN management.
 - `BackupAction`: backup/restore orchestration over a per-run temp work directory; the view supplies where an archive
-  goes (local save, WebDAV upload) or comes from. The archive format lives in `lib/common/backup.dart`, which stages a
+  goes (local save) or comes from. The archive format lives in `lib/common/backup.dart`, which stages a
   restore without touching the data directory; files, database rows and settings are applied only after the whole
   archive has been read and validated.
 - `CoreAction`: core lifecycle, initialization, coalesced restart, and post-restart profile/running-state application.
