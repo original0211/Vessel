@@ -1613,17 +1613,14 @@ table. `lib/common/window.dart` and `lib/manager/window_manager.dart` are the on
   `should-terminate`) and `applicationShouldHandleReopen` (emits `activate`); `MainFlutterWindow` calls
   `hiddenWindowAtLaunch()` so the first `order` keeps the window hidden until Dart shows it.
 - Window effects (`transparent`, `blur`, `acrylic`, `mica`) are capability-gated by `isEffectSupported`; the Flutter
-  content must paint a translucent background for them to show. `ThemeProps.sidebarBlur` (on by default) drives
-  them: `Window.setBlur` picks `blur` on macOS and `acrylic` (or `blur`) on Windows and caches only a successful
-  probe, so a platform that answered unsupported is asked again the next time blur is turned on. `WindowManager` reapplies it
-  whenever the setting or the app brightness changes and records the outcome in `windowBlurProvider`, and only the
-  sidebar and the caption strip paint translucently while it is on. On macOS the sidebar paints fully transparent
-  and the effect view follows the window's active state, which is the flutter_acrylic `TransparentMacOSSidebar`
-  look; Windows keeps a 50% tint because the accent effects blur too little for the rail to stay readable.
-- Sidebar blur is soft-disabled: `feature.sidebarBlur` (`lib/common/feature.dart`) is off unless the build passes
-  `--dart-define=FEATURE_SIDEBAR_BLUR=true`. While it is off the theme page hides the toggle and
-  `windowBlurRequestProvider` asks for no effect whatever `ThemeProps.sidebarBlur` holds. `WindowManager` still sends
-  that request at startup: the macOS plugin installs its effect view in `ensureInitialized` and leaves it active until
+  content must paint a translucent background for them to show. `Window.setBlur` picks `blur` on macOS and `acrylic`
+  (or `blur`) on Windows and caches only a successful probe, so a platform that answered unsupported is asked again
+  the next time blur is turned on. No shipped feature turns an effect on: `windowBlurRequestProvider` always asks
+  for no effect, and `WindowManager` still sends that request at startup and whenever the app brightness changes,
+  recording the outcome in `windowBlurProvider`.
+- Sidebar blur is retired: the `FEATURE_SIDEBAR_BLUR` flag, the theme page toggle and the `ThemeProps.sidebarBlur`
+  field are gone, and a `sidebarBlur` key stored by an older build is ignored on read and no longer written. The
+  startup request stays: the macOS plugin installs its effect view in `ensureInitialized` and leaves it active until
   the first `setEffect`, so the `none` request is what makes the window opaque and parks the effect view.
 
 ## rust_api Crate Layout

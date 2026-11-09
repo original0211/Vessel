@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:kfusion/common/app_localizations.dart';
 import 'package:kfusion/common/app_ports.dart';
-import 'package:kfusion/common/feature.dart';
 import 'package:kfusion/l10n/l10n.dart';
 import 'package:kfusion/manager/window_manager.dart';
 import 'package:kfusion/models/config.dart';
@@ -249,33 +248,17 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  group('sidebar blur', () {
-    setUp(() => feature = const Feature(sidebarBlur: true));
-
-    tearDown(() => feature = const Feature());
-
-    testWidgets('a disabled feature drops the backdrop despite the setting', (
-      tester,
-    ) async {
-      feature = const Feature();
-      await pumpWindowManager(tester);
-      await tester.pumpAndSettle();
-
-      expect(container.read(themeSettingProvider).sidebarBlur, isTrue);
-      expect(window.blurRequests.single.enabled, isFalse);
-      expect(container.read(windowBlurProvider), isFalse);
-    });
-
-    testWidgets('is applied on start and mirrored into the provider', (
+  group('window effect request', () {
+    testWidgets('asks for no effect on start and mirrors it as off', (
       tester,
     ) async {
       await pumpWindowManager(tester);
       await tester.pumpAndSettle();
 
       expect(window.blurRequests, hasLength(1));
-      expect(window.blurRequests.single.enabled, isTrue);
+      expect(window.blurRequests.single.enabled, isFalse);
       expect(window.blurRequests.single.brightness, Brightness.dark);
-      expect(container.read(windowBlurProvider), isTrue);
+      expect(container.read(windowBlurProvider), isFalse);
     });
 
     testWidgets('a platform without a backdrop leaves the provider off', (
@@ -288,20 +271,9 @@ void main() {
       expect(container.read(windowBlurProvider), isFalse);
     });
 
-    testWidgets('turning the setting off drops the backdrop', (tester) async {
-      await pumpWindowManager(tester);
-      await tester.pumpAndSettle();
-
-      container
-          .read(themeSettingProvider.notifier)
-          .update((state) => state.copyWith(sidebarBlur: false));
-      await tester.pumpAndSettle();
-
-      expect(window.blurRequests.last.enabled, isFalse);
-      expect(container.read(windowBlurProvider), isFalse);
-    });
-
-    testWidgets('a theme mode change reapplies the effect', (tester) async {
+    testWidgets('a theme mode change resends the no-effect request', (
+      tester,
+    ) async {
       await pumpWindowManager(tester);
       await tester.pumpAndSettle();
 
@@ -310,9 +282,9 @@ void main() {
           .update((state) => state.copyWith(themeMode: ThemeMode.light));
       await tester.pumpAndSettle();
 
-      expect(window.blurRequests.last.enabled, isTrue);
+      expect(window.blurRequests.last.enabled, isFalse);
       expect(window.blurRequests.last.brightness, Brightness.light);
-      expect(container.read(windowBlurProvider), isTrue);
+      expect(container.read(windowBlurProvider), isFalse);
     });
   });
 

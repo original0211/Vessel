@@ -1449,12 +1449,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Кнопка остановки в уведомлении",
     ),
     "showPassword": MessageLookupByLibrary.simpleMessage("Показать пароль"),
-    "sidebarBlur": MessageLookupByLibrary.simpleMessage(
-      "Размытие боковой панели",
-    ),
-    "sidebarBlurDesc": MessageLookupByLibrary.simpleMessage(
-      "Показывать сквозь боковую панель размытый рабочий стол за окном",
-    ),
     "silentLaunch": MessageLookupByLibrary.simpleMessage("Тихий запуск"),
     "silentLaunchDesc": MessageLookupByLibrary.simpleMessage(
       "Тихий запуск не показывает окно.",

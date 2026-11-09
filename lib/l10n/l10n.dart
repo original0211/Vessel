@@ -1280,26 +1280,6 @@ class AppLocalizations {
     );
   }
 
-  /// `Sidebar blur`
-  String get sidebarBlur {
-    return Intl.message(
-      'Sidebar blur',
-      name: 'sidebarBlur',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Show the blurred desktop behind the window through the sidebar`
-  String get sidebarBlurDesc {
-    return Intl.message(
-      'Show the blurred desktop behind the window through the sidebar',
-      name: 'sidebarBlurDesc',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Liquid Glass`
   String get liquidGlass {
     return Intl.message(

@@ -169,8 +169,6 @@
   "onlyStatisticsProxy": "プロキシトラフィックのみ集計",
   "showNotificationStopAction": "通知に停止ボタンを表示",
   "pureBlackMode": "ピュアブラックモード",
-  "sidebarBlur": "サイドバーのぼかし",
-  "sidebarBlurDesc": "ウィンドウ背後のデスクトップをぼかしてサイドバーに透過します",
   "liquidGlass": "リキッドグラス",
   "keepAliveIntervalDesc": "TCPキープアライブ間隔",
   "entries": " 件",

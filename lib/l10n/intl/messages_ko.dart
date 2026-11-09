@@ -1183,10 +1183,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "알림에 중지 버튼 표시",
     ),
     "showPassword": MessageLookupByLibrary.simpleMessage("비밀번호 표시"),
-    "sidebarBlur": MessageLookupByLibrary.simpleMessage("사이드바 블러"),
-    "sidebarBlurDesc": MessageLookupByLibrary.simpleMessage(
-      "사이드바를 통해 창 뒤의 흐릿한 바탕화면을 표시합니다",
-    ),
     "silentLaunch": MessageLookupByLibrary.simpleMessage("백그라운드 실행"),
     "silentLaunchDesc": MessageLookupByLibrary.simpleMessage(
       "백그라운드 실행은 창을 표시하지 않고 시작합니다.",

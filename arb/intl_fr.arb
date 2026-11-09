@@ -169,8 +169,6 @@
   "onlyStatisticsProxy": "Ne compter que le trafic proxy",
   "showNotificationStopAction": "Bouton Arrêter dans la notification",
   "pureBlackMode": "Mode noir pur",
-  "sidebarBlur": "Flou de la barre latérale",
-  "sidebarBlurDesc": "Afficher le bureau flouté derrière la fenêtre à travers la barre latérale",
   "liquidGlass": "Liquid Glass",
   "keepAliveIntervalDesc": "Intervalle keep-alive TCP",
   "entries": " entrées",

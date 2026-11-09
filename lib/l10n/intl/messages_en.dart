@@ -1388,10 +1388,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Stop button in notification",
     ),
     "showPassword": MessageLookupByLibrary.simpleMessage("Show password"),
-    "sidebarBlur": MessageLookupByLibrary.simpleMessage("Sidebar blur"),
-    "sidebarBlurDesc": MessageLookupByLibrary.simpleMessage(
-      "Show the blurred desktop behind the window through the sidebar",
-    ),
     "silentLaunch": MessageLookupByLibrary.simpleMessage("Silent launch"),
     "silentLaunchDesc": MessageLookupByLibrary.simpleMessage(
       "Silent launch starts without showing the window.",

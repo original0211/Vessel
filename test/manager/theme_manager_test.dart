@@ -1,3 +1,4 @@
+import 'package:kfusion/enum/enum.dart';
 import 'package:kfusion/manager/theme_manager.dart';
 import 'package:kfusion/ui/hara.dart';
 import 'package:kfusion/ui/theme.dart';
@@ -58,7 +59,7 @@ void main() {
       notifier.value = change(notifier.value);
     }
 
-    update((props) => props.copyWith(sidebarBlur: !props.sidebarBlur));
+    update((props) => props.copyWith(liquidGlass: LiquidGlassMode.standard));
     await tester.pump();
     update((props) => props.copyWith(pureBlack: !props.pureBlack));
     await tester.pump();

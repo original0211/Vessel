@@ -1490,12 +1490,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "showPassword": MessageLookupByLibrary.simpleMessage(
       "Afficher le mot de passe",
     ),
-    "sidebarBlur": MessageLookupByLibrary.simpleMessage(
-      "Flou de la barre latérale",
-    ),
-    "sidebarBlurDesc": MessageLookupByLibrary.simpleMessage(
-      "Afficher le bureau flouté derrière la fenêtre à travers la barre latérale",
-    ),
     "silentLaunch": MessageLookupByLibrary.simpleMessage(
       "Lancement silencieux",
     ),

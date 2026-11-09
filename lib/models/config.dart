@@ -361,7 +361,6 @@ abstract class ThemeProps with _$ThemeProps {
   const factory ThemeProps({
     @Default(ThemeMode.system) ThemeMode themeMode,
     @Default(false) bool pureBlack,
-    @Default(true) bool sidebarBlur,
     @Default(LiquidGlassMode.none)
     @JsonKey(readValue: _readLiquidGlass)
     LiquidGlassMode liquidGlass,

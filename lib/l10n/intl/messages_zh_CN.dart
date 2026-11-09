@@ -1090,8 +1090,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "通知栏显示停止按钮",
     ),
     "showPassword": MessageLookupByLibrary.simpleMessage("显示密码"),
-    "sidebarBlur": MessageLookupByLibrary.simpleMessage("侧边栏背景模糊"),
-    "sidebarBlurDesc": MessageLookupByLibrary.simpleMessage("侧边栏透出窗口后方模糊的桌面"),
     "silentLaunch": MessageLookupByLibrary.simpleMessage("静默启动"),
     "silentLaunchDesc": MessageLookupByLibrary.simpleMessage("静默启动时不显示窗口。"),
     "singBoxBinaryMissing": MessageLookupByLibrary.simpleMessage(

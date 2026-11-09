@@ -1205,10 +1205,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "通知に停止ボタンを表示",
     ),
     "showPassword": MessageLookupByLibrary.simpleMessage("パスワードを表示"),
-    "sidebarBlur": MessageLookupByLibrary.simpleMessage("サイドバーのぼかし"),
-    "sidebarBlurDesc": MessageLookupByLibrary.simpleMessage(
-      "ウィンドウ背後のデスクトップをぼかしてサイドバーに透過します",
-    ),
     "silentLaunch": MessageLookupByLibrary.simpleMessage("サイレント起動"),
     "silentLaunchDesc": MessageLookupByLibrary.simpleMessage(
       "サイレント起動ではウィンドウを表示しません。",

@@ -1,7 +1,4 @@
-import 'dart:io';
 import 'dart:math' show max;
-
-import 'package:kfusion/common/feature.dart';
 
 import 'package:kfusion/enum/enum.dart';
 import 'package:kfusion/models/models.dart';
@@ -77,30 +74,10 @@ void main() {
   });
 
   group('sidebar blur', () {
-    testWidgets('stays hidden while the feature is off', (tester) async {
+    testWidgets('the retired toggle never renders', (tester) async {
       await pumpThemeView(tester);
 
       expect(find.text('Sidebar blur'), findsNothing);
-    });
-
-    testWidgets('shows a working toggle only on supported platforms', (
-      tester,
-    ) async {
-      feature = const Feature(sidebarBlur: true);
-      addTearDown(() => feature = const Feature());
-      await pumpThemeView(tester);
-      final toggle = find.text('Sidebar blur');
-
-      expect(readTheme().sidebarBlur, isTrue);
-      if (!Platform.isMacOS && !Platform.isWindows) {
-        expect(toggle, findsNothing);
-        return;
-      }
-
-      expect(toggle, findsOneWidget);
-      await tester.tap(toggle);
-      await tester.pumpAndSettle();
-      expect(readTheme().sidebarBlur, isFalse);
     });
   });
 

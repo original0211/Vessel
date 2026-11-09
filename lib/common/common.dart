@@ -11,7 +11,6 @@ export 'country_name.dart';
 export 'datetime.dart';
 export 'dialog.dart';
 export 'exception.dart';
-export 'feature.dart';
 export 'file.dart';
 export 'fixed.dart';
 export 'function.dart';

@@ -39,79 +39,11 @@ class ThemeView extends StatelessWidget {
                 _LiquidGlassItem(),
                 SizedBox(height: HaraSpace.groupGap),
                 _TextScaleFactorItem(),
-                SizedBox(height: HaraSpace.groupGap),
-                _SidebarBlurItem(),
               ],
             );
           },
         ),
       ),
-    );
-  }
-}
-
-/// A lone toggle between two groups: a top hairline, the label (and its
-/// description), and the A switch mark; the row tap flips the value.
-class _ThemeToggle extends StatelessWidget {
-  const _ThemeToggle({
-    required this.label,
-    this.desc,
-    required this.value,
-    required this.onChanged,
-  });
-
-  final String label;
-  final String? desc;
-  final bool value;
-  final ValueChanged<bool> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final palette = context.haraPalette;
-    final appLocalizations = context.appLocalizations;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        HaraHairline(color: palette.line),
-        Semantics(
-          toggled: value,
-          child: HaraRow(
-            onTap: () => onChanged(!value),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        label,
-                        style: HaraText.nodeName(
-                          context,
-                          palette.ink,
-                          current: false,
-                        ),
-                      ),
-                      if (desc != null) ...[
-                        const SizedBox(height: HaraSpace.profileMetaGap),
-                        Text(
-                          desc!,
-                          style: HaraText.profileMeta(context, palette.sub),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-                HaraToggleMark(
-                  value: value,
-                  word: value
-                      ? appLocalizations.enabled
-                      : appLocalizations.disabled,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
@@ -258,31 +190,6 @@ class _LiquidGlassItem extends ConsumerWidget {
         ref
             .read(themeSettingProvider.notifier)
             .update((state) => state.copyWith(liquidGlass: value));
-      },
-    );
-  }
-}
-
-class _SidebarBlurItem extends ConsumerWidget {
-  const _SidebarBlurItem();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    if (!feature.sidebarBlur || (!system.isMacOS && !system.isWindows)) {
-      return const SizedBox.shrink();
-    }
-    final appLocalizations = context.appLocalizations;
-    final sidebarBlur = ref.watch(
-      themeSettingProvider.select((state) => state.sidebarBlur),
-    );
-    return _ThemeToggle(
-      label: appLocalizations.sidebarBlur,
-      desc: appLocalizations.sidebarBlurDesc,
-      value: sidebarBlur,
-      onChanged: (value) {
-        ref
-            .read(themeSettingProvider.notifier)
-            .update((state) => state.copyWith(sidebarBlur: value));
       },
     );
   }
