@@ -7,7 +7,7 @@ import 'parser.dart';
 import 'render.dart';
 
 /// Versions up to and including this tag are frozen: the 0.x line is closed and its tags retired, so its sections are kept verbatim, not re-derived.
-const frozenBoundaryTag = 'v1.1.1';
+const frozenBoundaryTag = 'v1.2.0';
 
 const changelogDataPath = 'changelog.json';
 
