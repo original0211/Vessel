@@ -118,18 +118,6 @@ class ProfilesAction extends _$ProfilesAction {
         ref
             .read(setupActionProvider.notifier)
             .applyProfileDebounce(silence: true);
-      } else {
-        final label = ref
-            .read(profilesProvider.notifier)
-            .labeled(newProfile)
-            .realLabel;
-        unawaited(
-          ref.read(clashProvidersActionProvider.notifier).applyIfReferenced(
-            ProviderKind.proxy,
-            {label},
-            force: true,
-          ),
-        );
       }
     } finally {
       if (operation != null) {
@@ -336,4 +324,37 @@ class ProfilesAction extends _$ProfilesAction {
       );
     }
   }
+}
+
+/// Names the core registers first; a group may still take GLOBAL.
+const reservedProxyNames = {
+  'DIRECT',
+  'REJECT',
+  'REJECT-DROP',
+  'COMPATIBLE',
+  'PASS',
+  'PASS-RULE',
+};
+
+const reservedCustomProxyNames = {...reservedProxyNames, 'GLOBAL'};
+
+final _unnamedLinkPattern = RegExp(r'^(-\d+)?$');
+
+String linkProxyName(Map<String, dynamic> definition) {
+  final name = definition['name']?.toString().trim() ?? '';
+  if (!_unnamedLinkPattern.hasMatch(name)) {
+    return name;
+  }
+  return definition['server']?.toString() ?? definition['type'].toString();
+}
+
+String _numberedName(String base, int index) =>
+    '$base-${index.toString().padLeft(2, '0')}';
+
+String freeProxyName(String base, Set<String> taken) {
+  var name = base;
+  for (var index = 1; !taken.add(name); index++) {
+    name = _numberedName(base, index);
+  }
+  return name;
 }

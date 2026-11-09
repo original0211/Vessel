@@ -2339,7 +2339,7 @@ final class ClashConfigProvider
   }
 }
 
-String _$clashConfigHash() => r'ed8cfcf34801fae6f54b28ddcf5ea31bc49ad0ba';
+String _$clashConfigHash() => r'd2254110f0a47b6008566790637b97e3959ff53d';
 
 final class ClashConfigFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<ClashConfig>, int> {
@@ -2413,7 +2413,7 @@ final class SetupStateProvider
   }
 }
 
-String _$setupStateHash() => r'c83f9371caeff1dfa149cfd50039ceb88162665e';
+String _$setupStateHash() => r'7e541853801a6af0df74ce836932baeb7c34088b';
 
 final class SetupStateFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<SetupState>, int?> {
@@ -2432,54 +2432,3 @@ final class SetupStateFamily extends $Family
   @override
   String toString() => r'setupStateProvider';
 }
-
-/// Subscription profiles double as proxy providers for custom profiles.
-
-@ProviderFor(profileProviders)
-final profileProvidersProvider = ProfileProvidersProvider._();
-
-/// Subscription profiles double as proxy providers for custom profiles.
-
-final class ProfileProvidersProvider
-    extends
-        $FunctionalProvider<
-          Map<String, int>,
-          Map<String, int>,
-          Map<String, int>
-        >
-    with $Provider<Map<String, int>> {
-  /// Subscription profiles double as proxy providers for custom profiles.
-  ProfileProvidersProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'profileProvidersProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$profileProvidersHash();
-
-  @$internal
-  @override
-  $ProviderElement<Map<String, int>> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
-
-  @override
-  Map<String, int> create(Ref ref) {
-    return profileProviders(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(Map<String, int> value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<Map<String, int>>(value),
-    );
-  }
-}
-
-String _$profileProvidersHash() => r'689856f32a4b40e6a26b1eedd16db418d140371a';

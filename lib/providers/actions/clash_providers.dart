@@ -43,12 +43,6 @@ class ClashProvidersAction extends _$ClashProvidersAction {
     if (previous != null && previous.fileName != next.fileName) {
       unawaited(_clearCache(previous));
     }
-    unawaited(
-      applyIfReferenced(ProviderKind.rule, {
-        next.label,
-        ?previous?.label,
-      }, force: content != null || download),
-    );
     return next;
   }
 
@@ -115,15 +109,14 @@ class ClashProvidersAction extends _$ClashProvidersAction {
     return null;
   }
 
-  /// Returns false when the set changed shape, which only a reapply loads.
-  Future<bool> syncRemote(ClashProvider provider) async {
+  /// Syncs the stored set from its source; the core then reloads it in
+  /// place.
+  Future<void> syncRemote(ClashProvider provider) async {
     final next = await _compile(provider, download: true);
     if (next == provider) {
-      return true;
+      return;
     }
     await database.clashProviders.put(next.toCompanion());
-    unawaited(applyIfReferenced(ProviderKind.rule, {next.label}, force: true));
-    return false;
   }
 
   /// Backups leave remote sets out and older sets have no mrs yet.
@@ -162,66 +155,12 @@ class ClashProvidersAction extends _$ClashProvidersAction {
     };
     return [
       for (final profile in ref.read(profilesProvider))
-        if (ids.contains(profile.id) ||
-            kind == ProviderKind.rule &&
-                profile.type == ProfileType.custom &&
-                profile.overrides.ruleSets.contains(name))
-          profile,
+        if (ids.contains(profile.id)) profile,
     ];
   }
 
   Future<void> _clearCache(ClashProvider provider) async {
     await File(await provider.path).safeDelete();
     await File(await provider.compiledPath).safeDelete();
-  }
-
-  Future<bool> _isReferenced(
-    int profileId,
-    ProviderKind kind,
-    Set<String> labels,
-  ) async {
-    return switch (kind) {
-      ProviderKind.proxy =>
-        (await database.proxyGroupsDao.query(profileId).get()).any(
-          (group) => group.use?.any(labels.contains) ?? false,
-        ),
-      ProviderKind.rule =>
-        (ref
-                    .read(profilesProvider)
-                    .getProfile(profileId)
-                    ?.overrides
-                    .ruleSets
-                    .any(labels.contains) ??
-                false) ||
-            (await database.rulesDao.queryProfileRules(profileId).get()).any(
-              (rule) => rule.ruleSets.any(labels.contains),
-            ),
-    };
-  }
-
-  /// [force] reapplies a provider whose content changed under the same path,
-  /// which leaves the generated config unchanged.
-  Future<void> applyIfReferenced(
-    ProviderKind kind,
-    Set<String> labels, {
-    bool force = false,
-  }) => _applyIf(
-    (profileId) => _isReferenced(profileId, kind, labels),
-    force: force,
-  );
-
-  Future<void> _applyIf(
-    Future<bool> Function(int profileId) isReferenced, {
-    bool force = false,
-  }) async {
-    final profile = ref.read(currentProfileProvider);
-    if (profile == null ||
-        profile.type != ProfileType.custom ||
-        !await isReferenced(profile.id)) {
-      return;
-    }
-    ref
-        .read(setupActionProvider.notifier)
-        .applyProfileDebounce(silence: true, force: force);
   }
 }

@@ -459,49 +459,26 @@ class SetupAction extends _$SetupAction {
       ),
     );
     final appendSystemDns = networkSetting.appendSystemDns;
-    final isCustom = setupState.profileType == ProfileType.custom;
-    final profileBase = !isCustom
-        ? await _core.getProfileBase(profileId)
-        : null;
-    final Map<String, dynamic> rawConfig = isCustom
-        ? {
-            'proxies': appProxiesPayload(
-              setupState.appProxies,
-              dialers: setupState.proxyDialers,
-              groups: setupState.proxyGroups,
-            ),
-          }
-        : profileBase?.base.config ?? await _core.getConfig(profileId);
-    final proxyGroups = isCustom ? setupState.proxyGroups : <ProxyGroup>[];
-    final rules = isCustom ? setupState.rules : <Rule>[];
+    final profileBase = await _core.getProfileBase(profileId);
+    final Map<String, dynamic> rawConfig = profileBase.base.config;
     final directory = await appPath.profilesPath;
-    final injected = await _resolveInjectedProviders(
-      setupState,
-      proxyGroups: proxyGroups,
-      rules: rules,
-    );
     final res = await makeRealProfileTask(
       MakeRealProfileState(
-        rules: rules,
-        proxyGroups: proxyGroups,
-        injectedProxyProviders: injected.proxies,
-        injectedRuleProviders: injected.rules,
+        rules: const [],
+        proxyGroups: const [],
         profilesPath: directory,
         profileId: profileId,
         rawConfig: rawConfig,
         realPatchConfig: patchConfig,
         overrides: setupState.overrides,
         bypassPrivateRoute: networkSetting.bypassPrivateRoute,
-        keepEmptyDnsOverrides: setupState.profileType != ProfileType.custom,
+        keepEmptyDnsOverrides: true,
         appendSystemDns: appendSystemDns,
         defaultUA: defaultUA,
         authentication: const [],
         safeMode: ref.read(safeModeProvider),
       ),
     );
-    if (profileBase == null) {
-      return (yaml: res.yaml, md5: res.md5, counts: res.counts, base: null);
-    }
     final (:base, :path) = profileBase;
     return (
       yaml: res.yaml,
@@ -513,6 +490,60 @@ class SetupAction extends _$SetupAction {
       ),
       base: SetupBase(path: path, overlay: res.yaml),
     );
+  }
+
+  /// Renders a custom profile held in memory; only the restore converter
+  /// calls this, a live profile never renders this way.
+  Future<BuiltProfile> renderCustomProfile({
+    required SetupState setupState,
+    required PatchClashConfig patchConfig,
+  }) async {
+    final profileId = setupState.profileId;
+    if (profileId == null) {
+      return (yaml: '', md5: '', counts: configCountsOf(const {}), base: null);
+    }
+    final defaultUA = globalState.packageInfo.ua;
+    final networkSetting = ref.read(
+      networkSettingProvider.select(
+        (state) => (
+          appendSystemDns: state.appendSystemDns,
+          bypassPrivateRoute: state.bypassPrivateRoute,
+        ),
+      ),
+    );
+    final Map<String, dynamic> rawConfig = {
+      'proxies': appProxiesPayload(
+        setupState.appProxies,
+        dialers: setupState.proxyDialers,
+        groups: setupState.proxyGroups,
+      ),
+    };
+    final directory = await appPath.profilesPath;
+    final injected = await _resolveInjectedProviders(
+      setupState,
+      proxyGroups: setupState.proxyGroups,
+      rules: setupState.rules,
+    );
+    final res = await makeRealProfileTask(
+      MakeRealProfileState(
+        rules: setupState.rules,
+        proxyGroups: setupState.proxyGroups,
+        injectedProxyProviders: injected.proxies,
+        injectedRuleProviders: injected.rules,
+        profilesPath: directory,
+        profileId: profileId,
+        rawConfig: rawConfig,
+        realPatchConfig: patchConfig,
+        overrides: setupState.overrides,
+        bypassPrivateRoute: networkSetting.bypassPrivateRoute,
+        keepEmptyDnsOverrides: false,
+        appendSystemDns: networkSetting.appendSystemDns,
+        defaultUA: defaultUA,
+        authentication: const [],
+        safeMode: ref.read(safeModeProvider),
+      ),
+    );
+    return (yaml: res.yaml, md5: res.md5, counts: res.counts, base: null);
   }
 
   /// Only what the custom profile actually references is injected, so an

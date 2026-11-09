@@ -248,8 +248,8 @@ class ProxiesAction extends _$ProxiesAction {
         clashProvidersActionProvider.notifier,
       );
       final ruleSet = await clashProvidersAction.remoteProviderOf(provider);
-      if (ruleSet != null && !await clashProvidersAction.syncRemote(ruleSet)) {
-        return '';
+      if (ruleSet != null) {
+        await clashProvidersAction.syncRemote(ruleSet);
       }
       final message = await _core.updateExternalProvider(
         providerName: provider.name,
