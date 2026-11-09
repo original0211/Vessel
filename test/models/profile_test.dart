@@ -61,7 +61,9 @@ void main() {
     });
 
     test('custom never updates itself', () {
-      final profile = Profile.custom(label: 'Mine');
+      final profile = Profile.normal(
+        label: 'Mine',
+      ).copyWith(type: ProfileType.custom);
 
       expect(profile.type, ProfileType.custom);
       expect(profile.url, isEmpty);

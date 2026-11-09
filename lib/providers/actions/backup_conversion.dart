@@ -18,7 +18,7 @@ class RestoreConversionReport {
 /// YAML file snapshots its current rendering, before any of it lands.
 Future<({MigrationData data, RestoreConversionReport report})>
 materializeRestoredCustomProfiles(
-  Ref ref,
+  SetupAction setupAction,
   MigrationData data, {
   required PatchClashConfig patchConfig,
   required String? stagingDirPath,
@@ -34,7 +34,6 @@ materializeRestoredCustomProfiles(
     for (final profile in data.profiles)
       if (profile.type != ProfileType.custom) profile.realLabel: profile.id,
   };
-  final setupAction = ref.read(setupActionProvider.notifier);
   var profiles = data.profiles;
   final convertedIds = <int, int>{};
   final failedIds = <int>{};
@@ -54,10 +53,12 @@ materializeRestoredCustomProfiles(
             for (final group in data.proxyGroups)
               if (group.profileId == profile.id) group,
           ],
-          overrides: profile.overrides.overAppTun(
-            patchConfig.tunOverride,
-            patchConfig.tunOverrideKeys,
-          ),
+          overrides:
+              (data.profileOverrides[profile.id] ?? const ProfileOverrides())
+                  .overAppTun(
+                    patchConfig.tunOverride,
+                    patchConfig.tunOverrideKeys,
+                  ),
           clashProviders: data.clashProviders,
           profileProviders: profileProviders,
           appProxies: data.customProxies,
@@ -86,15 +87,7 @@ materializeRestoredCustomProfiles(
       profiles = [
         for (final item in profiles)
           if (item.id == profile.id)
-            item.copyWith(
-              id: newId,
-              type: ProfileType.file,
-              overrides: const ProfileOverrides(),
-              scriptId: null,
-              matchTarget: null,
-              extendType: ExtendType.standard,
-              autoUpdate: false,
-            )
+            item.copyWith(id: newId, type: ProfileType.file, autoUpdate: false)
           else
             item,
       ];
@@ -144,11 +137,68 @@ materializeRestoredCustomProfiles(
       ],
       // Shared by every custom profile; dropped only when none remain.
       customProxies: stillCustom ? data.customProxies : const [],
+      profileOverrides: {
+        for (final MapEntry(key: id, value: overrides)
+            in data.profileOverrides.entries)
+          if (!converted.contains(id)) id: overrides,
+      },
     ),
     report: RestoreConversionReport(
       converted: convertedIds.length,
       failedLabels: failedLabels,
     ),
+  );
+}
+
+/// The schema-22 upgrade of a live database, run once at startup before
+/// the profiles load: materializes any custom profiles the retired
+/// per-profile tables still carry — the same conversion a restore runs —
+/// then retires the shape. Profiles that fail to convert keep their rows
+/// and the tables stay, so the next launch retries them; the retired
+/// tables only drop once nothing unconverted remains.
+Future<({RestoreConversionReport report, int? currentProfileId})>
+convertDatabaseCustomProfiles(
+  SetupAction setupAction, {
+  required PatchClashConfig patchConfig,
+  required int? currentProfileId,
+}) async {
+  final customsPresent = await database
+      .customSelect("SELECT id FROM profiles WHERE type = 'custom'")
+      .get();
+  if (customsPresent.isEmpty && !await database.hasLegacyProfileData) {
+    return (
+      report: const RestoreConversionReport(),
+      currentProfileId: currentProfileId,
+    );
+  }
+  final legacy = await database.readLegacyProfileData();
+  final customIds = {
+    for (final profile in legacy.profiles)
+      if (profile.type == ProfileType.custom) profile.id,
+  };
+  final (:data, :report) = await materializeRestoredCustomProfiles(
+    setupAction,
+    legacy.copyWith(configMap: {'currentProfileId': currentProfileId}),
+    patchConfig: patchConfig,
+    stagingDirPath: null,
+  );
+  await database.profilesDao.setAll(data.profiles);
+  final failedIds = {
+    for (final profile in data.profiles)
+      if (profile.type == ProfileType.custom) profile.id,
+  };
+  if (failedIds.isEmpty) {
+    await database.dropLegacyProfileData();
+  } else {
+    await database.deleteLegacyProfileRows(customIds.difference(failedIds));
+    commonPrint.log(
+      'legacy profiles kept for a later retry: ${report.failedLabels}',
+      logLevel: LogLevel.warning,
+    );
+  }
+  return (
+    report: report,
+    currentProfileId: data.configMap?['currentProfileId'] as int?,
   );
 }
 

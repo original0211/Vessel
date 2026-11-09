@@ -19,12 +19,6 @@ class Profiles extends Table {
 
   DateTimeColumn get lastUpdateDate => dateTime().nullable()();
 
-  TextColumn get extendType => textEnum<ExtendType>()();
-
-  IntColumn get scriptId => integer().nullable()();
-
-  TextColumn get matchTarget => text().nullable()();
-
   IntColumn get autoUpdateDurationMillis => integer()();
 
   TextColumn get subscriptionInfo =>
@@ -38,32 +32,8 @@ class Profiles extends Table {
 
   IntColumn get order => integer().nullable()();
 
-  TextColumn get overrides =>
-      text().map(const ProfileOverridesConverter()).nullable()();
-
   @override
   Set<Column> get primaryKey => {id};
-}
-
-class ProfileOverridesConverter
-    extends TypeConverter<ProfileOverrides?, String?> {
-  const ProfileOverridesConverter();
-
-  @override
-  ProfileOverrides? fromSql(String? fromDb) {
-    if (fromDb == null) return null;
-    return decodeOrRestoreDefault(
-      'profile overrides',
-      () => ProfileOverrides.safeFromJson(json.decode(fromDb)),
-      () => null,
-    );
-  }
-
-  @override
-  String? toSql(ProfileOverrides? value) {
-    if (value == null || value == const ProfileOverrides()) return null;
-    return json.encode(value.toJson());
-  }
 }
 
 class SubscriptionInfoConverter
@@ -127,13 +97,6 @@ class ProfilesDao extends DatabaseAccessor<Database> with _$ProfilesDaoMixin {
     return query.map((row) => row.read(profiles.id)!);
   }
 
-  Selectable<int> customIds() {
-    final query = profiles.selectOnly()
-      ..addColumns([profiles.id])
-      ..where(profiles.type.equalsValue(ProfileType.custom));
-    return query.map((row) => row.read(profiles.id)!);
-  }
-
   Future<Profile?> get(int id) => profiles
       .readable((row) => row.toProfile(), where: (t) => t.id.equals(id))
       .getSingleOrNull();
@@ -167,11 +130,7 @@ extension RawProfilExt on RawProfile {
       autoUpdate: autoUpdate,
       selectedMap: selectedMap,
       unfoldSet: unfoldSet,
-      extendType: extendType,
-      scriptId: scriptId,
-      matchTarget: matchTarget,
       order: order,
-      overrides: overrides ?? const ProfileOverrides(),
     );
   }
 }
@@ -191,11 +150,7 @@ extension ProfilesCompanionExt on Profile {
       autoUpdate: autoUpdate,
       selectedMap: selectedMap,
       unfoldSet: unfoldSet,
-      extendType: extendType,
-      scriptId: Value(scriptId),
-      matchTarget: Value(matchTarget),
       order: Value(order ?? this.order),
-      overrides: Value(overrides),
     );
   }
 }

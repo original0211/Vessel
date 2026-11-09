@@ -80,7 +80,7 @@ final class ProfilesProvider
   }
 }
 
-String _$profilesHash() => r'60f47803bd141627e5354018339d13704b00d31e';
+String _$profilesHash() => r'2f1cd1bf85799fd9fa5f9cc94beed6ea2668a523';
 
 abstract class _$Profiles extends $Notifier<List<Profile>> {
   List<Profile> build();
@@ -124,7 +124,7 @@ final class ClashProvidersProvider
   ClashProviders create() => ClashProviders();
 }
 
-String _$clashProvidersHash() => r'00588fa9c7300d3319d97d61962e898d29497188';
+String _$clashProvidersHash() => r'ac8521740b21f6ab5d6a78a824000b2fd12badff';
 
 abstract class _$ClashProviders extends $StreamNotifier<List<ClashProvider>> {
   Stream<List<ClashProvider>> build();
@@ -187,74 +187,4 @@ abstract class _$IconSets extends $StreamNotifier<List<IconSet>> {
             >;
     return element.handleCreate(ref, build);
   }
-}
-
-@ProviderFor(profileGroupsCount)
-final profileGroupsCountProvider = ProfileGroupsCountFamily._();
-
-final class ProfileGroupsCountProvider
-    extends $FunctionalProvider<AsyncValue<int>, int, Stream<int>>
-    with $FutureModifier<int>, $StreamProvider<int> {
-  ProfileGroupsCountProvider._({
-    required ProfileGroupsCountFamily super.from,
-    required int super.argument,
-  }) : super(
-         retry: null,
-         name: r'profileGroupsCountProvider',
-         isAutoDispose: true,
-         dependencies: null,
-         $allTransitiveDependencies: null,
-       );
-
-  @override
-  String debugGetCreateSourceHash() => _$profileGroupsCountHash();
-
-  @override
-  String toString() {
-    return r'profileGroupsCountProvider'
-        ''
-        '($argument)';
-  }
-
-  @$internal
-  @override
-  $StreamProviderElement<int> $createElement($ProviderPointer pointer) =>
-      $StreamProviderElement(pointer);
-
-  @override
-  Stream<int> create(Ref ref) {
-    final argument = this.argument as int;
-    return profileGroupsCount(ref, argument);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is ProfileGroupsCountProvider && other.argument == argument;
-  }
-
-  @override
-  int get hashCode {
-    return argument.hashCode;
-  }
-}
-
-String _$profileGroupsCountHash() =>
-    r'c82d409c32b5467619c51bba28b2066b6ea09c59';
-
-final class ProfileGroupsCountFamily extends $Family
-    with $FunctionalFamilyOverride<Stream<int>, int> {
-  ProfileGroupsCountFamily._()
-    : super(
-        retry: null,
-        name: r'profileGroupsCountProvider',
-        dependencies: null,
-        $allTransitiveDependencies: null,
-        isAutoDispose: true,
-      );
-
-  ProfileGroupsCountProvider call(int profileId) =>
-      ProfileGroupsCountProvider._(argument: profileId, from: this);
-
-  @override
-  String toString() => r'profileGroupsCountProvider';
 }

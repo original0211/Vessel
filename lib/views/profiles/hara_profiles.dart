@@ -273,7 +273,7 @@ class _HaraProfileRow extends ConsumerWidget {
                   ),
                   const SizedBox(height: HaraSpace.profileNameToMeta),
                   Text(
-                    _metaLine1(context, ref),
+                    _metaLine1(context),
                     style: HaraText.profileMeta(context, palette.sub),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -293,19 +293,13 @@ class _HaraProfileRow extends ConsumerWidget {
     );
   }
 
-  String _metaLine1(BuildContext context, WidgetRef ref) {
+  String _metaLine1(BuildContext context) {
     final localizations = context.appLocalizations;
     final typeLabel = switch (profile.type) {
       ProfileType.url => localizations.remote,
       ProfileType.file => localizations.local,
       ProfileType.custom => localizations.custom,
     };
-    if (profile.type == ProfileType.custom) {
-      final count = ref.watch(profileGroupsCountProvider(profile.id)).value;
-      if (count != null) {
-        return '$typeLabel · ${count.compact}';
-      }
-    }
     return typeLabel;
   }
 

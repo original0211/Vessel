@@ -12,42 +12,20 @@ import 'package:flutter/foundation.dart' show visibleForTesting;
 
 part 'clash_providers.dart';
 part 'converter.dart';
-part 'custom_proxies.dart';
-part 'dialers.dart';
 part 'generated/database.g.dart';
-part 'groups.dart';
 part 'icons.dart';
+part 'legacy.dart';
 part 'profiles.dart';
-part 'rules.dart';
 
 @DriftDatabase(
-  tables: [
-    Profiles,
-    Rules,
-    DisabledRules,
-    ProxyGroups,
-    IconRecords,
-    IconSets,
-    ClashProviders,
-    CustomProxies,
-    ProxyDialers,
-  ],
-  daos: [
-    ProfilesDao,
-    RulesDao,
-    ProxyGroupsDao,
-    IconRecordsDao,
-    IconSetsDao,
-    ClashProvidersDao,
-    CustomProxiesDao,
-    ProxyDialersDao,
-  ],
+  tables: [Profiles, IconRecords, IconSets, ClashProviders],
+  daos: [ProfilesDao, IconRecordsDao, IconSetsDao, ClashProvidersDao],
 )
 class Database extends _$Database {
   Database([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 21;
+  int get schemaVersion => 22;
 
   static LazyDatabase _openConnection() {
     return LazyDatabase(() async {
@@ -65,7 +43,7 @@ class Database extends _$Database {
           await _migrateV1Rules();
         }
         if (from < 3) {
-          await _addColumnIfMissing(m, profiles, profiles.matchTarget);
+          await _addRawColumnIfMissing('profiles', 'match_target', 'TEXT NULL');
         }
         if (from < 6) {
           await _createTableIfMissing(m, clashProviders);
@@ -74,36 +52,40 @@ class Database extends _$Database {
           await m.alterTable(TableMigration(clashProviders));
         }
         if (from < 10) {
-          await _createTableIfMissing(m, customProxies);
+          await _createRawTableIfMissing('custom_proxies', _customProxiesDdl);
         }
         if (from < 17) {
-          await _renameColumnIfPresent(
-            m,
-            profiles,
+          await _renameRawColumnIfPresent(
+            'profiles',
             'overwrite_type',
-            profiles.extendType,
+            'extend_type',
           );
-          await _dropProfileCustomProxies(m);
-          await _migrateToCustomProfiles(m);
+          await _dropProfileCustomProxies();
+          await _migrateToCustomProfiles();
           await _createTableIfMissing(m, iconSets);
           await _addColumnIfMissing(m, iconSets, iconSets.lastUpdateTime);
-          await _addColumnIfMissing(m, profiles, profiles.overrides);
+          await _addRawColumnIfMissing('profiles', 'overrides', 'TEXT NULL');
         }
         if (from < 18) {
-          await _moveGroupOptionsToDefinition(m);
+          await _moveGroupOptionsToDefinition();
         }
         if (from < 19) {
           await _addColumnIfMissing(m, profiles, profiles.ageSecretKey);
         }
         if (from < 20) {
-          await _addColumnIfMissing(
-            m,
-            customProxies,
-            customProxies.emptyOptions,
+          await _addRawColumnIfMissing(
+            'custom_proxies',
+            'empty_options',
+            'TEXT NULL',
           );
         }
         // Schema 21 drops the scripts table from the schema only; the
         // physical table stays in place, unread, so stored rows survive.
+        // Schema 22 retires the per-profile tables and the profiles
+        // override columns from the schema the same way: the physical
+        // shape stays until the startup conversion has materialized any
+        // custom profiles out of it (see legacy.dart), because a backup
+        // snapshot opened for restore must still find its rows.
       }),
       beforeOpen: (_) => customStatement('PRAGMA foreign_keys = ON'),
     );
@@ -135,53 +117,92 @@ class Database extends _$Database {
     await m.addColumn(table, column);
   }
 
-  Future<void> _renameColumnIfPresent(
-    Migrator m,
-    TableInfo table,
-    String oldName,
-    GeneratedColumn column,
+  /// The tables retired at schema 22 have no table info to migrate with,
+  /// so their steps speak raw SQL throughout.
+  Future<void> _addRawColumnIfMissing(
+    String table,
+    String column,
+    String definition,
   ) async {
-    if (!(await _columnsOf(table.actualTableName)).contains(oldName)) {
+    if ((await _columnsOf(table)).contains(column)) {
       return;
     }
-    await m.renameColumn(table, oldName, column);
+    await customStatement('ALTER TABLE $table ADD COLUMN $column $definition');
   }
 
-  /// alterTable re-creates the old index, which names the dropped column.
-  Future<void> _dropProfileCustomProxies(Migrator m) async {
-    final columns = await _columnsOf(customProxies.actualTableName);
+  Future<bool> _createRawTableIfMissing(String table, String ddl) async {
+    if ((await _columnsOf(table)).isNotEmpty) {
+      return false;
+    }
+    await customStatement(ddl);
+    return true;
+  }
+
+  Future<void> _renameRawColumnIfPresent(
+    String table,
+    String oldName,
+    String newName,
+  ) async {
+    final columns = await _columnsOf(table);
+    if (!columns.contains(oldName) || columns.contains(newName)) {
+      return;
+    }
+    await customStatement(
+      'ALTER TABLE $table RENAME COLUMN $oldName TO $newName',
+    );
+  }
+
+  /// Rebuilding the table is what sheds the dropped column; the old index
+  /// names it, so it goes first.
+  Future<void> _dropProfileCustomProxies() async {
+    final columns = await _columnsOf('custom_proxies');
     if (!columns.contains('profile_id')) {
       return;
     }
     await customStatement(
-      'DELETE FROM ${customProxies.actualTableName} '
-      'WHERE profile_id IS NOT NULL',
+      'DELETE FROM custom_proxies WHERE profile_id IS NOT NULL',
     );
     await customStatement(
       'DROP INDEX IF EXISTS idx_custom_proxies_profile_order',
     );
-    await m.alterTable(
-      TableMigration(
-        customProxies,
-        newColumns: [
-          if (!columns.contains(customProxies.emptyOptions.name))
-            customProxies.emptyOptions,
-        ],
-      ),
+    await customStatement(
+      'CREATE TABLE custom_proxies_new ('
+      '"id" INTEGER NOT NULL, "definition" TEXT NOT NULL, '
+      '"order" TEXT NULL, "empty_options" TEXT NULL, PRIMARY KEY ("id"))',
+    );
+    await customStatement(
+      'INSERT INTO custom_proxies_new (id, definition, "order", empty_options) '
+      'SELECT id, definition, "order", '
+      '${columns.contains('empty_options') ? 'empty_options' : 'NULL'} '
+      'FROM custom_proxies',
+    );
+    await customStatement('DROP TABLE custom_proxies');
+    await customStatement(
+      'ALTER TABLE custom_proxies_new RENAME TO custom_proxies',
     );
   }
 
   /// Schema 17 kept each group option in a column of its own.
-  Future<void> _moveGroupOptionsToDefinition(Migrator m) async {
-    final columns = await _columnsOf(proxyGroups.actualTableName);
-    if (columns.isEmpty || columns.contains(proxyGroups.definition.name)) {
+  Future<void> _moveGroupOptionsToDefinition() async {
+    final columns = await _columnsOf('proxy_groups');
+    if (columns.isEmpty || columns.contains('definition')) {
       return;
     }
-    final rows = await customSelect(
-      'SELECT * FROM ${proxyGroups.actualTableName}',
-    ).get();
-    await m.alterTable(
-      TableMigration(proxyGroups, newColumns: [proxyGroups.definition]),
+    final rows = await customSelect('SELECT * FROM proxy_groups').get();
+    await customStatement(_proxyGroupsRebuiltDdl);
+    await customStatement(
+      'INSERT INTO proxy_groups_new '
+      '(id, profile_id, name, type, proxies, use, definition, "order") '
+      "SELECT id, profile_id, name, type, proxies, use, '{}', \"order\" "
+      'FROM proxy_groups',
+    );
+    await customStatement('DROP TABLE proxy_groups');
+    await customStatement(
+      'ALTER TABLE proxy_groups_new RENAME TO proxy_groups',
+    );
+    await customStatement(
+      'CREATE INDEX idx_proxy_groups_profile_order '
+      'ON proxy_groups (profile_id, "order")',
     );
     for (final row in rows) {
       final options = {
@@ -193,10 +214,9 @@ class Database extends _$Database {
       if (options.isEmpty) {
         continue;
       }
-      final stmt = proxyGroups.update()
-        ..where((t) => t.id.equals(row.read<int>('id')));
-      await stmt.write(
-        ProxyGroupsCompanion(definition: Value(json.encode(options))),
+      await customStatement(
+        'UPDATE proxy_groups SET definition = ? WHERE id = ?',
+        [json.encode(options), row.read<int>('id')],
       );
     }
   }
@@ -257,22 +277,17 @@ class Database extends _$Database {
   /// dropped: those groups named the subscription's own proxies, which a
   /// custom profile does not have. The mapping table marks the old shape, so
   /// a database that went back to an older build and returns is left as is.
-  Future<void> _migrateToCustomProfiles(Migrator m) async {
+  Future<void> _migrateToCustomProfiles() async {
     final profileColumns = await _columnsOf('profiles');
-    if (!profileColumns.contains(profiles.type.name)) {
-      await m.alterTable(
-        TableMigration(
-          profiles,
-          columnTransformer: {
-            profiles.type: const CustomExpression<String>(
-              "CASE WHEN url = '' THEN 'file' ELSE 'url' END",
-            ),
-          },
-          newColumns: [
-            for (final column in profiles.$columns)
-              if (!profileColumns.contains(column.name)) column,
-          ],
-        ),
+    if (!profileColumns.contains('type')) {
+      for (final MapEntry(key: name, value: ddl) in _profileColumnDdl.entries) {
+        if (!profileColumns.contains(name)) {
+          await customStatement('ALTER TABLE profiles ADD COLUMN "$name" $ddl');
+        }
+      }
+      await customStatement(
+        'UPDATE profiles SET type = '
+        "CASE WHEN url = '' THEN 'file' ELSE 'url' END",
       );
     }
     final customOverwrites = {
@@ -339,20 +354,16 @@ class Database extends _$Database {
     ]) {
       await customStatement('DROP TABLE IF EXISTS $table');
     }
-    for (final table in <TableInfo>[
-      rules,
-      disabledRules,
-      proxyGroups,
-      proxyDialers,
+    for (final ddl in [
+      _rulesDdl,
+      _disabledRulesDdl,
+      _proxyGroupsDdl,
+      _proxyDialersDdl,
+      'CREATE INDEX idx_rule_target ON rules (rule_target)',
+      'CREATE INDEX idx_rules_profile_order ON rules (profile_id, "order")',
+      'CREATE INDEX idx_proxy_groups_profile_order ON proxy_groups (profile_id, "order")',
     ]) {
-      await m.createTable(table);
-    }
-    for (final index in [
-      idxRuleTarget,
-      idxRulesProfileOrder,
-      idxProxyGroupsProfileOrder,
-    ]) {
-      await m.createIndex(index);
+      await customStatement(ddl);
     }
     final keptRuleIds = <int>{};
     for (final row in ruleRows) {
@@ -391,23 +402,16 @@ class Database extends _$Database {
     }
   }
 
+  /// The per-profile rows a backup may still carry in its [MigrationData]
+  /// are not written: the restore converter materializes them into file
+  /// profiles beforehand, and what it could not convert stays in the
+  /// backup, not in tables this schema no longer has.
   Future<void> restore(
-    List<Profile> profiles,
-    List<Rule> rules,
-    List<DisabledRule> disabledRules,
-    List<ProxyGroup> proxyGroups, {
+    List<Profile> profiles, {
     List<ClashProvider> clashProviders = const [],
-    List<CustomProxy> customProxies = const [],
-    List<ProxyDialer> proxyDialers = const [],
     bool isOverride = false,
   }) async {
-    if (profiles.isEmpty &&
-        rules.isEmpty &&
-        disabledRules.isEmpty &&
-        proxyGroups.isEmpty &&
-        clashProviders.isEmpty &&
-        customProxies.isEmpty &&
-        proxyDialers.isEmpty) {
+    if (profiles.isEmpty && clashProviders.isEmpty) {
       return;
     }
     await transaction(() async {
@@ -416,52 +420,90 @@ class Database extends _$Database {
       await batch((b) {
         if (isOverride) {
           profilesDao.setAllWithBatch(b, profiles);
-          rulesDao.setAllWithBatch(b, rules, disabledRules);
-          proxyGroupsDao.setAllWithBatch(b, proxyGroups);
-          customProxiesDao.setAllWithBatch(b, customProxies);
           clashProvidersDao.setAllWithBatch(b, clashProviders);
-          // Rewriting profiles or custom proxies cascades into these.
-          proxyDialersDao.setAllWithBatch(b, proxyDialers);
           return;
         }
         profilesDao.putAllWithBatch(
           b,
           profiles.map((item) => item.toCompanion()),
         );
-        rulesDao.putAllWithBatch(b, rules, disabledRules);
-        proxyGroupsDao.putAllWithBatch(b, proxyGroups);
-        customProxiesDao.putAllWithBatch(b, customProxies);
         clashProvidersDao.putAllWithBatch(b, clashProviders);
-        proxyDialersDao.putAllWithBatch(b, proxyDialers);
       });
-      await _purgeOrphans();
     });
   }
 
   Future<void> deleteProfile(int profileId) {
     return profiles.remove((t) => t.id.equals(profileId));
   }
-
-  Future<void> _purgeOrphans() async {
-    final profileIds = selectOnly(profiles)..addColumns([profiles.id]);
-    final ruleIds = selectOnly(rules)..addColumns([rules.id]);
-    final customProxyIds = selectOnly(customProxies)
-      ..addColumns([customProxies.id]);
-    await rules.remove(
-      (t) => t.profileId.isNotNull() & t.profileId.isNotInQuery(profileIds),
-    );
-    await disabledRules.remove(
-      (t) =>
-          t.profileId.isNotInQuery(profileIds) | t.ruleId.isNotInQuery(ruleIds),
-    );
-    await proxyGroups.remove((t) => t.profileId.isNotInQuery(profileIds));
-    await proxyDialers.remove(
-      (t) =>
-          t.profileId.isNotInQuery(profileIds) |
-          t.proxyId.isNotInQuery(customProxyIds),
-    );
-  }
 }
+
+/// The schema-21 shapes of the retired per-profile tables, kept as raw
+/// SQL because the migration chain still has to build them on its way
+/// through the old versions (and the test harness rebuilds them to walk
+/// a database back).
+const _rulesDdl =
+    'CREATE TABLE "rules" ("id" INTEGER NOT NULL, '
+    '"profile_id" INTEGER NULL REFERENCES profiles (id) ON DELETE CASCADE, '
+    '"rule_action" TEXT NOT NULL, "content" TEXT NULL, '
+    '"rule_target" TEXT NULL, "rule_provider" TEXT NULL, '
+    '"sub_rule" TEXT NULL, '
+    '"no_resolve" INTEGER NOT NULL DEFAULT 0 CHECK ("no_resolve" IN (0, 1)), '
+    '"src" INTEGER NOT NULL DEFAULT 0 CHECK ("src" IN (0, 1)), '
+    '"order" TEXT NULL, PRIMARY KEY ("id"))';
+
+const _disabledRulesDdl =
+    'CREATE TABLE "disabled_rules" ('
+    '"profile_id" INTEGER NOT NULL REFERENCES profiles (id) '
+    'ON DELETE CASCADE, '
+    '"rule_id" INTEGER NOT NULL REFERENCES rules (id) ON DELETE CASCADE, '
+    'PRIMARY KEY ("profile_id", "rule_id"))';
+
+const _proxyGroupsDdl =
+    'CREATE TABLE "proxy_groups" ("id" INTEGER NOT NULL, '
+    '"profile_id" INTEGER NOT NULL REFERENCES profiles (id) '
+    'ON DELETE CASCADE, '
+    '"name" TEXT NOT NULL, "type" TEXT NOT NULL, "proxies" TEXT NULL, '
+    '"use" TEXT NULL, "definition" TEXT NOT NULL DEFAULT \'{}\', '
+    '"order" TEXT NULL, PRIMARY KEY ("id"))';
+
+const _proxyGroupsRebuiltDdl =
+    'CREATE TABLE "proxy_groups_new" ("id" INTEGER NOT NULL, '
+    '"profile_id" INTEGER NOT NULL REFERENCES profiles (id) '
+    'ON DELETE CASCADE, '
+    '"name" TEXT NOT NULL, "type" TEXT NOT NULL, "proxies" TEXT NULL, '
+    '"use" TEXT NULL, "definition" TEXT NOT NULL DEFAULT \'{}\', '
+    '"order" TEXT NULL, PRIMARY KEY ("id"))';
+
+const _customProxiesDdl =
+    'CREATE TABLE "custom_proxies" ("id" INTEGER NOT NULL, '
+    '"definition" TEXT NOT NULL, "order" TEXT NULL, '
+    '"empty_options" TEXT NULL, PRIMARY KEY ("id"))';
+
+const _proxyDialersDdl =
+    'CREATE TABLE "proxy_dialers" ('
+    '"profile_id" INTEGER NOT NULL REFERENCES profiles (id) '
+    'ON DELETE CASCADE, '
+    '"proxy_id" INTEGER NOT NULL REFERENCES custom_proxies (id) '
+    'ON DELETE CASCADE, '
+    '"target" TEXT NOT NULL, PRIMARY KEY ("profile_id", "proxy_id"))';
+
+/// Ballast for adding a declared profiles column to a pre-v17 table that
+/// lacks it: the stored value wins wherever the column already exists,
+/// these defaults only fill a column the file never had.
+const _profileColumnDdl = {
+  'type': "TEXT NOT NULL DEFAULT 'file'",
+  'label': "TEXT NOT NULL DEFAULT ''",
+  'current_group_name': 'TEXT NULL',
+  'url': "TEXT NOT NULL DEFAULT ''",
+  'age_secret_key': 'TEXT NULL',
+  'last_update_date': 'INTEGER NULL',
+  'auto_update_duration_millis': 'INTEGER NOT NULL DEFAULT 0',
+  'subscription_info': 'TEXT NULL',
+  'auto_update': 'INTEGER NOT NULL DEFAULT 0',
+  'selected_map': "TEXT NOT NULL DEFAULT '{}'",
+  'unfold_set': "TEXT NOT NULL DEFAULT '[]'",
+  'order': 'INTEGER NULL',
+};
 
 const _v17GroupOptions = [
   ('url', 'url'),

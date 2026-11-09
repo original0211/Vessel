@@ -83,8 +83,90 @@ void _downgradeToV7(Database raw) {
   raw.execute('PRAGMA user_version = 7');
 }
 
+/// Schema version 21 still carried the per-profile tables and the profile
+/// columns schema 22 retired from the drift declaration. The upgrade leaves
+/// the physical shape in place; the startup conversion retires it later.
+void _downgradeToV21(Database raw) {
+  final profileColumns = _columnsOf(raw, 'profiles');
+  void addColumn(String name, String ddl) {
+    if (!profileColumns.contains(name)) {
+      raw.execute('ALTER TABLE profiles ADD COLUMN "$name" $ddl');
+    }
+  }
+
+  addColumn('extend_type', "TEXT NOT NULL DEFAULT 'standard'");
+  addColumn('script_id', 'INTEGER NULL');
+  addColumn('match_target', 'TEXT NULL');
+  addColumn('overrides', 'TEXT NULL');
+  raw.execute('''
+    CREATE TABLE IF NOT EXISTS "rules" (
+      "id" INTEGER NOT NULL,
+      "profile_id" INTEGER NULL REFERENCES profiles (id) ON DELETE CASCADE,
+      "rule_action" TEXT NOT NULL,
+      "content" TEXT NULL,
+      "rule_target" TEXT NULL,
+      "rule_provider" TEXT NULL,
+      "sub_rule" TEXT NULL,
+      "no_resolve" INTEGER NOT NULL DEFAULT 0 CHECK ("no_resolve" IN (0, 1)),
+      "src" INTEGER NOT NULL DEFAULT 0 CHECK ("src" IN (0, 1)),
+      "order" TEXT NULL,
+      PRIMARY KEY ("id")
+    )
+  ''');
+  raw.execute('''
+    CREATE TABLE IF NOT EXISTS "disabled_rules" (
+      "profile_id" INTEGER NOT NULL REFERENCES profiles (id) ON DELETE CASCADE,
+      "rule_id" INTEGER NOT NULL REFERENCES rules (id) ON DELETE CASCADE,
+      PRIMARY KEY ("profile_id", "rule_id")
+    )
+  ''');
+  raw.execute('''
+    CREATE TABLE IF NOT EXISTS "proxy_groups" (
+      "id" INTEGER NOT NULL,
+      "profile_id" INTEGER NOT NULL REFERENCES profiles (id) ON DELETE CASCADE,
+      "name" TEXT NOT NULL,
+      "type" TEXT NOT NULL,
+      "proxies" TEXT NULL,
+      "use" TEXT NULL,
+      "definition" TEXT NOT NULL DEFAULT '{}',
+      "order" TEXT NULL,
+      PRIMARY KEY ("id")
+    )
+  ''');
+  raw.execute('''
+    CREATE TABLE IF NOT EXISTS "custom_proxies" (
+      "id" INTEGER NOT NULL,
+      "definition" TEXT NOT NULL,
+      "order" TEXT NULL,
+      "empty_options" TEXT NULL,
+      PRIMARY KEY ("id")
+    )
+  ''');
+  raw.execute('''
+    CREATE TABLE IF NOT EXISTS "proxy_dialers" (
+      "profile_id" INTEGER NOT NULL REFERENCES profiles (id) ON DELETE CASCADE,
+      "proxy_id" INTEGER NOT NULL REFERENCES custom_proxies (id) ON DELETE CASCADE,
+      "target" TEXT NOT NULL,
+      PRIMARY KEY ("profile_id", "proxy_id")
+    )
+  ''');
+  raw.execute(
+    'CREATE INDEX IF NOT EXISTS idx_rule_target ON rules (rule_target)',
+  );
+  raw.execute(
+    'CREATE INDEX IF NOT EXISTS idx_rules_profile_order '
+    'ON rules (profile_id, "order")',
+  );
+  raw.execute(
+    'CREATE INDEX IF NOT EXISTS idx_proxy_groups_profile_order '
+    'ON proxy_groups (profile_id, "order")',
+  );
+  raw.execute('PRAGMA user_version = 21');
+}
+
 /// Schema version 19 had no `empty_options` on `custom_proxies`.
 void _downgradeToV19(Database raw) {
+  _downgradeToV21(raw);
   raw.execute('ALTER TABLE custom_proxies DROP COLUMN empty_options');
   raw.execute('PRAGMA user_version = 19');
 }
@@ -272,7 +354,7 @@ void main() {
 
     await openAndMigrate();
 
-    expect(_userVersion(raw), 21);
+    expect(_userVersion(raw), 22);
   });
 
   test('the v3 upgrade adds match_target to profiles', () async {
@@ -282,19 +364,20 @@ void main() {
     await openAndMigrate();
 
     expect(_columnsOf(raw, 'profiles'), contains('match_target'));
-    expect(_userVersion(raw), 21);
+    expect(_userVersion(raw), 22);
   });
 
   test(
     'a v2 user_version with match_target already present still opens',
     () async {
+      _downgradeToV21(raw);
       raw.execute('PRAGMA user_version = 2');
       expect(_columnsOf(raw, 'profiles'), contains('match_target'));
 
       await openAndMigrate();
 
       expect(_columnsOf(raw, 'profiles'), contains('match_target'));
-      expect(_userVersion(raw), 21);
+      expect(_userVersion(raw), 22);
     },
   );
 
@@ -305,20 +388,21 @@ void main() {
     final database = await openAndMigrate();
 
     expect(_hasTable(raw, 'clash_providers'), isTrue);
-    expect(_userVersion(raw), 21);
+    expect(_userVersion(raw), 22);
     expect(await database.clashProvidersDao.query().get(), isEmpty);
   });
 
   test(
     'a v5 user_version with clash_providers already present still opens',
     () async {
+      _downgradeToV21(raw);
       raw.execute('PRAGMA user_version = 5');
       expect(_hasTable(raw, 'clash_providers'), isTrue);
 
       await openAndMigrate();
 
       expect(_hasTable(raw, 'clash_providers'), isTrue);
-      expect(_userVersion(raw), 21);
+      expect(_userVersion(raw), 22);
     },
   );
 
@@ -329,17 +413,18 @@ void main() {
     await openAndMigrate();
 
     expect(_columnsOf(raw, 'proxy_groups'), contains('definition'));
-    expect(_userVersion(raw), 21);
+    expect(_userVersion(raw), 22);
   });
 
   test('a v6 user_version on the current proxy_groups still opens', () async {
+    _downgradeToV21(raw);
     raw.execute('PRAGMA user_version = 6');
     expect(_columnsOf(raw, 'proxy_groups'), contains('definition'));
 
     await openAndMigrate();
 
     expect(_columnsOf(raw, 'proxy_groups'), contains('definition'));
-    expect(_userVersion(raw), 21);
+    expect(_userVersion(raw), 22);
   });
 
   test(
@@ -363,7 +448,7 @@ void main() {
         _columnsOf(raw, 'clash_providers'),
         isNot(anyOf(contains('interval'), contains('filter'))),
       );
-      expect(_userVersion(raw), 21);
+      expect(_userVersion(raw), 22);
       expect(
         (await database.clashProvidersDao.query().get()).single.label,
         'Kept',
@@ -467,11 +552,11 @@ void main() {
     _downgradeToV9(raw);
     expect(_hasTable(raw, 'custom_proxies'), isFalse);
 
-    final database = await openAndMigrate();
+    await openAndMigrate();
 
     expect(_hasTable(raw, 'custom_proxies'), isTrue);
-    expect(_userVersion(raw), 21);
-    expect(await database.customProxiesDao.query().get(), isEmpty);
+    expect(_userVersion(raw), 22);
+    expect(raw.select('SELECT id FROM custom_proxies'), isEmpty);
   });
 
   test('the upgrade gives proxy_groups the definition column', () async {
@@ -481,7 +566,7 @@ void main() {
 
     expect(_columnsOf(raw, 'proxy_groups'), contains('definition'));
     expect(_columnsOf(raw, 'proxy_groups'), isNot(contains('url')));
-    expect(_userVersion(raw), 21);
+    expect(_userVersion(raw), 22);
   });
 
   test('the v17 upgrade renames overwrite_type and adds overrides', () async {
@@ -498,8 +583,12 @@ void main() {
       ),
     );
     expect(
-      (await database.profilesDao.query().get()).single.extendType,
-      ExtendType.script,
+      raw.select('SELECT extend_type FROM profiles').single['extend_type'],
+      'script',
+    );
+    expect(
+      (await database.profilesDao.query().get()).single.type,
+      ProfileType.file,
     );
   });
 
@@ -523,7 +612,10 @@ void main() {
       isEmpty,
     );
     expect(
-      (await database.customProxiesDao.query().get()).single.definition['name'],
+      (await database.readLegacyProfileData())
+          .customProxies
+          .single
+          .definition['name'],
       'App',
     );
   });
@@ -551,7 +643,7 @@ void main() {
 
     final database = await openAndMigrate();
 
-    expect(_userVersion(raw), 21);
+    expect(_userVersion(raw), 22);
     expect(_hasTable(raw, 'profile_rule_mapping'), isFalse);
     expect(
       {
@@ -578,13 +670,18 @@ void main() {
       },
       {(1, 11), (2, 10), (2, 11)},
     );
+    final legacyRules = (await database.readLegacyProfileData()).rules;
     expect(
-      (await database.rulesDao.queryProfileRules(1).get()).map(
-        (rule) => rule.id,
-      ),
+      [
+        for (final rule in legacyRules)
+          if (rule.profileId == 1) rule.id,
+      ],
       [20],
     );
-    expect(await database.rulesDao.queryProfileRules(2).get(), isEmpty);
+    expect([
+      for (final rule in legacyRules)
+        if (rule.profileId == 2) rule.id,
+    ], isEmpty);
   });
 
   test('a custom overwrite runs its subscription as it is', () async {
@@ -603,11 +700,13 @@ void main() {
       "('2_20_added', 2, 20, 'added', 'a0')",
     );
 
-    final database = await openAndMigrate();
+    await openAndMigrate();
 
-    expect(await database.rulesDao.queryProfileRules(2).get(), isEmpty);
+    expect(raw.select('SELECT id FROM rules WHERE profile_id = 2'), isEmpty);
     expect(
-      (await database.profilesDao.query().get()).single.matchTarget,
+      raw
+          .select('SELECT match_target FROM profiles WHERE id = 2')
+          .single['match_target'],
       isNull,
     );
     expect(raw.select('SELECT id FROM rules').map((row) => row['id']), [10]);
@@ -644,7 +743,10 @@ void main() {
 
     expect(raw.select('SELECT * FROM proxy_groups'), isEmpty);
     expect(
-      (await database.customProxiesDao.query().get()).single.definition['name'],
+      (await database.readLegacyProfileData())
+          .customProxies
+          .single
+          .definition['name'],
       'App',
     );
     final indexes = {
@@ -675,6 +777,7 @@ void main() {
   test(
     'a v10 user_version on the current schema keeps its custom profiles',
     () async {
+      _downgradeToV21(raw);
       raw.execute(
         'INSERT INTO profiles (id, type, label, url, extend_type, '
         'auto_update_duration_millis, auto_update, selected_map, unfold_set) '
@@ -696,14 +799,9 @@ void main() {
         (await database.profilesDao.query().get()).single.type,
         ProfileType.custom,
       );
-      expect(
-        (await database.proxyGroupsDao.query(3).get()).single.name,
-        'Proxy',
-      );
-      expect(
-        (await database.rulesDao.queryProfileRules(3).get()).single.ruleTarget,
-        'Proxy',
-      );
+      final legacy = await database.readLegacyProfileData();
+      expect(legacy.proxyGroups.single.name, 'Proxy');
+      expect(legacy.rules.single.ruleTarget, 'Proxy');
     },
   );
 
@@ -711,11 +809,11 @@ void main() {
     _downgradeToV10(raw);
     expect(_hasTable(raw, 'proxy_dialers'), isFalse);
 
-    final database = await openAndMigrate();
+    await openAndMigrate();
 
     expect(_hasTable(raw, 'proxy_dialers'), isTrue);
-    expect(_userVersion(raw), 21);
-    expect(await database.proxyDialersDao.query(1).get(), isEmpty);
+    expect(_userVersion(raw), 22);
+    expect(raw.select('SELECT profile_id FROM proxy_dialers'), isEmpty);
   });
 
   test('the v17 upgrade creates icon_sets', () async {
@@ -726,20 +824,21 @@ void main() {
 
     expect(_hasTable(raw, 'icon_sets'), isTrue);
     expect(_columnsOf(raw, 'icon_sets'), contains('last_update_time'));
-    expect(_userVersion(raw), 21);
+    expect(_userVersion(raw), 22);
     expect(await database.iconSetsDao.query().get(), isEmpty);
   });
 
   test(
     'the v17 upgrade adds last_update_time to an existing icon_sets',
     () async {
+      _downgradeToV21(raw);
       raw.execute('ALTER TABLE icon_sets DROP COLUMN last_update_time');
       raw.execute('PRAGMA user_version = 16');
 
       final database = await openAndMigrate();
 
       expect(_columnsOf(raw, 'icon_sets'), contains('last_update_time'));
-      expect(_userVersion(raw), 21);
+      expect(_userVersion(raw), 22);
       expect(await database.iconSetsDao.query().get(), isEmpty);
     },
   );
@@ -769,7 +868,7 @@ void main() {
           .single['definition'],
       '{}',
     );
-    final [auto, plain] = await database.proxyGroupsDao.query(3).get();
+    final [auto, plain] = (await database.readLegacyProfileData()).proxyGroups;
     expect(
       auto,
       const ProxyGroup(
@@ -820,7 +919,7 @@ void main() {
     final database = await openAndMigrate();
 
     expect(_columnsOf(raw, 'profiles'), contains('age_secret_key'));
-    expect(_userVersion(raw), 21);
+    expect(_userVersion(raw), 22);
     expect(
       (await database.profilesDao.query().get()).single.ageSecretKey,
       isEmpty,
@@ -838,9 +937,12 @@ void main() {
     final database = await openAndMigrate();
 
     expect(_columnsOf(raw, 'custom_proxies'), contains('empty_options'));
-    expect(_userVersion(raw), 21);
+    expect(_userVersion(raw), 22);
     expect(
-      (await database.customProxiesDao.query().get()).single.emptyOptions,
+      (await database.readLegacyProfileData())
+          .customProxies
+          .single
+          .emptyOptions,
       isEmpty,
     );
   });
@@ -848,6 +950,7 @@ void main() {
   test(
     'a v17 user_version with definition already present still opens',
     () async {
+      _downgradeToV21(raw);
       raw.execute(
         'INSERT INTO profiles (id, type, label, url, extend_type, '
         'auto_update_duration_millis, auto_update, selected_map, unfold_set) '
@@ -861,9 +964,9 @@ void main() {
 
       final database = await openAndMigrate();
 
-      expect(_userVersion(raw), 21);
+      expect(_userVersion(raw), 22);
       expect(
-        (await database.proxyGroupsDao.query(3).get()).single.hidden,
+        (await database.readLegacyProfileData()).proxyGroups.single.hidden,
         isTrue,
       );
     },
@@ -874,17 +977,71 @@ void main() {
 
     final database = await openAndMigrate();
 
-    expect(_userVersion(raw), 21);
+    expect(_userVersion(raw), 22);
     expect(await database.customSelect('SELECT * FROM rules').get(), isEmpty);
   });
 
-  test('opening a database already at v2 changes nothing', () async {
-    final before = _columnsOf(raw, 'rules');
+  test('opening a database already at v22 changes nothing', () async {
+    expect(_userVersion(raw), 22);
+    final before = _columnsOf(raw, 'profiles');
 
     await openAndMigrate();
 
-    expect(_columnsOf(raw, 'rules'), before);
-    expect(_userVersion(raw), 21);
-    expect(_hasTable(raw, 'proxy_groups'), isTrue);
+    expect(_columnsOf(raw, 'profiles'), before);
+    expect(_userVersion(raw), 22);
+    expect(_hasTable(raw, 'proxy_groups'), isFalse);
   });
+
+  test(
+    'a v21 database keeps its legacy rows for the startup conversion',
+    () async {
+      _downgradeToV21(raw);
+      raw.execute(
+        'INSERT INTO profiles (id, type, label, url, extend_type, '
+        'script_id, match_target, auto_update_duration_millis, auto_update, '
+        'selected_map, unfold_set, overrides) VALUES '
+        "(1, 'url', 'Sub', 'https://example.com/sub', 'script', NULL, NULL, "
+        "0, 0, '{}', '[]', NULL), "
+        "(2, 'custom', 'Mine', '', 'script', 9, 'Proxy', 0, 0, '{}', '[]', "
+        '\'{"dns":{"enable":true}}\')',
+      );
+      raw.execute(
+        'INSERT INTO proxy_groups (id, profile_id, name, type) '
+        "VALUES (1, 2, 'Proxy', 'select')",
+      );
+      raw.execute(
+        'INSERT INTO rules (id, profile_id, rule_action, rule_target) '
+        "VALUES (1, 2, 'MATCH', 'Proxy')",
+      );
+      raw.execute(
+        'INSERT INTO disabled_rules (profile_id, rule_id) VALUES (2, 1)',
+      );
+      raw.execute(
+        'INSERT INTO custom_proxies (id, definition) '
+        '''VALUES (1, '{"name":"App","type":"ss"}')''',
+      );
+      raw.execute(
+        'INSERT INTO proxy_dialers (profile_id, proxy_id, target) '
+        "VALUES (2, 1, 'Proxy')",
+      );
+
+      final database = await openAndMigrate();
+
+      expect(_userVersion(raw), 22);
+      expect(await database.hasLegacyProfileData, isTrue);
+      final profiles = await database.profilesDao.query().get();
+      expect(
+        profiles.map((profile) => profile.type),
+        unorderedEquals([ProfileType.url, ProfileType.custom]),
+      );
+      final legacy = await database.readLegacyProfileData();
+      expect(legacy.profiles, hasLength(2));
+      expect(legacy.proxyGroups.single.name, 'Proxy');
+      expect(legacy.rules.single.ruleTarget, 'Proxy');
+      expect(legacy.disabledRules.single.ruleId, 1);
+      expect(legacy.customProxies.single.definition['name'], 'App');
+      expect(legacy.proxyDialers.single.target, 'Proxy');
+      expect(legacy.profileOverrides[2]?.dns.enable, isTrue);
+    },
+  );
 }

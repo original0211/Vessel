@@ -231,6 +231,10 @@ abstract class MigrationData with _$MigrationData {
     @Default([]) List<ClashProvider> clashProviders,
     @Default([]) List<CustomProxy> customProxies,
     @Default([]) List<ProxyDialer> proxyDialers,
+
+    /// The overrides a pre-v22 row carried in its `overrides` column, keyed
+    /// by profile id; the profile model no longer holds them.
+    @Default({}) Map<int, ProfileOverrides> profileOverrides,
   }) = _MigrationData;
 }
 

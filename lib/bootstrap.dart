@@ -9,6 +9,7 @@ import 'package:kfusion/common/migration.dart';
 import 'package:kfusion/common/tray.dart';
 import 'package:kfusion/common/window.dart';
 import 'package:kfusion/database/database.dart';
+import 'package:kfusion/enum/enum.dart';
 import 'package:kfusion/l10n/l10n.dart';
 import 'package:kfusion/models/models.dart';
 import 'package:kfusion/providers/providers.dart';
@@ -31,6 +32,44 @@ class Bootstrap {
   }
 
   BootDecision _bootDecision = const BootDecision();
+
+  /// Schema 22 retires the per-profile tables: custom profiles a
+  /// pre-upgrade database still carries are materialized into file
+  /// profiles before the first profiles read, and the retired shape is
+  /// dropped behind them. A failure leaves the data in place for the
+  /// next launch rather than blocking startup on it.
+  Future<Config> _convertLegacyProfiles(
+    ProviderContainer container,
+    Config config,
+  ) async {
+    try {
+      final (:report, :currentProfileId) = await convertDatabaseCustomProfiles(
+        container.read(setupActionProvider.notifier),
+        patchConfig: config.patchClashConfig,
+        currentProfileId: config.currentProfileId,
+      );
+      if (!report.isEmpty) {
+        commonPrint.log(
+          'converted ${report.converted} legacy custom profiles'
+          '${report.failedLabels.isEmpty ? '' : '; failed: ${report.failedLabels}'}',
+        );
+      }
+      if (currentProfileId == config.currentProfileId) {
+        return config;
+      }
+      final converted = config.copyWith(currentProfileId: currentProfileId);
+      container.read(currentProfileIdProvider.notifier).value =
+          converted.currentProfileId;
+      await preferences.saveConfig(converted);
+      return converted;
+    } catch (e) {
+      commonPrint.log(
+        'legacy profile conversion failed: ${compactError(e)}',
+        logLevel: LogLevel.warning,
+      );
+      return config;
+    }
+  }
 
   Future<ProviderContainer> init(int version) async {
     globalState.appEnv = const String.fromEnvironment(
@@ -85,6 +124,7 @@ class Bootstrap {
       overrides: [...appStateOverrides, ...configOverrides],
     );
     globalState.container = container;
+    config = await _convertLegacyProfiles(container, config);
     final profiles = await database.profilesDao.query().get();
     container.read(profilesProvider.notifier).reorder(profiles);
     await AppLocalizations.load(

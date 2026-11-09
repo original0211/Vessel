@@ -49,16 +49,10 @@ Future<void> confirmDeleteProfile(
 ) async {
   final profilesAction = ref.read(profilesActionProvider.notifier);
   final appLocalizations = context.appLocalizations;
-  final users = await profilesAction.providerUsers(profile);
   final res = await dialogs.showMessage(
     title: appLocalizations.tip,
     message: TextSpan(
-      text: users.isEmpty
-          ? appLocalizations.deleteTip(appLocalizations.profile)
-          : appLocalizations.providerInUse(
-              profile.realLabel,
-              users.map((item) => item.realLabel).join(', '),
-            ),
+      text: appLocalizations.deleteTip(appLocalizations.profile),
     ),
     destructive: true,
     confirmText: appLocalizations.delete,

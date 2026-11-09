@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:archive/archive_io.dart';
-import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:kfusion/common/common.dart';
 import 'package:kfusion/common/migration.dart';
@@ -160,36 +159,13 @@ Future<MigrationData> readBackupArchive({
     if (schemaVersion > database.schemaVersion) {
       throw const BackupException(BackupFailure.newerVersion);
     }
-    final results = await Future.wait([
-      database.profilesDao.query().get(),
-      (database.select(database.rules)..orderBy([
-            (t) => OrderingTerm(expression: t.order, nulls: NullsOrder.last),
-          ]))
-          .map((item) => item.toRule())
-          .get(),
-      database
-          .select(database.disabledRules)
-          .map((item) => item.toDisabledRule())
-          .get(),
-      (database.select(database.proxyGroups)..orderBy([
-            (t) => OrderingTerm(expression: t.order, nulls: NullsOrder.last),
-          ]))
-          .map((item) => item.toProxyGroup())
-          .get(),
+    // Opening the snapshot runs its migrations, which leave the retired
+    // per-profile shape in place for exactly this read.
+    final (legacy, providers) = await (
+      database.readLegacyProfileData(),
       database.clashProvidersDao.query().get(),
-      database.customProxiesDao.query().get(),
-      database.proxyDialers.readable((row) => row.toProxyDialer()).get(),
-    ]);
-    return MigrationData(
-      configMap: configMap,
-      profiles: results[0].cast<Profile>(),
-      rules: results[1].cast<Rule>(),
-      disabledRules: results[2].cast<DisabledRule>(),
-      proxyGroups: results[3].cast<ProxyGroup>(),
-      clashProviders: results[4].cast<ClashProvider>(),
-      customProxies: results[5].cast<CustomProxy>(),
-      proxyDialers: results[6].cast<ProxyDialer>(),
-    );
+    ).wait;
+    return legacy.copyWith(configMap: configMap, clashProviders: providers);
   } finally {
     await database.close();
   }

@@ -709,8 +709,6 @@ extension RulePayloadErrorExt on RulePayloadError {
   }
 }
 
-enum ExtendType { standard, script }
-
 enum RuleTarget {
   DIRECT('DIRECT'),
   REJECT('REJECT'),

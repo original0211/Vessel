@@ -17,12 +17,8 @@ import 'package:riverpod/riverpod.dart';
 import '../helpers/app_paths.dart';
 import '../helpers/preferences.dart';
 
-Profile _profile(int id, String label) => Profile(
-  id: id,
-  label: label,
-  autoUpdateDuration: Duration.zero,
-  extendType: ExtendType.standard,
-);
+Profile _profile(int id, String label) =>
+    Profile(id: id, label: label, autoUpdateDuration: Duration.zero);
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -235,33 +231,23 @@ void main() {
       expect(added.existsSync(), isFalse);
     });
 
-    test('a backup carrying only proxy groups still writes them', () async {
-      await testDatabase.profiles.put(
-        const Profile(id: 7, autoUpdateDuration: Duration.zero).toCompanion(),
-      );
+    test('a backup carrying only providers still writes them', () async {
       final container = buildContainer();
 
       await actionOf(container).applyRestore(
         const MigrationData(
-          proxyGroups: [
-            ProxyGroup(
-              id: 1,
-              profileId: 7,
-              name: 'Selector',
-              type: GroupType.Selector,
-            ),
-          ],
+          clashProviders: [ClashProvider(id: 1, label: 'Set')],
         ),
         RestoreOption.onlyProfiles,
       );
 
-      final stored = await testDatabase.proxyGroupsDao.query(7).get();
+      final stored = await testDatabase.clashProvidersDao.query().get();
       expect(
-        stored.map((item) => item.name),
-        ['Selector'],
+        stored.map((item) => item.label),
+        ['Set'],
         reason:
-            'proxyGroups belongs in the guard that decides whether the batch '
-            'runs, not only in the batch body',
+            'clashProviders belongs in the guard that decides whether the '
+            'batch runs, not only in the batch body',
       );
     });
   });

@@ -1498,7 +1498,9 @@ void main() {
 
     test('a custom profile declares only the proxies and providers it names, '
         'without a profile file', () async {
-      final profile = Profile.custom(label: 'p');
+      final profile = Profile.normal(
+        label: 'p',
+      ).copyWith(type: ProfileType.custom);
       final core = _MockCoreHandlerInterface();
       const appProxy = CustomProxy(
         id: 11,
@@ -1605,7 +1607,9 @@ void main() {
     });
 
     test('a provider a custom profile names carries its options', () async {
-      final profile = Profile.custom(label: 'p');
+      final profile = Profile.normal(
+        label: 'p',
+      ).copyWith(type: ProfileType.custom);
       final core = _MockCoreHandlerInterface();
       final setupState = nullProfileSetupState.copyWith(
         profileId: profile.id,
@@ -1658,7 +1662,9 @@ void main() {
 
     test('a custom profile group taking in every proxy or provider declares '
         'none the profile does not name', () async {
-      final profile = Profile.custom(label: 'p');
+      final profile = Profile.normal(
+        label: 'p',
+      ).copyWith(type: ProfileType.custom);
       final core = _MockCoreHandlerInterface();
       final setupState = nullProfileSetupState.copyWith(
         profileId: profile.id,

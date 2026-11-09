@@ -66,19 +66,6 @@ class ProfilesAction extends _$ProfilesAction {
     ref.read(currentProfileIdProvider.notifier).value = profile.id;
   }
 
-  Future<List<Profile>> providerUsers(Profile profile) async {
-    if (profile.type == ProfileType.custom) {
-      return const [];
-    }
-    final users = await ref
-        .read(clashProvidersActionProvider.notifier)
-        .profilesReferencing(ProviderKind.proxy, profile.realLabel);
-    return [
-      for (final user in users)
-        if (user.id != profile.id) user,
-    ];
-  }
-
   Future<void> updateProfiles() async {
     for (final id in [
       for (final profile in ref.read(profilesProvider)) profile.id,

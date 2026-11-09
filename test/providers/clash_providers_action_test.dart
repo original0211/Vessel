@@ -130,92 +130,6 @@ void main() {
   ClashProvidersAction action() =>
       container.read(clashProvidersActionProvider.notifier);
 
-  Future<void> useIn(int owner, String name, {required int id}) async {
-    await testDatabase.proxyGroups.put(
-      ProxyGroup(
-        id: id,
-        name: 'Auto',
-        type: GroupType.URLTest,
-        use: [name],
-        order: 'a',
-      ).toCompanion(owner),
-    );
-  }
-
-  Future<void> ruleSetIn(int owner, String name, {required int id}) async {
-    await testDatabase.rulesDao.putRule(
-      Rule(
-        id: id,
-        ruleAction: RuleAction.RULE_SET,
-        ruleProvider: name,
-        ruleTarget: 'DIRECT',
-        order: 'a',
-      ),
-      profileId: owner,
-    );
-  }
-
-  Future<String?> ruleSetOf(int owner) async =>
-      (await testDatabase.rulesDao.queryProfileRules(owner).get())
-          .single
-          .ruleProvider;
-
-  test('renaming a rule set renames it in every custom profile', () async {
-    await ruleSetIn(profileId, 'Ad block', id: 30);
-    await ruleSetIn(otherCustomId, 'Ad block', id: 31);
-    await ruleSetIn(standardProfileId, 'Ad block', id: 32);
-    container
-        .read(profilesProvider.notifier)
-        .updateProfile(
-          otherCustomId,
-          (profile) => profile.copyWith(
-            overrides: const ProfileOverrides(
-              sniffer: Sniffer(forceDomain: ['rule-set:Ad block']),
-              snifferOverrideKeys: {SnifferOverrideKey.forceDomain},
-            ),
-          ),
-        );
-    await testDatabase.clashProvidersDao.putAll([rules.toCompanion()]);
-    await pumpEventQueue();
-
-    await action().putProvider(
-      rules.copyWith(label: 'Renamed'),
-      previous: rules,
-    );
-    await pumpEventQueue();
-
-    expect(await ruleSetOf(profileId), 'Renamed');
-    expect(await ruleSetOf(otherCustomId), 'Renamed');
-    expect(await ruleSetOf(standardProfileId), 'Ad block');
-    expect(
-      container
-          .read(profilesProvider)
-          .getProfile(otherCustomId)!
-          .overrides
-          .sniffer
-          .forceDomain,
-      ['rule-set:Renamed'],
-    );
-  });
-
-  test('a rename follows the custom profiles and leaves a standard extension '
-      'naming its own set', () async {
-    await testDatabase.clashProvidersDao.putAll([rules.toCompanion()]);
-    await ruleSetIn(profileId, 'Ad block', id: 30);
-    await ruleSetIn(standardProfileId, 'Ad block', id: 31);
-    await pumpEventQueue();
-
-    final saved = await action().putProvider(
-      rules.copyWith(label: 'Renamed "rules"'),
-      previous: rules,
-    );
-    await pumpEventQueue();
-
-    expect(saved.label, 'Renamed "rules"');
-    expect(await ruleSetOf(profileId), 'Renamed "rules"');
-    expect(await ruleSetOf(standardProfileId), 'Ad block');
-  });
-
   Future<ClashProvider> stored(int id) async =>
       (await testDatabase.clashProvidersDao.query().get()).singleWhere(
         (provider) => provider.id == id,
@@ -248,7 +162,6 @@ void main() {
   });
 
   test('content the Core rejects leaves the saved set as it was', () async {
-    await ruleSetIn(profileId, 'Ad block', id: 30);
     File(await rules.path)
       ..createSync(recursive: true)
       ..writeAsStringSync('example.com');
@@ -294,7 +207,6 @@ void main() {
       label: 'Remote',
       url: 'https://example.com/r.list',
     );
-    await ruleSetIn(profileId, 'Remote', id: 30);
 
     await action().putProvider(remote);
     await pumpEventQueue();
@@ -323,7 +235,6 @@ void main() {
     late Future<ClashProvider> updating;
 
     setUp(() async {
-      await ruleSetIn(profileId, 'Remote', id: 30);
       await action().putProvider(remote);
       await pumpEventQueue();
       saved = await stored(remote.id);
@@ -347,7 +258,6 @@ void main() {
       await download();
 
       expect((await stored(remote.id)).label, 'Renamed');
-      expect(await ruleSetOf(profileId), 'Renamed');
     });
 
     test('drops the download of the url it no longer has', () async {
@@ -414,7 +324,6 @@ void main() {
       format: RuleProviderFormat.text,
     );
     await testDatabase.clashProvidersDao.putAll([remote.toCompanion()]);
-    await ruleSetIn(profileId, 'Remote', id: 30);
 
     await action().syncRemote(remote);
     await pumpEventQueue();
@@ -471,38 +380,5 @@ void main() {
       ),
       isNull,
     );
-  });
-
-  group('a profile as a provider', () {
-    const home = Profile(
-      id: 3,
-      label: 'Home',
-      autoUpdateDuration: Duration.zero,
-    );
-
-    setUp(() async {
-      container.read(profilesProvider.notifier).put(home);
-      await useIn(profileId, 'Home', id: 20);
-      await useIn(otherCustomId, 'Home', id: 21);
-    });
-
-    ProfilesAction profiles() =>
-        container.read(profilesActionProvider.notifier);
-
-    test('is used by the custom profiles its label reaches', () async {
-      expect(
-        (await profiles().providerUsers(home)).map((profile) => profile.id),
-        [profileId, otherCustomId],
-      );
-    });
-
-    test('a custom profile is never one, even under a label in use', () async {
-      final custom = container
-          .read(profilesProvider)
-          .singleWhere((profile) => profile.id == profileId);
-      await useIn(otherCustomId, custom.realLabel, id: 22);
-
-      expect(await profiles().providerUsers(custom), isEmpty);
-    });
   });
 }

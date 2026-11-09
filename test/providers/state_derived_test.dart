@@ -767,7 +767,7 @@ void main() {
   });
 
   test('profile and extend providers expose defaults', () {
-    final profile = Profile.normal().copyWith(extendType: ExtendType.script);
+    final profile = Profile.normal();
     _profiles(container).replace([profile]);
     expect(container.read(profileProvider(profile.id)), profile);
 

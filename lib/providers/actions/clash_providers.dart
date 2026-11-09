@@ -143,22 +143,6 @@ class ClashProvidersAction extends _$ClashProvidersAction {
     }
   }
 
-  Future<List<Profile>> profilesReferencing(
-    ProviderKind kind,
-    String name,
-  ) async {
-    final ids = switch (kind) {
-      ProviderKind.proxy => await database.proxyGroupsDao.profileIdsUsing(name),
-      ProviderKind.rule => await database.rulesDao.profileIdsUsingRuleProvider(
-        name,
-      ),
-    };
-    return [
-      for (final profile in ref.read(profilesProvider))
-        if (ids.contains(profile.id)) profile,
-    ];
-  }
-
   Future<void> _clearCache(ClashProvider provider) async {
     await File(await provider.path).safeDelete();
     await File(await provider.compiledPath).safeDelete();

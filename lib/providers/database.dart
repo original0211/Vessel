@@ -194,89 +194,13 @@ class Profiles extends _$Profiles {
 
   Profile labeled(Profile profile) => state.optimizeLabel(profile);
 
-  /// A new provider label follows into custom profiles whatever path set it.
   void put(Profile profile) {
     final newProfile = labeled(profile);
-    final previousLabel = state.getProfile(profile.id)?.realLabel;
-    var next = state.copyAndPut(newProfile, (item) => item.id == newProfile.id);
-    if (newProfile.type == ProfileType.custom ||
-        previousLabel == null ||
-        previousLabel == newProfile.realLabel) {
-      _optimistic(next, () => _serial(() => _putLatest([newProfile.id])));
-      return;
-    }
-    final names = {previousLabel: newProfile.realLabel};
-    final users = [
-      for (final item in next)
-        if (item.type == ProfileType.custom)
-          if (item.copyWith(
-                overrides: item.overrides.renamedProxyProviders(names),
-              )
-              case final user when user != item)
-            user,
-    ];
-    for (final user in users) {
-      next = next.copyAndPut(user, (item) => item.id == user.id);
-    }
-    _optimistic(
-      next,
-      () => _serial(
-        () => database.transaction(() async {
-          await database.proxyGroupsDao.renameUse(
-            await database.profilesDao.customIds().get(),
-            oldName: previousLabel,
-            newName: newProfile.realLabel,
-          );
-          await _putLatest([for (final user in users) user.id, newProfile.id]);
-        }),
-      ),
+    final next = state.copyAndPut(
+      newProfile,
+      (item) => item.id == newProfile.id,
     );
-  }
-
-  /// Applies the changes [body] returns to the state too, so a put landing
-  /// before the rows read back writes them rather than the profile as it was.
-  Future<void> rewriteCustom(
-    Future<Map<int, Profile Function(Profile profile)>> Function() body,
-  ) {
-    return _writes.track(() async {
-      (List<Profile>, List<Profile>)? applied;
-      try {
-        await _serial(
-          () => database.transaction(() async {
-            final changes = await body();
-            final current = state;
-            final next = [
-              for (final item in current) changes[item.id]?.call(item) ?? item,
-            ];
-            applied = (current, next);
-            state = next;
-            for (final (index, item) in next.indexed) {
-              if (item != current[index]) {
-                await database.profiles.put(item.toCompanion());
-              }
-            }
-            for (final MapEntry(key: id, value: change) in changes.entries) {
-              if (current.getProfile(id) != null) {
-                continue;
-              }
-              if (await database.profilesDao.get(id) case final row?) {
-                if (change(row) case final changed when changed != row) {
-                  await database.profiles.put(changed.toCompanion());
-                }
-              }
-            }
-          }),
-        );
-      } catch (e, s) {
-        if (applied case (
-          final previous,
-          final next,
-        ) when identical(state, next)) {
-          state = previous;
-        }
-        Error.throwWithStackTrace(e, s);
-      }
-    });
+    _optimistic(next, () => _serial(() => _putLatest([newProfile.id])));
   }
 
   Future<void> del(int id) {
@@ -332,40 +256,12 @@ class ClashProviders extends _$ClashProviders
   void put(ClashProvider provider) {
     final next = List<ClashProvider>.from(value);
     final index = next.indexWhere((item) => item.id == provider.id);
-    final renamedFrom = index != -1 && next[index].label != provider.label
-        ? next[index].label
-        : null;
     if (index != -1) {
       next[index] = provider;
     } else {
       next.add(provider);
     }
-    if (renamedFrom == null) {
-      optimistic(
-        next,
-        () => database.clashProviders.put(provider.toCompanion()),
-      );
-      return;
-    }
-    final names = {renamedFrom: provider.label};
-    optimistic(
-      next,
-      () => ref.read(profilesProvider.notifier).rewriteCustom(() async {
-        final profileIds = await database.profilesDao.customIds().get();
-        await database.rulesDao.renameRuleProvider(
-          profileIds,
-          oldName: renamedFrom,
-          newName: provider.label,
-        );
-        await database.clashProviders.put(provider.toCompanion());
-        return {
-          for (final id in profileIds)
-            id: (profile) => profile.copyWith(
-              overrides: profile.overrides.renamedRuleSets(names),
-            ),
-        };
-      }),
-    );
+    optimistic(next, () => database.clashProviders.put(provider.toCompanion()));
   }
 
   void del(int id) {
@@ -448,9 +344,4 @@ class IconSets extends _$IconSets with AsyncNotifierMixin, OptimisticMixin {
   ) {
     return !iconSetListEquality.equals(previous.value, next.value);
   }
-}
-
-@riverpod
-Stream<int> profileGroupsCount(Ref ref, int profileId) {
-  return database.proxyGroupsDao.profileGroupsCount(profileId).watchSingle();
 }

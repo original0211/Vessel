@@ -56,26 +56,24 @@ Profile _customProfile(int id, String label) => Profile(
   label: label,
   autoUpdate: false,
   autoUpdateDuration: defaultUpdateDuration,
-  extendType: ExtendType.script,
-  scriptId: 42,
-  matchTarget: 'fixture',
-  overrides: const ProfileOverrides(
-    dns: Dns(
-      enable: true,
-      enhancedMode: DnsMode.fakeIp,
-      fakeIpRange: '198.18.0.1/16',
-      nameserver: ['https://dns.example.invalid/dns-query'],
-    ),
-    dnsOverrideKeys: {
-      DnsOverrideKey.enable,
-      DnsOverrideKey.enhancedMode,
-      DnsOverrideKey.fakeIpRange,
-      DnsOverrideKey.nameserver,
-    },
-    tun: ProfileTun(mtu: 1400),
-    tunOverrideKeys: {TunOverrideKey.mtu},
-    proxyProviders: {'b6-provider': ProxyProviderOptions(filter: 'Node')},
+);
+
+const _overrides = ProfileOverrides(
+  dns: Dns(
+    enable: true,
+    enhancedMode: DnsMode.fakeIp,
+    fakeIpRange: '198.18.0.1/16',
+    nameserver: ['https://dns.example.invalid/dns-query'],
   ),
+  dnsOverrideKeys: {
+    DnsOverrideKey.enable,
+    DnsOverrideKey.enhancedMode,
+    DnsOverrideKey.fakeIpRange,
+    DnsOverrideKey.nameserver,
+  },
+  tun: ProfileTun(mtu: 1400),
+  tunOverrideKeys: {TunOverrideKey.mtu},
+  proxyProviders: {'b6-provider': ProxyProviderOptions(filter: 'Node')},
 );
 
 const _proxies = [
@@ -109,6 +107,7 @@ MigrationData _fixture({bool withBad = false}) => MigrationData(
     _customProfile(_customId, 'b6-custom'),
     if (withBad) _customProfile(_badId, 'b6-bad'),
   ],
+  profileOverrides: {_customId: _overrides, if (withBad) _badId: _overrides},
   rules: [
     const Rule(
       id: 7301,
@@ -262,21 +261,13 @@ void main() {
     );
     expect(converted.type, ProfileType.file);
     expect(converted.id, isNot(_customId));
-    expect(converted.scriptId, isNull);
-    expect(converted.matchTarget, isNull);
-    expect(converted.extendType, ExtendType.standard);
-    expect(converted.overrides, const ProfileOverrides());
     final snapshot = File(await appPath.getProfilePath('${converted.id}'));
     expect(await snapshot.readAsString(), original);
     expect(
       stored.singleWhere((profile) => profile.id == 7101).type,
       ProfileType.url,
     );
-    expect(await db.rulesDao.queryProfileRules(_customId).get(), isEmpty);
-    expect(await db.select(db.disabledRules).get(), isEmpty);
-    expect(await db.proxyGroupsDao.query(_customId).get(), isEmpty);
-    expect(await db.proxyDialersDao.query(_customId).get(), isEmpty);
-    expect(await db.customProxiesDao.query().get(), isEmpty);
+    expect(stored, hasLength(2));
   });
 
   test('a profile whose rendering fails keeps its data, is named, and does '
@@ -302,11 +293,30 @@ void main() {
     final stored = await db.profilesDao.query().get();
     final kept = stored.singleWhere((profile) => profile.id == _badId);
     expect(kept.type, ProfileType.custom);
-    expect(kept.scriptId, 42);
-    expect(await db.rulesDao.queryProfileRules(_badId).get(), hasLength(1));
-    expect(await db.proxyGroupsDao.query(_badId).get(), hasLength(1));
-    expect(await db.customProxiesDao.query().get(), hasLength(2));
     expect(container.read(currentProfileIdProvider), isNull);
+
+    // The failed profile's rows stay in the data the converter hands back;
+    // only the backup file carries them from here on.
+    final result = await materializeRestoredCustomProfiles(
+      container.read(setupActionProvider.notifier),
+      _fixture(withBad: true),
+      patchConfig: _patch(),
+      stagingDirPath: null,
+    );
+    expect(result.report.failedLabels, ['b6-bad']);
+    expect(
+      result.data.rules.where((rule) => rule.profileId == _badId),
+      hasLength(1),
+    );
+    expect(
+      result.data.proxyGroups.where((group) => group.profileId == _badId),
+      hasLength(1),
+    );
+    expect(result.data.customProxies, hasLength(2));
+    expect(
+      result.data.profiles.singleWhere((profile) => profile.id == _badId).type,
+      ProfileType.custom,
+    );
     final converted = stored.singleWhere(
       (profile) => profile.label == 'b6-custom',
     );

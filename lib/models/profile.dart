@@ -5,8 +5,6 @@ import 'package:kfusion/common/common.dart';
 import 'package:kfusion/enum/enum.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'clash_config.dart';
-
 part 'generated/profile.freezed.dart';
 part 'generated/profile.g.dart';
 
@@ -75,13 +73,7 @@ abstract class Profile with _$Profile {
     @Default(true) bool autoUpdate,
     @Default({}) Map<String, String> selectedMap,
     @Default({}) Set<String> unfoldSet,
-    @Default(ExtendType.standard) ExtendType extendType,
-    int? scriptId,
-    String? matchTarget,
     int? order,
-    @Default(ProfileOverrides())
-    @JsonKey(fromJson: ProfileOverrides.safeFromJson)
-    ProfileOverrides overrides,
   }) = _Profile;
 
   factory Profile.fromJson(Map<String, Object?> json) =>
@@ -94,17 +86,6 @@ abstract class Profile with _$Profile {
       label: label ?? '',
       url: url,
       id: id,
-      autoUpdateDuration: defaultUpdateDuration,
-    );
-  }
-
-  factory Profile.custom({String? label}) {
-    return Profile(
-      id: snowflake.id,
-      type: ProfileType.custom,
-      label: label ?? '',
-      lastUpdateDate: DateTime.now(),
-      autoUpdate: false,
       autoUpdateDuration: defaultUpdateDuration,
     );
   }

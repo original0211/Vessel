@@ -94,7 +94,7 @@ class BackupAction extends _$BackupAction {
         ? null
         : Config.fromJson(source.configMap!);
     final (:data, :report) = await materializeRestoredCustomProfiles(
-      ref,
+      ref.read(setupActionProvider.notifier),
       source,
       patchConfig:
           sourceConfig?.patchClashConfig ?? ref.read(patchClashConfigProvider),
@@ -111,12 +111,7 @@ class BackupAction extends _$BackupAction {
     try {
       await database.restore(
         data.profiles,
-        data.rules,
-        data.disabledRules,
-        data.proxyGroups,
         clashProviders: data.clashProviders,
-        customProxies: data.customProxies,
-        proxyDialers: data.proxyDialers,
         isOverride: false,
       );
     } catch (_) {

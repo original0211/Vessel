@@ -296,8 +296,7 @@ void main() {
           targetPath: target.path,
         );
 
-        expect(data.profiles.single.extendType, ExtendType.standard);
-        expect(data.profiles.single.scriptId, isNull);
+        expect(data.profiles.single.type, ProfileType.file);
       },
     );
 
@@ -318,7 +317,7 @@ void main() {
         targetPath: target.path,
       );
 
-      expect(data.profiles.single.extendType, ExtendType.standard);
+      expect(data.profiles.single.type, ProfileType.file);
     });
 
     test('remaps currentProfileId and nulls it when there is none', () async {
@@ -415,9 +414,25 @@ void main() {
           autoUpdateDuration: Duration.zero,
         ).toCompanion(),
       ]);
-      await database.rulesDao.putRule(
-        const Rule(id: 3, content: 'example.com', order: 'a'),
-        profileId: 1,
+      // The seed carries a rules row in the retired physical shape an old
+      // backup holds, so the restore read path stays exercised.
+      await database.customStatement(
+        'CREATE TABLE IF NOT EXISTS "rules" ('
+        '"id" INTEGER NOT NULL, '
+        '"profile_id" INTEGER NULL, '
+        '"rule_action" TEXT NOT NULL, '
+        '"content" TEXT NULL, '
+        '"rule_target" TEXT NULL, '
+        '"rule_provider" TEXT NULL, '
+        '"sub_rule" TEXT NULL, '
+        '"no_resolve" INTEGER NOT NULL DEFAULT 0, '
+        '"src" INTEGER NOT NULL DEFAULT 0, '
+        '"order" TEXT NULL, '
+        'PRIMARY KEY ("id"))',
+      );
+      await database.customStatement(
+        'INSERT INTO rules (id, profile_id, rule_action, content, "order") '
+        "VALUES (3, 1, 'DOMAIN', 'example.com', 'a')",
       );
       await database.clashProvidersDao.putAll([localProvider.toCompanion()]);
       await database.close();

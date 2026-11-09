@@ -480,10 +480,6 @@ Future<MigrationData> migrateLegacyConfig({
     }
     final profileId = idMap.updateCacheValue(rawId, () => snowflake.id);
     rawProfile['id'] = profileId;
-    final overwrite = rawProfile['overwrite'] as Map?;
-    if (overwrite != null) {
-      rawProfile['extendType'] = ExtendType.standard.name;
-    }
     final rawUrl = rawProfile['url'];
     rawProfile['type'] = rawUrl is String && rawUrl.isNotEmpty ? 'url' : 'file';
 

@@ -50,13 +50,7 @@ class _AppMigrationStore implements MigrationStore {
 
   @override
   Future<void> restore(MigrationData data) {
-    return database.restore(
-      data.profiles,
-      data.rules,
-      data.disabledRules,
-      data.proxyGroups,
-      clashProviders: data.clashProviders,
-    );
+    return database.restore(data.profiles, clashProviders: data.clashProviders);
   }
 
   @override
