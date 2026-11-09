@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.1.1 (2026-11-09)
+
+**Bug Fixes**
+
+- The bundled core steps up to the fork build based on mihomo v1.19.33, which carries the CVE-2026-97031 fix in its TLS stack (the metacubex/tls fork moves from v0.1.8 to v0.1.9). The same core step steadies a few edges: queued DNS-over-HTTPS dialling is capped, fake-IP assignments survive a reload, dialer-proxy loop checks are bounded instead of quadratic, and URL tests no longer report sub-millisecond failures that never happened. (f2a721f)
+
 ## v1.1.0 (2026-11-09)
 
 **Features**
