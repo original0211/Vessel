@@ -285,7 +285,7 @@ the tag is what `render release` reads. CI never writes back to the repository; 
 `changelog.json` may be edited by hand as long as no derivable entry disappears and every entry still points at a commit
 inside that version's range.
 
-Entries at or below `v1.2.0` are frozen: their tags are retired, so the sections live under the `<!-- changelog:frozen -->` marker
+Entries at or below `v1.3.0` are frozen: their tags are retired, so the sections live under the `<!-- changelog:frozen -->` marker
 in `CHANGELOG.md`, are kept verbatim and are never re-derived or regenerated.
 
 `verify` compares a version only when its tag is reachable from `HEAD`, because that is the same scope the builder walks
