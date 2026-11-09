@@ -156,56 +156,53 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m54(label) => "Значение «${label}» должно быть числом";
 
-  static String m55(label, profiles) =>
-      "«${label}» всё ещё используется профилями: ${profiles}. После удаления они будут работать неправильно. Вы уверены, что хотите удалить его?";
+  static String m55(name, count) => "${name} и другие (${count} прокси)";
 
-  static String m56(name, count) => "${name} и другие (${count} прокси)";
-
-  static String m57(count, label) =>
+  static String m56(count, label) =>
       "${Intl.plural(count, one: '${label} группа прокси', few: '${label} группы прокси', many: '${label} групп прокси', other: '${label} группы прокси')}";
 
-  static String m58(count) =>
+  static String m57(count) =>
       "Преобразовано пользовательских профилей в обычные: ${count} (эффекты закреплены в файле профиля)";
 
-  static String m59(names) =>
+  static String m58(names) =>
       "Не удалось преобразовать: ${names}. Они сохранены без изменений и не применены.";
 
-  static String m60(appName) => "${appName} (Безопасный режим)";
+  static String m59(appName) => "${appName} (Безопасный режим)";
 
-  static String m61(count) =>
+  static String m60(count) =>
       "${Intl.plural(count, one: '${count} секунда', few: '${count} секунды', many: '${count} секунд', other: '${count} секунды')}";
 
-  static String m62(link) => "Не удалось прочитать прокси из ${link}";
+  static String m61(link) => "Не удалось прочитать прокси из ${link}";
 
-  static String m63(member) =>
+  static String m62(member) =>
       "Участник ${member} недоступен в sing-box и был исключён";
 
-  static String m64(type) =>
+  static String m63(type) =>
       "Тип группы ${type} не переносится; остаются только select и url-test";
 
-  static String m65(type) => "Протокол ${type} не поддерживается в sing-box";
+  static String m64(type) => "Протокол ${type} не поддерживается в sing-box";
 
-  static String m66(count) =>
+  static String m65(count) =>
       "Правила подписки (${count}) не перенесены; применяется встроенный шаблон";
 
-  static String m67(count) => "Деградаций sing-box: ${count}";
+  static String m66(count) => "Деградаций sing-box: ${count}";
 
-  static String m68(count) =>
+  static String m67(count) =>
       "В этом профиле ${count} элементов деградируют в sing-box; список называет каждый.";
 
-  static String m69(percent) => "Загрузка sing-box… ${percent}%";
+  static String m68(percent) => "Загрузка sing-box… ${percent}%";
 
-  static String m70(version, path) =>
+  static String m69(version, path) =>
       "Управляемый приложением бинарный файл (версия ${version}): ${path}";
 
-  static String m71(label) => "«${label}» — только одно значение";
+  static String m70(label) => "«${label}» — только одно значение";
 
-  static String m72(label) => "Значение «${label}» должно быть URL";
+  static String m71(label) => "Значение «${label}» должно быть URL";
 
-  static String m73(count) =>
+  static String m72(count) =>
       "${Intl.plural(count, one: '${count} год назад', few: '${count} года назад', many: '${count} лет назад', other: '${count} года назад')}";
 
-  static String m74(count) =>
+  static String m73(count) =>
       "${Intl.plural(count, one: '${count} г. назад', few: '${count} г. назад', many: '${count} л. назад', other: '${count} г. назад')}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
@@ -1185,11 +1182,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "project": MessageLookupByLibrary.simpleMessage("Проект"),
     "protocol": MessageLookupByLibrary.simpleMessage("Протокол"),
     "protocolParam": MessageLookupByLibrary.simpleMessage("Параметр протокола"),
-    "providerInUse": m55,
     "proxies": MessageLookupByLibrary.simpleMessage("Прокси"),
-    "proxiesProfileLabel": m56,
+    "proxiesProfileLabel": m55,
     "proxyGroup": MessageLookupByLibrary.simpleMessage("Группа прокси"),
-    "proxyGroupsCount": m57,
+    "proxyGroupsCount": m56,
     "proxyProviders": MessageLookupByLibrary.simpleMessage("Провайдеры прокси"),
     "proxySettings": MessageLookupByLibrary.simpleMessage(
       "Прокси и тест скорости",
@@ -1263,7 +1259,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "restoreAllData": MessageLookupByLibrary.simpleMessage(
       "Восстановить все данные",
     ),
-    "restoreConvertedProfiles": m58,
+    "restoreConvertedProfiles": m57,
     "restoreDefaults": MessageLookupByLibrary.simpleMessage(
       "Восстановить по умолчанию",
     ),
@@ -1273,7 +1269,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "restoreSuccess": MessageLookupByLibrary.simpleMessage(
       "Восстановление выполнено",
     ),
-    "restoreUnconvertedProfiles": m59,
+    "restoreUnconvertedProfiles": m58,
     "result": MessageLookupByLibrary.simpleMessage("Результат"),
     "retry": MessageLookupByLibrary.simpleMessage("Повторить"),
     "routeAddress": MessageLookupByLibrary.simpleMessage("Адреса маршрутов"),
@@ -1433,13 +1429,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "Конфигурация выполнения",
     ),
     "safeMode": MessageLookupByLibrary.simpleMessage("Безопасный режим"),
-    "safeModeAppTitle": m60,
+    "safeModeAppTitle": m59,
     "saturation": MessageLookupByLibrary.simpleMessage("Насыщенность"),
     "save": MessageLookupByLibrary.simpleMessage("Сохранить"),
     "saveChanges": MessageLookupByLibrary.simpleMessage("Сохранить изменения?"),
     "search": MessageLookupByLibrary.simpleMessage("Поиск"),
     "seconds": MessageLookupByLibrary.simpleMessage("секунд"),
-    "secondsCount": m61,
+    "secondsCount": m60,
     "selectAll": MessageLookupByLibrary.simpleMessage("Выбрать всё"),
     "selected": MessageLookupByLibrary.simpleMessage("Выбрано"),
     "server": MessageLookupByLibrary.simpleMessage("Сервер"),
@@ -1447,7 +1443,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "serviceFailed": MessageLookupByLibrary.simpleMessage("Ошибка проверки"),
     "serviceStatus": MessageLookupByLibrary.simpleMessage("Состояние сервисов"),
     "settings": MessageLookupByLibrary.simpleMessage("Настройки"),
-    "shareLinkUnreadable": m62,
+    "shareLinkUnreadable": m61,
     "shareLinksInvalid": MessageLookupByLibrary.simpleMessage(
       "Не удалось прочитать прокси из ссылок",
     ),
@@ -1505,7 +1501,7 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Все участники недоступны, поэтому группа удалена",
         ),
-    "singBoxDegradationReasonGroupMember": m63,
+    "singBoxDegradationReasonGroupMember": m62,
     "singBoxDegradationReasonGroupMemberReject":
         MessageLookupByLibrary.simpleMessage(
           "Для REJECT нет исходящего соединения sing-box, он был исключён",
@@ -1513,18 +1509,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "singBoxDegradationReasonGroupNested": MessageLookupByLibrary.simpleMessage(
       "Участники включают другие группы; вложенные группы не переносятся",
     ),
-    "singBoxDegradationReasonGroupType": m64,
-    "singBoxDegradationReasonNodeProtocol": m65,
+    "singBoxDegradationReasonGroupType": m63,
+    "singBoxDegradationReasonNodeProtocol": m64,
     "singBoxDegradationReasonNodeUnusable":
         MessageLookupByLibrary.simpleMessage(
           "Не хватает поля, нужного sing-box (локальный адрес WireGuard)",
         ),
-    "singBoxDegradationReasonRouting": m66,
+    "singBoxDegradationReasonRouting": m65,
     "singBoxDegradationsAllCarried": MessageLookupByLibrary.simpleMessage(
       "Всё переносится в sing-box",
     ),
-    "singBoxDegradationsCount": m67,
-    "singBoxDegradationsImportSummary": m68,
+    "singBoxDegradationsCount": m66,
+    "singBoxDegradationsImportSummary": m67,
     "singBoxDegradationsImportTitle": MessageLookupByLibrary.simpleMessage(
       "Импортировано, с деградациями sing-box",
     ),
@@ -1544,11 +1540,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "singBoxDownloadRetry": MessageLookupByLibrary.simpleMessage(
       "Повторить загрузку",
     ),
-    "singBoxDownloading": m69,
-    "singBoxManagedBinary": m70,
+    "singBoxDownloading": m68,
+    "singBoxManagedBinary": m69,
     "singleAdd": MessageLookupByLibrary.simpleMessage("По одному"),
     "singleImport": MessageLookupByLibrary.simpleMessage("По одному"),
-    "singleValueTip": m71,
+    "singleValueTip": m70,
     "skipCertVerify": MessageLookupByLibrary.simpleMessage(
       "Пропускать проверку сертификата",
     ),
@@ -1676,7 +1672,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "update": MessageLookupByLibrary.simpleMessage("Обновить"),
     "upload": MessageLookupByLibrary.simpleMessage("Отдача"),
     "url": MessageLookupByLibrary.simpleMessage("URL"),
-    "urlTip": m72,
+    "urlTip": m71,
     "useHosts": MessageLookupByLibrary.simpleMessage("Использовать hosts"),
     "useSystemHosts": MessageLookupByLibrary.simpleMessage(
       "Использовать системный hosts",
@@ -1700,8 +1696,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "writeToSystem": MessageLookupByLibrary.simpleMessage(
       "Записывать в систему",
     ),
-    "yearsAgo": m73,
-    "yearsAgoShort": m74,
+    "yearsAgo": m72,
+    "yearsAgoShort": m73,
     "zhCN": MessageLookupByLibrary.simpleMessage("Упрощённый китайский"),
   };
 }

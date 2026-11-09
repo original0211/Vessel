@@ -645,7 +645,6 @@
   "customIssueMissingDialer": "El proxy de marcación {name} no existe",
   "customIssueDialerLoop": "{proxy} marca a través de {target}, que lleva de vuelta a {proxy}, por lo que la marcación entra en bucle",
   "dialerProxyLoopStopped": "La marcación a través de {name} lleva de vuelta al proxy que lo usa, por lo que se detuvo la conexión",
-  "providerInUse": "{label} sigue en uso en {profiles}, que dejarán de funcionar correctamente si se elimina. ¿Seguro que quieres eliminarlo?",
   "fontSize": "Tamaño",
   "large": "Grande",
   "extraLarge": "Muy grande",

@@ -122,43 +122,10 @@ List<String> _ruleSetsIn(String entry, {bool policyKey = false}) =>
       null => const [],
     };
 
-String _renamedRuleSetsIn(
-  String entry,
-  Map<String, String> names, {
-  bool policyKey = false,
-}) {
-  final range = _ruleSetRange(entry, policyKey: policyKey);
-  if (range == null) {
-    return entry;
-  }
-  final (start, end) = range;
-  return entry.replaceRange(
-    start,
-    end,
-    [
-      for (final name in entry.substring(start, end).split(','))
-        names[name] ?? name,
-    ].join(','),
-  );
-}
-
 final _nestedRuleSet = RegExp(
   r'(\(\s*RULE-SET\s*,\s*)([^,()]+?)(\s*[,)])',
   caseSensitive: false,
 );
-
-final _leadingRuleSet = RegExp(
-  r'^(\s*RULE-SET\s*,\s*)([^,]+?)(\s*(?:,|$))',
-  caseSensitive: false,
-);
-
-String _renamedRuleText(String text, Map<String, String> names) {
-  String rename(Match match) =>
-      '${match[1]}${names[match[2]] ?? match[2]}${match[3]}';
-  return text
-      .replaceFirstMapped(_leadingRuleSet, rename)
-      .replaceAllMapped(_nestedRuleSet, rename);
-}
 
 extension RuleReferences on Rule {
   /// mihomo's ProviderNames: an undeclared one rejects the whole config.
@@ -281,39 +248,6 @@ extension ProfileOverridesReferences on ProfileOverrides {
       ntp: ntp.copyWith(dialerProxy: names[ntp.dialerProxy] ?? ntp.dialerProxy),
     );
   }
-
-  ProfileOverrides renamedRuleSets(Map<String, String> names) {
-    Map<String, String> policy(Map<String, String> map) => {
-      for (final MapEntry(:key, :value) in map.entries)
-        _renamedRuleSetsIn(key, names, policyKey: true): value,
-    };
-    List<String> entries(List<String> list) => [
-      for (final entry in list) _renamedRuleSetsIn(entry, names),
-    ];
-    return copyWith(
-      dns: dns.copyWith(
-        nameserverPolicy: policy(dns.nameserverPolicy),
-        proxyServerNameserverPolicy: policy(dns.proxyServerNameserverPolicy),
-        fakeIpFilter: [
-          for (final entry in dns.fakeIpFilter)
-            _renamedRuleText(_renamedRuleSetsIn(entry, names), names),
-        ],
-      ),
-      sniffer: sniffer.copyWith(
-        forceDomain: entries(sniffer.forceDomain),
-        skipDomain: entries(sniffer.skipDomain),
-        skipSrcAddress: entries(sniffer.skipSrcAddress),
-        skipDstAddress: entries(sniffer.skipDstAddress),
-      ),
-    );
-  }
-
-  ProfileOverrides renamedProxyProviders(Map<String, String> names) => copyWith(
-    proxyProviders: {
-      for (final MapEntry(:key, :value) in proxyProviders.entries)
-        names[key] ?? key: value,
-    },
-  );
 }
 
 extension ProfileReferences on Profile {

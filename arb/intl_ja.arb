@@ -645,7 +645,6 @@
   "customIssueMissingDialer": "ダイヤラープロキシ {name} が存在しません",
   "customIssueDialerLoop": "{proxy} は {target} 経由で接続しますが、{target} から再び {proxy} に戻るため、ループになります",
   "dialerProxyLoopStopped": "{name} 経由の接続が使用元のプロキシに戻るため、接続を中止しました",
-  "providerInUse": "{label} は {profiles} でまだ使用されており、削除するとそれらが正常に動作しなくなります。削除してもよろしいですか？",
   "fontSize": "サイズ",
   "large": "大",
   "extraLarge": "特大",

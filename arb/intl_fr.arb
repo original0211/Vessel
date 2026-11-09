@@ -645,7 +645,6 @@
   "customIssueMissingDialer": "Le proxy de connexion {name} n’existe pas",
   "customIssueDialerLoop": "{proxy} se connecte via {target}, qui renvoie à {proxy} ; la connexion boucle",
   "dialerProxyLoopStopped": "La connexion via {name} renvoie au proxy qui l’utilise ; la connexion a donc été arrêtée",
-  "providerInUse": "{label} est encore utilisé par {profiles}, qui ne fonctionneront plus correctement s’il est supprimé. Voulez-vous vraiment le supprimer ?",
   "fontSize": "Taille",
   "large": "Grande",
   "extraLarge": "Très grande",

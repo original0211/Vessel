@@ -5319,16 +5319,6 @@ class AppLocalizations {
     );
   }
 
-  /// `{label} is still used by {profiles}, which will not work properly once it is deleted. Are you sure you want to delete it?`
-  String providerInUse(Object label, Object profiles) {
-    return Intl.message(
-      '$label is still used by $profiles, which will not work properly once it is deleted. Are you sure you want to delete it?',
-      name: 'providerInUse',
-      desc: '',
-      args: [label, profiles],
-    );
-  }
-
   /// `Size`
   String get fontSize {
     return Intl.message('Size', name: 'fontSize', desc: '', args: []);

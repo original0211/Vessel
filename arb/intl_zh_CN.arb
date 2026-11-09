@@ -645,7 +645,6 @@
   "customIssueMissingDialer": "拨号代理 {name} 不存在",
   "customIssueDialerLoop": "{proxy} 经 {target} 拨号，而 {target} 又会回到 {proxy}，形成环路",
   "dialerProxyLoopStopped": "经 {name} 拨号会绕回使用它的代理，连接已中止",
-  "providerInUse": "{label} 仍被 {profiles} 使用，删除后这些配置会异常。确定删除吗？",
   "fontSize": "大小",
   "large": "大",
   "extraLarge": "超大",

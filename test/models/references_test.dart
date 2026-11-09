@@ -115,15 +115,11 @@ void main() {
           ..._firstArguments(function),
       };
       expect(sites, _ruleSetSites.keys.toSet());
-      // Rules carry their own RULE-SET names; sub-rules a custom profile
-      // never writes.
+      // Rules carry their own RULE-SET names.
       expect(_firstArguments('parseRules'), ['rawCfg.Rule', 'rawRules']);
       for (final MapEntry(key: site, value: overrides)
           in _ruleSetSites.entries) {
         expect(overrides.ruleSets, {'x'}, reason: site);
-        expect(overrides.renamedRuleSets({'x': 'y'}).ruleSets, {
-          'y',
-        }, reason: site);
       }
     });
 
@@ -199,18 +195,9 @@ void main() {
       );
 
       expect(overrides.ruleSets, {'a', 'b', 'd:e'});
-      expect(
-        overrides.renamedRuleSets({'a': 'A', 'd:e': 'D'}).dns.nameserverPolicy,
-        {
-          'rule-set:A,b:c': '1.1.1.1',
-          'rule-set:D': '1.1.1.1',
-          'geosite:cn': '1.1.1.1',
-        },
-      );
     });
 
-    test('fake-ip-filter reads rules in rule mode and renames either '
-        'form', () {
+    test('fake-ip-filter reads rules in rule mode, in either form', () {
       const overrides = ProfileOverrides(
         dns: Dns(
           fakeIpFilter: [
@@ -233,17 +220,6 @@ void main() {
             .copyWith(dnsOverrideKeys: {DnsOverrideKey.fakeIpFilter})
             .ruleSets,
         {'c'},
-      );
-      final renamed = overrides.renamedRuleSets({'a': 'A', 'b': 'B', 'c': 'C'});
-      expect(renamed.dns.fakeIpFilter, [
-        'RULE-SET,A,fake-ip',
-        'AND,((RULE-SET,B),(NETWORK,UDP)),real-ip',
-        'rule-set:C',
-        '+.example.com',
-      ]);
-      expect(
-        renamed.renamedRuleSets({'A': 'a', 'B': 'b', 'C': 'c'}),
-        overrides,
       );
     });
 
