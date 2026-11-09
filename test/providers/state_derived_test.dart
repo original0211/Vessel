@@ -777,25 +777,6 @@ void main() {
     );
   });
 
-  test(
-    'a custom profile is no proxy provider and has no config file',
-    () async {
-      final subscription = Profile.normal(label: 'Sub');
-      final file = Profile.normal(label: 'File');
-      final custom = Profile.custom(label: 'Mine');
-      _profiles(container).replace([subscription, file, custom]);
-
-      expect(container.read(profileProvidersProvider), {
-        'Sub': subscription.id,
-        'File': file.id,
-      });
-      expect(
-        await container.read(clashConfigProvider(custom.id).future),
-        const ClashConfig(),
-      );
-    },
-  );
-
   test('shared state hands the VPN service the resolved route list', () async {
     await AppLocalizations.load(const Locale('en'));
     container.listen(sharedStateProvider, (_, _) {});

@@ -1569,7 +1569,7 @@ void main() {
 
       final res = await scoped
           .read(setupActionProvider.notifier)
-          .getProfile(
+          .renderCustomProfile(
             setupState: setupState,
             patchConfig: const PatchClashConfig(),
           );
@@ -1639,7 +1639,7 @@ void main() {
 
       final res = await scoped
           .read(setupActionProvider.notifier)
-          .getProfile(
+          .renderCustomProfile(
             setupState: setupState,
             patchConfig: const PatchClashConfig(),
           );
@@ -1696,7 +1696,7 @@ void main() {
 
       final res = await scoped
           .read(setupActionProvider.notifier)
-          .getProfile(
+          .renderCustomProfile(
             setupState: setupState,
             patchConfig: const PatchClashConfig(),
           );

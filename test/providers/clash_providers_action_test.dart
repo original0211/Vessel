@@ -23,18 +23,6 @@ import '../helpers/test_profiles.dart';
 
 class _MockCoreHandlerInterface extends Mock implements CoreHandlerInterface {}
 
-class _RecordingSetupAction extends SetupAction {
-  final forced = <bool>[];
-
-  int get applies => forced.length;
-
-  @override
-  void applyProfileDebounce({bool silence = false, bool force = false}) {
-    forced.add(force);
-  }
-}
-
-/// Only a change the current custom profile can see is worth a reapply.
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -51,7 +39,6 @@ void main() {
   late Directory home;
   late db.Database testDatabase;
   late ProviderContainer container;
-  late _RecordingSetupAction setup;
   late RuleSetInfo compiled;
   late Exception? compileError;
   late Completer<void>? compileGate;
@@ -69,7 +56,6 @@ void main() {
   setUp(() async {
     testDatabase = db.Database(NativeDatabase.memory());
     db.database = testDatabase;
-    setup = _RecordingSetupAction();
     const profile = Profile(
       id: profileId,
       label: 'Custom',
@@ -127,7 +113,6 @@ void main() {
         profilesProvider.overrideWith(
           () => TestProfiles([profile, standardProfile, otherCustom]),
         ),
-        setupActionProvider.overrideWith(() => setup),
         coreHandlerProvider.overrideWithValue(CoreController.scoped(core)),
       ],
     );
@@ -175,36 +160,6 @@ void main() {
           .single
           .ruleProvider;
 
-  test('a rule set a rule references reapplies', () async {
-    await ruleSetIn(profileId, 'Ad block', id: 30);
-
-    await action().putProvider(rules);
-    await pumpEventQueue();
-
-    expect(setup.forced, [false]);
-  });
-
-  test('new content for a used rule set forces a reapply', () async {
-    await ruleSetIn(profileId, 'Ad block', id: 30);
-
-    await action().putProvider(rules, content: 'payload: []'.codeUnits);
-    await pumpEventQueue();
-
-    expect(setup.forced, [true]);
-  });
-
-  test('renaming a used rule set reapplies under its old name', () async {
-    await ruleSetIn(profileId, 'Ad block', id: 30);
-
-    await action().putProvider(
-      rules.copyWith(label: 'Renamed'),
-      previous: rules,
-    );
-    await pumpEventQueue();
-
-    expect(setup.applies, 1);
-  });
-
   test('renaming a rule set renames it in every custom profile', () async {
     await ruleSetIn(profileId, 'Ad block', id: 30);
     await ruleSetIn(otherCustomId, 'Ad block', id: 31);
@@ -241,23 +196,6 @@ void main() {
           .forceDomain,
       ['rule-set:Renamed'],
     );
-  });
-
-  test('a rule set no rule references does not reapply', () async {
-    await action().putProvider(rules);
-    await pumpEventQueue();
-
-    expect(setup.applies, 0);
-  });
-
-  test('a subscription profile never reapplies for a provider', () async {
-    await ruleSetIn(standardProfileId, 'Ad block', id: 30);
-    container.read(currentProfileIdProvider.notifier).value = standardProfileId;
-
-    await action().putProvider(rules);
-    await pumpEventQueue();
-
-    expect(setup.applies, 0);
   });
 
   test('a rename follows the custom profiles and leaves a standard extension '
@@ -327,7 +265,6 @@ void main() {
 
     expect(await read(rules.path), 'example.com');
     expect(await testDatabase.clashProvidersDao.query().get(), isEmpty);
-    expect(setup.applies, 0);
     final staged = await appPath.getProviderCachePath('${rules.fileName}.new');
     expect(File(staged).existsSync(), isFalse);
   });
@@ -363,7 +300,6 @@ void main() {
     await pumpEventQueue();
 
     expect(compiles.single, (name: remote.fileName, url: remote.url));
-    expect(setup.forced, [true]);
     final saved = await stored(remote.id);
     expect(saved.behavior, RuleProviderBehavior.domain);
     expect(await read(saved.compiledPath), 'mrs of downloaded');
@@ -375,7 +311,6 @@ void main() {
     await pumpEventQueue();
 
     expect(compiles, hasLength(1));
-    expect(setup.forced, [true, false]);
   });
 
   group('a set changed while it downloads', () {
@@ -470,7 +405,7 @@ void main() {
     expect(await action().prepare(rules), rules);
   });
 
-  test('a remote sync reloads in place unless the set changed shape', () async {
+  test('a remote sync rewrites the stored set it downloads', () async {
     const remote = ClashProvider(
       id: 43,
       label: 'Remote',
@@ -481,18 +416,17 @@ void main() {
     await testDatabase.clashProvidersDao.putAll([remote.toCompanion()]);
     await ruleSetIn(profileId, 'Remote', id: 30);
 
-    expect(await action().syncRemote(remote), isTrue);
+    await action().syncRemote(remote);
     await pumpEventQueue();
-    expect(setup.applies, 0);
+    expect((await stored(remote.id)).behavior, RuleProviderBehavior.domain);
 
     compiled = (
       behavior: RuleProviderBehavior.classical,
       format: RuleProviderFormat.text,
     );
-    expect(await action().syncRemote(remote), isFalse);
+    await action().syncRemote(remote);
     await pumpEventQueue();
 
-    expect(setup.forced, [true]);
     expect((await stored(remote.id)).behavior, RuleProviderBehavior.classical);
   });
 
@@ -570,41 +504,5 @@ void main() {
 
       expect(await profiles().providerUsers(custom), isEmpty);
     });
-
-    test('forces a reapply of the profile whose groups use it', () async {
-      await action().applyIfReferenced(ProviderKind.proxy, {
-        'Home',
-      }, force: true);
-      await action().applyIfReferenced(ProviderKind.proxy, {
-        'Elsewhere',
-      }, force: true);
-
-      expect(setup.forced, [true]);
-    });
-
-    test(
-      'a group taking in every provider or proxy reapplies only on the named',
-      () async {
-        await testDatabase.proxyGroups.put(
-          const ProxyGroup(
-            id: 23,
-            name: 'All',
-            type: GroupType.Selector,
-            includeAllProxies: true,
-            includeAllProviders: true,
-            order: 'b',
-          ).toCompanion(profileId),
-        );
-
-        await action().applyIfReferenced(ProviderKind.proxy, {
-          'Elsewhere',
-        }, force: true);
-        await action().applyIfReferenced(ProviderKind.proxy, {
-          'Home',
-        }, force: true);
-
-        expect(setup.forced, [true]);
-      },
-    );
   });
 }

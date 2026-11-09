@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:kfusion/enum/enum.dart';
 import 'package:kfusion/models/models.dart';
-import 'package:kfusion/providers/state.dart';
+import 'package:kfusion/providers/providers.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

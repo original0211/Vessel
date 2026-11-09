@@ -25,14 +25,17 @@ class _MockCoreHandlerInterface extends Mock implements CoreHandlerInterface {}
 
 class _FailingSetupAction extends SetupAction {
   @override
-  Future<BuiltProfile> getProfile({
+  Future<BuiltProfile> renderCustomProfile({
     required SetupState setupState,
     required PatchClashConfig patchConfig,
   }) {
     if (setupState.profileId == _badId) {
       throw StateError('fixture rendering failure');
     }
-    return super.getProfile(setupState: setupState, patchConfig: patchConfig);
+    return super.renderCustomProfile(
+      setupState: setupState,
+      patchConfig: patchConfig,
+    );
   }
 }
 
@@ -227,34 +230,20 @@ void main() {
     return container;
   }
 
-  Future<String> renderOriginal(MigrationData data, PatchClashConfig patch) {
-    return useDatabase()
-        .restore(
-          data.profiles,
-          data.rules,
-          data.disabledRules,
-          data.proxyGroups,
-          clashProviders: data.clashProviders,
-          customProxies: data.customProxies,
-          proxyDialers: data.proxyDialers,
-        )
-        .then((_) async {
-          final container = buildContainer(data, patch);
-          final setupState = await container.read(
-            setupStateProvider(_customId).future,
-          );
-          final built = await container
-              .read(setupActionProvider.notifier)
-              .getProfile(setupState: setupState, patchConfig: patch);
-          return built.yaml;
-        });
+  // The custom path's rendering of this fixture, frozen from the tree
+  // before the live path stopped rendering custom profiles.
+  Future<String> frozenOriginal() async {
+    final golden = await File(
+      'test/fixtures/b6/materialized_custom_golden.yaml',
+    ).readAsString();
+    return golden.replaceAll('<HOME>', home.path);
   }
 
   test('a custom profile lands as a file profile whose snapshot renders '
       'byte for byte like the custom path', () async {
     final data = _fixture();
     final patch = _patch();
-    final original = await renderOriginal(data, patch);
+    final original = await frozenOriginal();
     expect(original, contains('dialer-proxy: "NodeB"'));
     expect(original, contains('mtu: 1400'));
     expect(original, contains('fake-ip-range: "198.18.0.1/16"'));
