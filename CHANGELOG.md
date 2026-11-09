@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.2.0 (2026-11-09)
+
+**Features**
+
+- On Windows the app, the core and the helper now carry the Vessel name throughout: Vessel.exe, VesselCore.exe and VesselHelperService.exe, and the helper service registers under the VesselHelperService key. An in-place upgrade migrates the previously registered service on its own — the installer retires the old service first and the new helper clears its leftovers — so upgrading needs no manual steps. (b2c2168)
+
 ## v1.1.1 (2026-11-09)
 
 **Bug Fixes**
