@@ -60,13 +60,16 @@ Key Go core files:
 
 ## DNS, NTP and Sniffer Overrides
 
-A URL or file profile brings its own sections; a custom profile brings none. The app's DNS page
-(`PatchClashConfig.dns` with `dnsOverrideKeys`) is written over the DNS of every URL and file profile, and offers only
+A URL or file profile brings its own sections. The app's DNS page
+(`PatchClashConfig.dns` with `dnsOverrideKeys`) is written over the DNS of every profile, and offers only
 `DnsOverrideKey.normalProfileKeys`: keys that name nothing of a profile's own, because a subscription's groups and rule
-sets change with every update. A custom profile keeps all three sections in `Profile.overrides`, a `ProfileOverrides`
-stored as JSON in the `profiles.overrides` column, with every key available, and NTP and sniffer exist nowhere else.
-`setupState` resolves `SetupState.overrides` by profile type, intersecting the app-wide keys with the normal set, and
-`_makeRealProfileTask` merges whatever it is handed; there is no on/off toggle, a picked key is the override.
+sets change with every update. `setupState` builds `SetupState.overrides` from that page alone, a `ProfileOverrides`
+holding the app-wide DNS keys intersected with the normal set and the app-wide TUN keys, and
+`_makeRealProfileTask` merges whatever it is handed; there is no on/off toggle, a picked key is the override. The
+`ProfileOverrides` shape outlives the per-profile store it once was: schema 22 dropped the `profiles.overrides`
+column, and the type remains as the value the setup is handed and as the legacy shape, NTP and sniffer sections
+included, that the startup and restore conversion renders a retired custom profile from before materializing it as
+a file profile.
 
 Each `*OverrideKey` names one Clash key, with `parent.field` paths for nested maps, and covers every yaml key of the
 matching mihomo raw struct; `test/models/{dns,ntp,sniffer}_override_test.dart` read `core/Clash.Meta/config/config.go`
@@ -89,8 +92,9 @@ quick edit, which opens `overrideYaml` in an `EditorPage` and rebuilds the key s
 
 mihomo upper-cases sniff protocol names and ignores the deprecated `sniffing` list once `sniff` holds anything, so
 `mergeSnifferOverride` drops the profile's entry for an overridden protocol in any case and first carries `sniffing`
-into `sniff`. A `rule-set:` key of a custom profile's DNS policy counts as a use of that rule provider, so
-`_resolveInjectedProviders` injects it like one a rule names. Safe mode forces `write-to-system` off on whatever `ntp`
+into `sniff`. A `rule-set:` key of a legacy custom profile's DNS policy counts as a use of that rule provider in
+the one rendering that still reads such a profile, the conversion's, so `_resolveInjectedProviders` injects it like
+one a rule names. Safe mode forces `write-to-system` off on whatever `ntp`
 section reaches the core, because setting the system clock is a host change; `loadConfig` in the Go wrapper also drops
 it on Android, where the seccomp policy kills the process for `settimeofday`.
 
@@ -98,7 +102,8 @@ TUN is the exception to covering the raw struct. The network settings own only `
 `stack`, and `auto-route` always on), spread last over the profile's section and patched again on every
 `updateConfig`, so `TunOverrideKey` offers only keys outside it that work in FlClash's TUN. Its keys exist app-wide
 (`PatchClashConfig.tunOverride` with `tunOverrideKeys`, listed in the network page's TUN section as `OverrideEntry`
-rows and added from its last row, as a custom group's options are) for every profile, and per custom profile, whose own keys `ProfileOverrides.overAppTun` lays over the app-wide ones. MTU,
+rows and added from its last row) for every profile, and, in the conversion of a legacy custom profile, over that
+profile's own keys, which `ProfileOverrides.overAppTun` lays over the app-wide ones. MTU,
 congestion control, strict route and the route lists are such keys on desktop, so a profile's own values apply unless
 picked; Android's TUN rows keep them in `Tun`, which its VPN service starts from, and a config saved before the move
 carries values changed from their defaults into picked keys. `bypassPrivateRoute` stays a network setting: the task
@@ -112,14 +117,9 @@ descriptions say. Route address sets are left out: sing-tun applies them only th
 `core/tun` without the section, so TUN is listed on desktop only. Being a part of the section, the page has no quick
 edit; see Quick Edit.
 
-A custom profile's overview keeps rows for rules, providers and DNS, which every custom profile runs on, and puts the
-dialer proxies, NTP, sniffer and TUN behind a single "more" row, which opens a page listing them with their states.
-Both lists are the same grouped rows, glyph, title and state, ending in a chevron. Another rarely changed section joins
-the "more" list rather than taking a row of its own.
-
 Every page is an `OverrideView` over an `OverrideSpec` from `lib/views/config/override.dart`. The spec supplies the
-section's keys, labels and fields; its `OverrideTarget` is where the model and keys live, `PatchOverrideTarget` for the
-app-wide DNS and `ProfileOverrideTarget` for a profile. Another overridable section is a spec, not a copy of a page.
+section's keys, labels and fields; its `OverrideTarget` is where the model and keys live, `PatchOverrideTarget` for
+the app-wide pages. Another overridable section is a spec, not a copy of a page.
 
 A config from a release that still had the `overrideDns` toggle keeps, through `Config.fromJson`, the normal keys of
 an on toggle and none of an off one. That release had no custom profiles, so its app-wide NTP override is dropped.
@@ -351,7 +351,7 @@ puts the profile's bulk sections into the overlay, appends the profile's rules a
 for the Android service and the controller's reload, and parses it. `config.yaml` is encoded a slice at a time, because on a
 profile of 100k proxies and 2M rules one `Encode` call doubles the peak heap. The preview reads the YAML `buildProfile`
 merges into the spill directory, and the extend page only the names
-and types `getProfileOutbounds` lists; a script extension still needs the whole config from `getConfig`.
+and types `getProfileOutbounds` lists.
 
 Go event delivery is intentionally non-blocking:
 
@@ -800,12 +800,10 @@ keys to move through the enclosing `SliverReorderableList`'s own `onReorderItem`
 ## Quick Edit
 
 Quick edit, the compose button that opens what a page edits as text in an `EditorPage`, appears only where that text is
-the whole of it: a full list or section, such as a custom profile's rules, its proxies as share links, or its DNS, NTP
-and sniffer sections, or one isolated item, such as the definition of the proxy group or proxy a form edits. A page
-that edits only part of something other settings also write offers none, since its document would show a fragment and
-reject what it leaves out. The app-wide DNS page is that case, a few keys laid over the DNS of every URL and file
-profile, so only the profile's DNS spec mixes in `OverrideQuickEdit`. So is the custom profile's TUN page: it picks a
-few keys of a `tun` section the network settings own, so its spec does not mix in `OverrideQuickEdit`.
+the whole of it: a full list or section, such as a profile's own file, or one isolated item a form edits as a whole.
+A page that edits only part of something other settings also write offers none, since its document would show a
+fragment and reject what it leaves out. The app-wide override pages are that case, a few keys laid over a section of
+every URL and file profile, so no override spec mixes in `OverrideQuickEdit`.
 
 ## Where A Route Opens
 
@@ -1027,7 +1025,6 @@ Provider files in `lib/providers/`:
   - `state/system.dart`: tray, VPN params, access control, hot keys, shared state.
   - `state/theme.dart`: dynamic color, color scheme, brightness.
   - `state/profile.dart`: profiles, current profile, clash config, setup state.
-  - `state/custom.dart`: custom profile validity and the staged group/rule notifiers.
 - `action.dart`: business logic notifiers, setup, backup, core lifecycle, proxy selection.
 - `core.dart`: `coreHandlerProvider`, the container-scoped handle on `CoreController`.
 - `route_state.dart` and `routed_probe.dart`: the route tracker and the probe cache; see Route Consistency above.
@@ -1203,36 +1200,23 @@ counter; a schema change bumps it and goes into the one step the coming release 
 Tables:
 
 - `Profiles`
-- `Scripts`
-- `Rules`
-- `DisabledRules` (`disabled_rules`)
-- `ProxyGroups` (`proxy_groups`)
-- `CustomProxies` (`custom_proxies`)
-- `ProxyDialers` (`proxy_dialers`)
 - `IconRecords` (`icon_records`)
 - `IconSets` (`icon_sets`)
 - `ClashProviders` (`clash_providers`)
 
-`Profiles.type` is `file`, `url` or `custom`, fixed when the profile is created. A rule belongs to whoever its
-`profile_id` names: no profile makes it global, a file or url profile's rules are what its standard extension adds, and
-a custom profile's rules are all the rules it has. `DisabledRules` lets a profile leave out a global rule. Proxy groups
-and dialers exist only on custom profiles. Every one of these rows cascades with its profile. Rule and proxy-group
-ordering use fractional indexing.
+`Profiles.type` is `file` or `url` for anything the app creates; the `custom` value remains in the type only so a
+legacy row stays readable until the startup conversion materializes it as a file profile. Schema 22 retired the
+per-profile tables (`rules`, `disabled_rules`, `proxy_groups`, `custom_proxies`, `proxy_dialers`) and the profile
+columns that fed them: a profile's rules and groups are whatever its own file or subscription carries.
 
-A custom profile has no file and no extension: `SetupAction.getProfile` builds its config from an empty map plus its
-groups and rules, and `clashConfigProvider` answers an empty `ClashConfig` for it. Its groups name app-level custom
-proxies directly, and the config declares only the ones some group names; they take nodes from every file or url
-profile too, each a file proxy provider under its label. A custom profile is never a provider itself. App-level
-`ClashProviders` rows are rule providers only, and only custom profiles are offered them.
+App-level `ClashProviders` rows are rule providers only; the resources page keeps them, and the conversion is the
+one remaining path that offers them to a profile being rendered.
 
-A custom profile names groups, local proxies, provider profiles and rule sets by name, mihomo's own strings included
-(a DNS server's `#proxy`, a `rule-set:` policy key, the sniffer's lists). `lib/models/references.dart` reads and
-renames every such place, and renames, delete prompts, provider injection and the profile checks all go through it;
-`test/models/references_test.dart` fails when `config.go` reads a name somewhere it does not. A rename is detected
-where the row is written, so every path carries it. A local proxy may not share a name with any custom profile's
-group, as both live in mihomo's one namespace; where older data has both, the name means the group in that profile
-and a proxy rename leaves it alone. `Profiles` writes rows one at a time from the state as it then stands, so a rename
-rewriting custom profiles is never written over by a put issued before it landed.
+A legacy custom profile names groups, local proxies, provider profiles and rule sets by name, mihomo's own strings
+included (a DNS server's `#proxy`, a `rule-set:` policy key, the sniffer's lists). `lib/models/references.dart`
+reads every such place, and the conversion's provider injection goes through it;
+`test/models/references_test.dart` fails when `config.go` reads a name somewhere it does not. The rename
+propagation that once rewrote stored profiles through the same file was retired with the per-profile tables.
 
 An app-level rule set's behavior and format are what the Core's `compileRuleSet` found in its source, never a user
 choice. The source stays at `getProviderCachePath(fileName)`; a domain or ipcidr set also gets an `.mrs` beside it, and

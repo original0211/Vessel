@@ -36,7 +36,7 @@ A self-built proxy client for **Android** and **Windows** only.
 ## 已知取舍
 
 - sing-box 只做契约子集：订阅自带的分流规则脑（规则集展开、链式代理、冷门协议等）不移植，无法表达的进降级清单逐项点名。
-- per-profile 渲染（按单个订阅定制渲染参数）尚未实现。
+- 不提供 per-profile 渲染：单个订阅不带定制渲染参数，定制统一走全局覆写。
 - 不提供连接、请求与 DNS 的在线监视视图——减法取舍；运行日志保留。
 
 ## 下载
@@ -99,7 +99,7 @@ Latest stable release: see [Releases](https://github.com/original0211/Vessel/rel
 ### Known trade-offs
 
 - sing-box is a contract subset: the routing brain shipped inside subscriptions (rule-set expansion, chained proxies, niche protocols, …) is not ported; whatever cannot be expressed is named in the degradation list.
-- Per-profile rendering (custom rendering parameters per subscription) is not implemented yet.
+- No per-profile rendering: a subscription carries no custom rendering parameters; customization lives in the app-wide override.
 - No live monitoring views for connections, requests or DNS — a deliberate subtraction; runtime logs are kept.
 
 ### Download
