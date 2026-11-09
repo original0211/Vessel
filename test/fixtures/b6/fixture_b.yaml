@@ -1,0 +1,35 @@
+mixed-port: 7892
+allow-lan: true
+mode: global
+log-level: info
+ipv6: true
+dns:
+  enable: true
+  listen: 0.0.0.0:1054
+  enhanced-mode: redir-host
+  nameserver:
+    - tls://203.0.113.53:853
+  default-nameserver:
+    - 198.51.100.53
+tun:
+  enable: true
+  stack: system
+  mtu: 1400
+  dns-hijack:
+    - 198.18.0.2:53
+sniffer:
+  enable: false
+proxies:
+  - name: B-SS
+    type: ss
+    server: 192.0.2.20
+    port: 8389
+    cipher: chacha20-ietf-poly1305
+    password: pass-b
+proxy-groups:
+  - name: Main
+    type: select
+    proxies:
+      - B-SS
+rules:
+  - MATCH,Main

@@ -1,0 +1,118 @@
+mixed-port: 7890
+allow-lan: false
+mode: "rule"
+log-level: "info"
+ipv6: true
+dns:
+  enable: true
+  enhanced-mode: "fake-ip"
+  fake-ip-range: "198.18.0.1/16"
+  nameserver:
+    - "https://dns.example.invalid/dns-query"
+    - "tls://203.0.113.53:853"
+  fake-ip-filter:
+    - "*.lan"
+    - "localhost"
+    - "time.example.invalid"
+  fake-ip-filter-mode: "blacklist"
+  default-nameserver:
+    - "203.0.113.1"
+    - "203.0.113.2"
+    - "198.51.100.1"
+    - "198.51.100.2"
+proxy-providers:
+  sub-nodes:
+    type: "http"
+    url: "https://subs.example.invalid/nodes.yaml"
+    interval: 3600
+    path: "<PROFILES>/providers/7003/proxies/62854d4adfee48c9ad399139b5f159ac"
+    health-check:
+      enable: true
+      url: "https://www.gstatic.com/generate_204"
+      interval: 300
+rule-providers:
+  ads:
+    type: "http"
+    behavior: "domain"
+    format: "mrs"
+    url: "https://rules.example.invalid/ads.mrs"
+    path: "<PROFILES>/providers/7003/rules/80e6f2b2c8a3d5fa3ad2797018afebf8"
+    interval: 86400
+  games:
+    type: "file"
+    behavior: "classical"
+    path: "<PROFILES>/providers/7003/rules/9c942569280ab756aad478bf59293548"
+proxies:
+  - name: "C-SS"
+    type: "ss"
+    server: "192.0.2.30"
+    port: 8390
+    cipher: "aes-128-gcm"
+    password: "pass-c1"
+proxy-groups:
+  - name: "PROXY"
+    type: "select"
+    use:
+      - "sub-nodes"
+    proxies:
+      - "C-SS"
+rules:
+  - "RULE-SET,ads,REJECT"
+  - "RULE-SET,games,PROXY"
+  - "MATCH,PROXY"
+external-controller: ""
+secret: ""
+external-controller-tls: ""
+external-controller-unix: ""
+external-controller-pipe: ""
+external-ui: ""
+interface-name: ""
+external-ui-url: ""
+tcp-concurrent: true
+unified-delay: true
+port: 0
+socks-port: 0
+keep-alive-interval: 30
+keep-alive-idle: 15
+disable-keep-alive: false
+routing-mark: 0
+redir-port: 0
+tproxy-port: 0
+find-process-mode: "always"
+authentication: []
+skip-auth-prefixes: []
+tun:
+  dns-hijack:
+    - "any:53"
+  mtu: 9000
+  congestion-controller: "bbr"
+  udp-timeout: 300
+  enable: true
+  device: "Vessel"
+  stack: "mixed"
+  auto-route: true
+  auto-detect-interface: true
+  route-exclude-address:
+    - "0.0.0.0/8"
+    - "10.0.0.0/8"
+    - "127.0.0.0/8"
+    - "169.254.0.0/16"
+    - "172.16.0.0/12"
+    - "192.168.0.0/16"
+    - "224.0.0.0/4"
+    - "255.255.255.255/32"
+    - "fc00::/7"
+    - "fe80::/10"
+    - "ff00::/8"
+geodata-loader: "memconservative"
+geo-auto-update: true
+geo-update-interval: 24
+profile:
+  store-selected: false
+geox-url:
+  mmdb: "https://geo.example.invalid/country.mmdb"
+  asn: "https://geo.example.invalid/asn.mmdb"
+  geoip: "https://geo.example.invalid/geoip.dat"
+  geosite: "https://geo.example.invalid/geosite.dat"
+global-ua: "Vessel/v0.0.0 clash-verge Platform/linux"
+hosts: {}

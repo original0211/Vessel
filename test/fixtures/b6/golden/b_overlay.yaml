@@ -1,0 +1,81 @@
+mixed-port: 7890
+allow-lan: false
+mode: "rule"
+log-level: "info"
+ipv6: true
+dns:
+  enable: true
+  listen: "0.0.0.0:1054"
+  enhanced-mode: "fake-ip"
+  nameserver:
+    - "https://dns.example.invalid/dns-query"
+    - "tls://203.0.113.53:853"
+  default-nameserver:
+    - "203.0.113.1"
+    - "203.0.113.2"
+    - "198.51.100.1"
+    - "198.51.100.2"
+  fake-ip-filter:
+    - "*.lan"
+    - "localhost"
+    - "time.example.invalid"
+  fake-ip-filter-mode: "blacklist"
+tun:
+  enable: true
+  stack: "mixed"
+  mtu: 9000
+  dns-hijack:
+    - "any:53"
+  congestion-controller: "bbr"
+  udp-timeout: 300
+  device: "Vessel"
+  auto-route: true
+  auto-detect-interface: true
+  route-exclude-address:
+    - "0.0.0.0/8"
+    - "10.0.0.0/8"
+    - "127.0.0.0/8"
+    - "169.254.0.0/16"
+    - "172.16.0.0/12"
+    - "192.168.0.0/16"
+    - "224.0.0.0/4"
+    - "255.255.255.255/32"
+    - "fc00::/7"
+    - "fe80::/10"
+    - "ff00::/8"
+sniffer:
+  enable: false
+external-controller: ""
+secret: ""
+external-controller-tls: ""
+external-controller-unix: ""
+external-controller-pipe: ""
+external-ui: ""
+interface-name: ""
+external-ui-url: ""
+tcp-concurrent: true
+unified-delay: true
+port: 0
+socks-port: 0
+keep-alive-interval: 30
+keep-alive-idle: 15
+disable-keep-alive: false
+routing-mark: 0
+redir-port: 0
+tproxy-port: 0
+find-process-mode: "always"
+authentication: []
+skip-auth-prefixes: []
+geodata-loader: "memconservative"
+geo-auto-update: true
+geo-update-interval: 24
+profile:
+  store-selected: false
+geox-url:
+  mmdb: "https://geo.example.invalid/country.mmdb"
+  asn: "https://geo.example.invalid/asn.mmdb"
+  geoip: "https://geo.example.invalid/geoip.dat"
+  geosite: "https://geo.example.invalid/geosite.dat"
+global-ua: "Vessel/v0.0.0 clash-verge Platform/linux"
+hosts: {}
+rules: []

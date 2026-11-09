@@ -1,0 +1,178 @@
+{
+  "dns": {
+    "final": "remote",
+    "rules": [
+      {
+        "rule_set": [
+          "geosite-cn"
+        ],
+        "server": "direct"
+      },
+      {
+        "query_type": [
+          "A",
+          "AAAA"
+        ],
+        "server": "fakeip"
+      }
+    ],
+    "servers": [
+      {
+        "detour": "PROXY",
+        "path": "/dns-query",
+        "server": "dns.google",
+        "tag": "remote",
+        "type": "https"
+      },
+      {
+        "server": "223.5.5.5",
+        "tag": "direct",
+        "type": "udp"
+      },
+      {
+        "inet4_range": "198.18.0.0/15",
+        "inet6_range": "fc00::/18",
+        "tag": "fakeip",
+        "type": "fakeip"
+      }
+    ],
+    "strategy": "prefer_ipv4"
+  },
+  "experimental": {
+    "cache_file": {
+      "enabled": true,
+      "path": "cache.db"
+    },
+    "clash_api": {
+      "default_mode": "rule",
+      "external_controller": "127.0.0.1:9091",
+      "secret": "b6-secret"
+    }
+  },
+  "inbounds": [
+    {
+      "listen": "127.0.0.1",
+      "listen_port": 7890,
+      "tag": "mixed-in",
+      "type": "mixed"
+    }
+  ],
+  "log": {
+    "level": "info",
+    "timestamp": true
+  },
+  "outbounds": [
+    {
+      "method": "aes-256-gcm",
+      "password": "pass-a",
+      "server": "192.0.2.10",
+      "server_port": 8388,
+      "tag": "A-SS",
+      "type": "shadowsocks"
+    },
+    {
+      "server": "198.51.100.20",
+      "server_port": 443,
+      "tag": "A-VLESS",
+      "tls": {
+        "enabled": true,
+        "server_name": "example.invalid"
+      },
+      "type": "vless",
+      "uuid": "11111111-2222-3333-4444-555555555555"
+    },
+    {
+      "password": "pass-c",
+      "server": "203.0.113.30",
+      "server_port": 443,
+      "tag": "A-Trojan",
+      "type": "trojan"
+    },
+    {
+      "outbounds": [
+        "A-SS",
+        "A-VLESS",
+        "A-Trojan"
+      ],
+      "tag": "PROXY",
+      "type": "selector"
+    },
+    {
+      "interval": "300s",
+      "outbounds": [
+        "A-SS",
+        "A-VLESS"
+      ],
+      "tag": "AUTO · auto",
+      "type": "urltest",
+      "url": "https://www.gstatic.com/generate_204"
+    },
+    {
+      "default": "AUTO · auto",
+      "outbounds": [
+        "AUTO · auto",
+        "A-SS",
+        "A-VLESS"
+      ],
+      "tag": "AUTO",
+      "type": "selector"
+    },
+    {
+      "tag": "direct",
+      "type": "direct"
+    }
+  ],
+  "route": {
+    "auto_detect_interface": true,
+    "default_domain_resolver": {
+      "server": "direct"
+    },
+    "final": "PROXY",
+    "rule_set": [
+      {
+        "download_detour": "direct",
+        "format": "binary",
+        "tag": "geoip-cn",
+        "type": "remote",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geoip/rule-set/geoip-cn.srs"
+      },
+      {
+        "download_detour": "direct",
+        "format": "binary",
+        "tag": "geosite-cn",
+        "type": "remote",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-cn.srs"
+      }
+    ],
+    "rules": [
+      {
+        "action": "hijack-dns",
+        "protocol": "dns"
+      },
+      {
+        "clash_mode": "Global",
+        "outbound": "PROXY"
+      },
+      {
+        "clash_mode": "Direct",
+        "outbound": "direct"
+      },
+      {
+        "ip_is_private": true,
+        "outbound": "direct"
+      },
+      {
+        "outbound": "direct",
+        "rule_set": [
+          "geoip-cn"
+        ]
+      },
+      {
+        "outbound": "direct",
+        "rule_set": [
+          "geosite-cn"
+        ]
+      }
+    ]
+  }
+}

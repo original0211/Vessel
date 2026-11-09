@@ -1,0 +1,51 @@
+mixed-port: 7893
+allow-lan: false
+mode: rule
+log-level: info
+ipv6: false
+dns:
+  enable: true
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  nameserver:
+    - 223.5.5.5
+proxy-providers:
+  sub-nodes:
+    type: http
+    url: https://subs.example.invalid/nodes.yaml
+    interval: 3600
+    path: ./providers/sub-nodes.yaml
+    health-check:
+      enable: true
+      url: https://www.gstatic.com/generate_204
+      interval: 300
+rule-providers:
+  ads:
+    type: http
+    behavior: domain
+    format: mrs
+    url: https://rules.example.invalid/ads.mrs
+    path: ./providers/ads.mrs
+    interval: 86400
+  games:
+    type: file
+    behavior: classical
+    path: ./providers/games.yaml
+proxies:
+  - name: C-SS
+    type: ss
+    server: 192.0.2.30
+    port: 8390
+    cipher: aes-128-gcm
+    password: pass-c1
+proxy-groups:
+  - name: PROXY
+    type: select
+    use:
+      - sub-nodes
+    proxies:
+      - C-SS
+rules:
+  - RULE-SET,ads,REJECT
+  - RULE-SET,games,PROXY
+  - MATCH,PROXY

@@ -1,0 +1,65 @@
+{
+  "a_full.yaml": {
+    "counts": {
+      "groups": 2,
+      "proxies": 3,
+      "rules": 4
+    },
+    "taskMd5": "ecc8e70536ae39c02dd3c79973f44392",
+    "textMd5": "ecc8e70536ae39c02dd3c79973f44392"
+  },
+  "a_overlay.yaml": {
+    "basePath": "<PROFILES>/profiles/7001.yaml",
+    "builtMd5": "2b43bfefc56bb63c5503fa8ca4c1247c",
+    "counts": {
+      "groups": 2,
+      "proxies": 3,
+      "rules": 4
+    },
+    "textMd5": "cfacd1f5e9f8bb444e9b5bac3b2cb036"
+  },
+  "a_singbox.json": {
+    "degradations": [
+      "subscription routing replaced by the built-in template (4 rule lines)"
+    ],
+    "textMd5": "c7287c1b876e04a62d3640102183e5d5"
+  },
+  "b_full.yaml": {
+    "counts": {
+      "groups": 1,
+      "proxies": 1,
+      "rules": 1
+    },
+    "taskMd5": "82b19b352f9e125ded84ff4effcf1b15",
+    "textMd5": "82b19b352f9e125ded84ff4effcf1b15"
+  },
+  "b_overlay.yaml": {
+    "basePath": "<PROFILES>/profiles/7002.yaml",
+    "builtMd5": "db22139a389c3b27319b794641175024",
+    "counts": {
+      "groups": 1,
+      "proxies": 1,
+      "rules": 1
+    },
+    "textMd5": "7fea27660f97ac4921cedda2d1f740ed"
+  },
+  "c_full.yaml": {
+    "counts": {
+      "groups": 1,
+      "proxies": 1,
+      "rules": 3
+    },
+    "taskMd5": "35279cd19cedc4ce69f3c55edcbaad97",
+    "textMd5": "b0d2ede1489165366389cb9d6759a9e5"
+  },
+  "c_overlay.yaml": {
+    "basePath": "<PROFILES>/profiles/7003.yaml",
+    "builtMd5": null,
+    "counts": {
+      "groups": 1,
+      "proxies": 1,
+      "rules": 3
+    },
+    "textMd5": "fd2691e7cfd7c0b83284e45d14c2f03f"
+  }
+}
