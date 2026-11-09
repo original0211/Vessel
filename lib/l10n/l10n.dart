@@ -2525,16 +2525,6 @@ class AppLocalizations {
     return Intl.message('None', name: 'none', desc: '', args: []);
   }
 
-  /// `Advanced configuration`
-  String get advancedConfig {
-    return Intl.message(
-      'Advanced configuration',
-      name: 'advancedConfig',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Add rule`
   String get addRule {
     return Intl.message('Add rule', name: 'addRule', desc: '', args: []);
@@ -2588,11 +2578,6 @@ class AppLocalizations {
   /// `Grid`
   String get grid {
     return Intl.message('Grid', name: 'grid', desc: '', args: []);
-  }
-
-  /// `Spectrum`
-  String get spectrum {
-    return Intl.message('Spectrum', name: 'spectrum', desc: '', args: []);
   }
 
   /// `Sliders`
@@ -4335,26 +4320,6 @@ class AppLocalizations {
     );
   }
 
-  /// `Enter a port or a range such as 443 or 8000-9000`
-  String get invalidPortRangeContent {
-    return Intl.message(
-      'Enter a port or a range such as 443 or 8000-9000',
-      name: 'invalidPortRangeContent',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Enter a domain or an IP address`
-  String get invalidHostContent {
-    return Intl.message(
-      'Enter a domain or an IP address',
-      name: 'invalidHostContent',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Enter an address and port such as 0.0.0.0:1053`
   String get invalidListenContent {
     return Intl.message(
@@ -4470,16 +4435,6 @@ class AppLocalizations {
     return Intl.message('On demand', name: 'onDemand', desc: '', args: []);
   }
 
-  /// `On demand pauses the proxy on excluded Wi-Fi.`
-  String get onDemandDesc {
-    return Intl.message(
-      'On demand pauses the proxy on excluded Wi-Fi.',
-      name: 'onDemandDesc',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Location permission was denied, so the current Wi-Fi name cannot be read. Please enable location permission manually in system settings.`
   String get locationPermissionDeniedMessage {
     return Intl.message(
@@ -4584,18 +4539,6 @@ class AppLocalizations {
       name: 'secondsCount',
       desc: '',
       args: [count],
-    );
-  }
-
-  /// `{count, plural, =1{1 proxy group} other{{label} proxy groups}}`
-  String proxyGroupsCount(num count, Object label) {
-    return Intl.plural(
-      count,
-      one: '1 proxy group',
-      other: '$label proxy groups',
-      name: 'proxyGroupsCount',
-      desc: '',
-      args: [count, label],
     );
   }
 

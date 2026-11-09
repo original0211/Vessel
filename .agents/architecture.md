@@ -552,14 +552,12 @@ The bar holds `primaryAction` everywhere, a phone's home page above the fixed na
 the app floats an action button: a secondary action such as selecting every app goes into `menuItems`. Saving or
 confirming, in a page, a side sheet or a form, is a check in `confirmationAction`, never among `iconActions`: it ends
 the bar and never folds, and only a form sheet moves it to its foot (Forms). Bar buttons are glyphs with tooltips,
-select all included; the one text button is the custom profile's Import, a filled button whose `CommonPopupBox` opens
-the import menu. Actions on a multi-selection, such as delete and select all, go into
+select all included. Actions on a multi-selection, such as delete and select all, go into
 `selectionActions` instead: the bar keeps them in sight as one button group that takes a single slot beside the search
 or clear button, so they never fold. A sheet's close button leads its bar when the bar has actions, except beside a
 primary action: then the two end the bar as one button group, as the proxies sheet's delay test and close do.
 
-Actions on what the page edits as a whole, such as renaming the custom profile or viewing its final config, go into
-`titleMenuItems` rather than the bar: the title shows a chevron and opens them, as an iOS document's title menu does.
+Actions on what the page edits as a whole go into `titleMenuItems` rather than the bar: the title shows a chevron and opens them, as an iOS document's title menu does.
 The menu opens from the title's start edge (`PopupPlacement.overAnchorStart`), since the bar's own menus, which open
 from their end edge, would cover the back button there.
 
@@ -781,14 +779,14 @@ a `DisclosureIndicator` there instead, as a script or a rule-set proxy provider 
 a tap, read-only unless it is a local text file the app owns, and keeps a second action on its trailing button: editing
 for a proxy provider backed by a text file, the options dialog for an app rule provider.
 
-A long press can mean only one thing on a row. Where rows have no context menu, as in a plain list editor, the global or
-profile rules, the on-demand SSIDs or the custom proxies, a long press on the row drags it and there is no sort button.
+A long press can mean only one thing on a row. Where rows have no context menu, as in a plain list editor, a long press
+on the row drags it and there is no sort button.
 Where they have one, the list reorders only in a sort mode. When the list is the page, `CommonScaffold` owns the mode as
 it owns search and selection, and the page passes `canSort` for the toggle in its bar. Changes apply as they are made,
 so nothing confirms them: while the mode is on, the bar shows only its toggle, selected, and the back or close button
 fades in place rather than offer the same way out twice, as iOS hides its back button while editing; a system back still
-ends the mode. A list that is one section of its page, as the custom profile's proxy groups are, keeps its own
-`SortModeScope` around its rows and its toggle in its header and leaves the page bar alone, back button included; its
+ends the mode. A list that is one section of its page keeps its own `SortModeScope`
+around its rows and its toggle in its header and leaves the page bar alone, back button included; its
 header keeps adding while it sorts, and a system back ends its mode before it leaves the page. Each row sits in a
 `SortableItem`, which reads the scope: while it sorts `DecorationListItem` drops its tap and context menu, and
 `SortableTrailing` springs a `SortHandle` in from the row's trailing edge while the trailing it replaces shrinks away.
@@ -825,12 +823,11 @@ Never reach for the root to open a page or sheet from a page, whether through `r
 something on the root, such as a dialog: the page lands on the root too and covers the rail. The add profile sheet is
 the one exception. `addProfileFormFile`, `addProfileFromLink` and `addProfilesFromLinks`, which a deep link also reaches,
 close it with a root `popUntil` before switching to the profiles tab, so `showAddProfilePage` opens it on the root and
-takes the caller's context as `origin`; a page the sheet leads to opens from `origin`, as `AddProfileView._toAddCustom`
-does.
+takes the caller's context as `origin`.
 
 The mistake only shows in the desktop layout, and `TestApp` has nothing but the root navigator. A test that guards
-where a route opens hosts the page in a nested `Navigator`, as the desktop case of a new custom profile in
-`test/features/profile_views_test.dart` does.
+where a route opens hosts the page in a nested `Navigator`, as the form sheet alert case in
+`test/features/nested_form_sheet_test.dart` does.
 
 ## Settings Rows
 
@@ -872,7 +869,7 @@ A form that edits more than one value opens with `showFormSheet` (`lib/ui/sheet.
 layout, and elsewhere a card `FormSheetRoute` centers over the navigator, as iPad and macOS present a form sheet, moving
 as an alert does. Both give the page `SheetType.bottomSheet` or `SheetType.formSheet`, compact sheets that share
 `CommonScaffold`'s sheet bar, so one page serves both: `FormPage` for a plain form, or the page a `NestedPagedSheet`
-pushes for the custom profile editors. Its values sit in `FormRow`s inside `generateSection` groups, each field a
+pushes inside a nested form sheet. Its values sit in `FormRow`s inside `generateSection` groups, each field a
 `FormRowTextField`, bare and set against the end in both, so a focused field's only outline is its row's focus ring.
 `RenderEditable` ends a field's text short of its end by the caret's margin, so the field ends its hint as short and
 reaches as far into the row's padding: the caret follows the hint or the text, and the text ends where another row's
@@ -996,7 +993,7 @@ than the frames a load costs. What a transition must not carry is work that repe
   nothing until all of it is in, then the finished content in one step: `NullStatusSwitcher.isLoading`. A load that can
   run long also gives the switcher a `loadingStatus`, its `NullStatus` illustration with no label, which takes the
   place of a first load still running after about a route transition (400 ms); one that ends sooner goes straight to
-  its content, so the illustration never flashes. The custom profile, resources and font family pages set one. Never a
+  its content, so the illustration never flashes. The resources page sets one. Never a
   skeleton screen of placeholder rows: it has to guess how many rows are coming, fills in piece by piece, and rebuilds
   every row it stood in for. `SkeletonText` is for a single value inside a card that is already on screen, such as the
   dashboard's service status.

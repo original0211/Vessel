@@ -166,52 +166,49 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m55(name, count) => "${name} et autres (${count} proxys)";
 
-  static String m56(count, label) =>
-      "${Intl.plural(count, one: '1 groupe de proxys', other: '${label} groupes de proxys')}";
-
-  static String m57(count) =>
+  static String m56(count) =>
       "${count} profils personnalisés ont été convertis en profils ordinaires (leurs effets sont intégrés au fichier de profil)";
 
-  static String m58(names) =>
+  static String m57(names) =>
       "Conversion impossible : ${names}. Ils ont été conservés tels quels et non appliqués.";
 
-  static String m59(appName) => "${appName} (mode sans échec)";
+  static String m58(appName) => "${appName} (mode sans échec)";
 
-  static String m60(count) =>
+  static String m59(count) =>
       "${Intl.plural(count, one: '1 seconde', other: '${count} secondes')}";
 
-  static String m61(link) => "Aucun proxy n’a pu être lu dans ${link}";
+  static String m60(link) => "Aucun proxy n’a pu être lu dans ${link}";
 
-  static String m62(member) =>
+  static String m61(member) =>
       "Le membre ${member} est indisponible sous sing-box et a été retiré";
 
-  static String m63(type) =>
+  static String m62(type) =>
       "Le type de groupe ${type} n\'est pas repris ; seuls select et url-test le sont";
 
-  static String m64(type) =>
+  static String m63(type) =>
       "Le protocole ${type} n\'est pas pris en charge par sing-box";
 
-  static String m65(count) =>
+  static String m64(count) =>
       "${count} règles d\'abonnement n\'ont pas été reprises ; le modèle intégré s\'applique";
 
-  static String m66(count) => "${count} dégradations sing-box";
+  static String m65(count) => "${count} dégradations sing-box";
 
-  static String m67(count) =>
+  static String m66(count) =>
       "${count} éléments de ce profil sont dégradés sous sing-box ; la liste les nomme chacun.";
 
-  static String m68(percent) => "Téléchargement de sing-box… ${percent} %";
+  static String m67(percent) => "Téléchargement de sing-box… ${percent} %";
 
-  static String m69(version, path) =>
+  static String m68(version, path) =>
       "Binaire géré par l’application (version ${version}) : ${path}";
 
-  static String m70(label) => "${label} doit être un seul élément";
+  static String m69(label) => "${label} doit être un seul élément";
 
-  static String m71(label) => "${label} doit être une URL";
+  static String m70(label) => "${label} doit être une URL";
 
-  static String m72(count) =>
+  static String m71(count) =>
       "${Intl.plural(count, one: 'il y a 1 an', other: 'il y a ${count} ans')}";
 
-  static String m73(count) =>
+  static String m72(count) =>
       "${Intl.plural(count, other: 'il y a ${count} a')}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
@@ -266,9 +263,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "additionalSuffix": MessageLookupByLibrary.simpleMessage("Suffixe du nom"),
     "address": MessageLookupByLibrary.simpleMessage("Adresse"),
     "advanced": MessageLookupByLibrary.simpleMessage("Avancé"),
-    "advancedConfig": MessageLookupByLibrary.simpleMessage(
-      "Configuration avancée",
-    ),
     "ageEncryptedProfile": MessageLookupByLibrary.simpleMessage(
       "Profil chiffré",
     ),
@@ -911,9 +905,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "invalidDscpContent": MessageLookupByLibrary.simpleMessage(
       "Une marque DSCP ne peut pas dépasser 63",
     ),
-    "invalidHostContent": MessageLookupByLibrary.simpleMessage(
-      "Saisissez un domaine ou une adresse IP",
-    ),
     "invalidIconSet": MessageLookupByLibrary.simpleMessage(
       "Jeu d’icônes non valide",
     ),
@@ -927,9 +918,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Seuls tcp ou udp sont pris en charge",
     ),
     "invalidPolicy": m36,
-    "invalidPortRangeContent": MessageLookupByLibrary.simpleMessage(
-      "Saisissez un port ou une plage, par exemple 443 ou 8000-9000",
-    ),
     "invalidProfileQrcode": MessageLookupByLibrary.simpleMessage(
       "Ce code QR ne contient pas de lien de profil",
     ),
@@ -1145,9 +1133,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Mot de passe d’obfuscation",
     ),
     "onDemand": MessageLookupByLibrary.simpleMessage("À la demande"),
-    "onDemandDesc": MessageLookupByLibrary.simpleMessage(
-      "À la demande met le proxy en pause sur les Wi-Fi exclus.",
-    ),
     "onlyStatisticsProxy": MessageLookupByLibrary.simpleMessage(
       "Ne compter que le trafic proxy",
     ),
@@ -1214,7 +1199,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "proxies": MessageLookupByLibrary.simpleMessage("Proxys"),
     "proxiesProfileLabel": m55,
     "proxyGroup": MessageLookupByLibrary.simpleMessage("Groupe de proxys"),
-    "proxyGroupsCount": m56,
     "proxyProviders": MessageLookupByLibrary.simpleMessage(
       "Fournisseurs de proxys",
     ),
@@ -1292,7 +1276,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "restoreAllData": MessageLookupByLibrary.simpleMessage(
       "Restaurer toutes les données",
     ),
-    "restoreConvertedProfiles": m57,
+    "restoreConvertedProfiles": m56,
     "restoreDefaults": MessageLookupByLibrary.simpleMessage(
       "Rétablir les valeurs par défaut",
     ),
@@ -1302,7 +1286,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "restoreSuccess": MessageLookupByLibrary.simpleMessage(
       "Restauration réussie",
     ),
-    "restoreUnconvertedProfiles": m58,
+    "restoreUnconvertedProfiles": m57,
     "result": MessageLookupByLibrary.simpleMessage("Résultat"),
     "retry": MessageLookupByLibrary.simpleMessage("Réessayer"),
     "routeAddress": MessageLookupByLibrary.simpleMessage("Adresses de route"),
@@ -1459,7 +1443,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Configuration d’exécution",
     ),
     "safeMode": MessageLookupByLibrary.simpleMessage("Mode sans échec"),
-    "safeModeAppTitle": m59,
+    "safeModeAppTitle": m58,
     "saturation": MessageLookupByLibrary.simpleMessage("Saturation"),
     "save": MessageLookupByLibrary.simpleMessage("Enregistrer"),
     "saveChanges": MessageLookupByLibrary.simpleMessage(
@@ -1467,7 +1451,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "search": MessageLookupByLibrary.simpleMessage("Rechercher"),
     "seconds": MessageLookupByLibrary.simpleMessage("secondes"),
-    "secondsCount": m60,
+    "secondsCount": m59,
     "selectAll": MessageLookupByLibrary.simpleMessage("Tout sélectionner"),
     "selected": MessageLookupByLibrary.simpleMessage("Sélectionné"),
     "server": MessageLookupByLibrary.simpleMessage("Serveur"),
@@ -1477,7 +1461,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "serviceStatus": MessageLookupByLibrary.simpleMessage("État des services"),
     "settings": MessageLookupByLibrary.simpleMessage("Paramètres"),
-    "shareLinkUnreadable": m61,
+    "shareLinkUnreadable": m60,
     "shareLinksInvalid": MessageLookupByLibrary.simpleMessage(
       "Aucun proxy n’a pu être lu dans les liens",
     ),
@@ -1533,7 +1517,7 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Tous les membres sont indisponibles, le groupe a donc été supprimé",
         ),
-    "singBoxDegradationReasonGroupMember": m62,
+    "singBoxDegradationReasonGroupMember": m61,
     "singBoxDegradationReasonGroupMemberReject":
         MessageLookupByLibrary.simpleMessage(
           "REJECT n\'a pas de sortie sing-box et a été retiré",
@@ -1541,17 +1525,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "singBoxDegradationReasonGroupNested": MessageLookupByLibrary.simpleMessage(
       "Ses membres incluent d\'autres groupes ; les groupes imbriqués ne sont pas repris",
     ),
-    "singBoxDegradationReasonGroupType": m63,
-    "singBoxDegradationReasonNodeProtocol": m64,
+    "singBoxDegradationReasonGroupType": m62,
+    "singBoxDegradationReasonNodeProtocol": m63,
     "singBoxDegradationReasonNodeUnusable": MessageLookupByLibrary.simpleMessage(
       "Il manque un champ requis par sing-box (l\'adresse locale WireGuard)",
     ),
-    "singBoxDegradationReasonRouting": m65,
+    "singBoxDegradationReasonRouting": m64,
     "singBoxDegradationsAllCarried": MessageLookupByLibrary.simpleMessage(
       "Tout est repris par sing-box",
     ),
-    "singBoxDegradationsCount": m66,
-    "singBoxDegradationsImportSummary": m67,
+    "singBoxDegradationsCount": m65,
+    "singBoxDegradationsImportSummary": m66,
     "singBoxDegradationsImportTitle": MessageLookupByLibrary.simpleMessage(
       "Importé, avec des dégradations sing-box",
     ),
@@ -1573,11 +1557,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "singBoxDownloadRetry": MessageLookupByLibrary.simpleMessage(
       "Réessayer le téléchargement",
     ),
-    "singBoxDownloading": m68,
-    "singBoxManagedBinary": m69,
+    "singBoxDownloading": m67,
+    "singBoxManagedBinary": m68,
     "singleAdd": MessageLookupByLibrary.simpleMessage("Ajout unique"),
     "singleImport": MessageLookupByLibrary.simpleMessage("Importation unique"),
-    "singleValueTip": m70,
+    "singleValueTip": m69,
     "skipCertVerify": MessageLookupByLibrary.simpleMessage(
       "Ignorer la vérification du certificat",
     ),
@@ -1594,7 +1578,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "source": MessageLookupByLibrary.simpleMessage("Source"),
     "specialProxy": MessageLookupByLibrary.simpleMessage("Proxy spécial"),
     "specialRules": MessageLookupByLibrary.simpleMessage("Règles spéciales"),
-    "spectrum": MessageLookupByLibrary.simpleMessage("Spectre"),
     "speedStatistics": MessageLookupByLibrary.simpleMessage(
       "Statistiques de débit",
     ),
@@ -1700,7 +1683,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "update": MessageLookupByLibrary.simpleMessage("Mettre à jour"),
     "upload": MessageLookupByLibrary.simpleMessage("Envoi"),
     "url": MessageLookupByLibrary.simpleMessage("URL"),
-    "urlTip": m71,
+    "urlTip": m70,
     "useHosts": MessageLookupByLibrary.simpleMessage("Utiliser hosts"),
     "useSystemHosts": MessageLookupByLibrary.simpleMessage(
       "Utiliser les hosts du système",
@@ -1720,8 +1703,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "writeToSystem": MessageLookupByLibrary.simpleMessage(
       "Écrire dans le système",
     ),
-    "yearsAgo": m72,
-    "yearsAgoShort": m73,
+    "yearsAgo": m71,
+    "yearsAgoShort": m72,
     "zhCN": MessageLookupByLibrary.simpleMessage("Chinois simplifié"),
   };
 }

@@ -142,45 +142,42 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m55(name, count) => "${name} など${count}件のプロキシ";
 
-  static String m56(count, label) =>
-      "${Intl.plural(count, other: 'プロキシグループ ${label} 件')}";
-
-  static String m57(count) =>
+  static String m56(count) =>
       "${count} 件のカスタムプロファイルを通常のプロファイルに変換しました（効果はプロファイルファイルに固定されています）";
 
-  static String m58(names) => "変換できませんでした：${names}。変更せず保持され、適用されていません。";
+  static String m57(names) => "変換できませんでした：${names}。変更せず保持され、適用されていません。";
 
-  static String m59(appName) => "${appName}（セーフモード）";
+  static String m58(appName) => "${appName}（セーフモード）";
 
-  static String m60(count) => "${count} 秒";
+  static String m59(count) => "${count} 秒";
 
-  static String m61(link) => "${link} からプロキシを読み取れませんでした";
+  static String m60(link) => "${link} からプロキシを読み取れませんでした";
 
-  static String m62(member) => "メンバー ${member} は sing-box で利用できないため除外されました";
+  static String m61(member) => "メンバー ${member} は sing-box で利用できないため除外されました";
 
-  static String m63(type) => "グループ種別 ${type} は引き継がれません。select と url-test のみです";
+  static String m62(type) => "グループ種別 ${type} は引き継がれません。select と url-test のみです";
 
-  static String m64(type) => "プロトコル ${type} は sing-box でサポートされていません";
+  static String m63(type) => "プロトコル ${type} は sing-box でサポートされていません";
 
-  static String m65(count) =>
+  static String m64(count) =>
       "サブスクリプションのルール ${count} 件は引き継がれず、組み込みテンプレートが適用されます";
 
-  static String m66(count) => "sing-box 降格 ${count} 件";
+  static String m65(count) => "sing-box 降格 ${count} 件";
 
-  static String m67(count) =>
+  static String m66(count) =>
       "このプロファイルには sing-box で降格される項目が ${count} 件あります。一覧で各項目を確認できます。";
 
-  static String m68(percent) => "sing-box をダウンロード中… ${percent}%";
+  static String m67(percent) => "sing-box をダウンロード中… ${percent}%";
 
-  static String m69(version, path) => "アプリ管理のバイナリ（バージョン ${version}）：${path}";
+  static String m68(version, path) => "アプリ管理のバイナリ（バージョン ${version}）：${path}";
 
-  static String m70(label) => "${label}は1項目のみ指定できます";
+  static String m69(label) => "${label}は1項目のみ指定できます";
 
-  static String m71(label) => "${label}はURLである必要があります";
+  static String m70(label) => "${label}はURLである必要があります";
+
+  static String m71(count) => "${count} 年前";
 
   static String m72(count) => "${count} 年前";
-
-  static String m73(count) => "${count} 年前";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -222,7 +219,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "additionalSuffix": MessageLookupByLibrary.simpleMessage("名前のサフィックス"),
     "address": MessageLookupByLibrary.simpleMessage("アドレス"),
     "advanced": MessageLookupByLibrary.simpleMessage("詳細設定"),
-    "advancedConfig": MessageLookupByLibrary.simpleMessage("詳細設定"),
     "ageEncryptedProfile": MessageLookupByLibrary.simpleMessage("暗号化されたプロファイル"),
     "ageSecretKey": MessageLookupByLibrary.simpleMessage("age 秘密鍵"),
     "ageSecretKeyRequiredTip": MessageLookupByLibrary.simpleMessage(
@@ -734,9 +730,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "invalidDscpContent": MessageLookupByLibrary.simpleMessage(
       "DSCP マークは 63 を超えられません",
     ),
-    "invalidHostContent": MessageLookupByLibrary.simpleMessage(
-      "ドメインまたは IP アドレスを入力してください",
-    ),
     "invalidIconSet": MessageLookupByLibrary.simpleMessage("有効なアイコンセットではありません"),
     "invalidLinkTip": MessageLookupByLibrary.simpleMessage(
       "サブスクリプションリンクまたはプロキシの共有リンクではありません",
@@ -748,9 +741,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "tcp または udp のみ対応しています",
     ),
     "invalidPolicy": m36,
-    "invalidPortRangeContent": MessageLookupByLibrary.simpleMessage(
-      "443 や 8000-9000 のようなポートまたは範囲を入力してください",
-    ),
     "invalidProfileQrcode": MessageLookupByLibrary.simpleMessage(
       "このQRコードにはプロファイルのリンクが含まれていません",
     ),
@@ -928,9 +918,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "obfsParam": MessageLookupByLibrary.simpleMessage("難読化パラメータ"),
     "obfsPassword": MessageLookupByLibrary.simpleMessage("難読化パスワード"),
     "onDemand": MessageLookupByLibrary.simpleMessage("オンデマンド"),
-    "onDemandDesc": MessageLookupByLibrary.simpleMessage(
-      "オンデマンドは、除外した Wi-Fi に接続している間プロキシを一時停止します。",
-    ),
     "onlyStatisticsProxy": MessageLookupByLibrary.simpleMessage(
       "プロキシトラフィックのみ集計",
     ),
@@ -983,7 +970,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "proxies": MessageLookupByLibrary.simpleMessage("プロキシ"),
     "proxiesProfileLabel": m55,
     "proxyGroup": MessageLookupByLibrary.simpleMessage("プロキシグループ"),
-    "proxyGroupsCount": m56,
     "proxyProviders": MessageLookupByLibrary.simpleMessage("プロキシプロバイダー"),
     "proxySettings": MessageLookupByLibrary.simpleMessage("プロキシと速度テスト"),
     "proxyType": MessageLookupByLibrary.simpleMessage("プロキシタイプ"),
@@ -1039,11 +1025,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "restartCoreTip": MessageLookupByLibrary.simpleMessage("コアを再起動してもよろしいですか？"),
     "restore": MessageLookupByLibrary.simpleMessage("復元"),
     "restoreAllData": MessageLookupByLibrary.simpleMessage("すべてのデータを復元"),
-    "restoreConvertedProfiles": m57,
+    "restoreConvertedProfiles": m56,
     "restoreDefaults": MessageLookupByLibrary.simpleMessage("デフォルトに戻す"),
     "restoreOnlyConfig": MessageLookupByLibrary.simpleMessage("プロファイルのみ復元"),
     "restoreSuccess": MessageLookupByLibrary.simpleMessage("復元が完了しました"),
-    "restoreUnconvertedProfiles": m58,
+    "restoreUnconvertedProfiles": m57,
     "result": MessageLookupByLibrary.simpleMessage("結果"),
     "retry": MessageLookupByLibrary.simpleMessage("再試行"),
     "routeAddress": MessageLookupByLibrary.simpleMessage("ルートアドレス"),
@@ -1180,13 +1166,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "running": MessageLookupByLibrary.simpleMessage("実行中"),
     "runtimeConfig": MessageLookupByLibrary.simpleMessage("ランタイム設定"),
     "safeMode": MessageLookupByLibrary.simpleMessage("セーフモード"),
-    "safeModeAppTitle": m59,
+    "safeModeAppTitle": m58,
     "saturation": MessageLookupByLibrary.simpleMessage("彩度"),
     "save": MessageLookupByLibrary.simpleMessage("保存"),
     "saveChanges": MessageLookupByLibrary.simpleMessage("変更を保存しますか？"),
     "search": MessageLookupByLibrary.simpleMessage("検索"),
     "seconds": MessageLookupByLibrary.simpleMessage("秒"),
-    "secondsCount": m60,
+    "secondsCount": m59,
     "selectAll": MessageLookupByLibrary.simpleMessage("すべて選択"),
     "selected": MessageLookupByLibrary.simpleMessage("選択済み"),
     "server": MessageLookupByLibrary.simpleMessage("サーバー"),
@@ -1194,7 +1180,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "serviceFailed": MessageLookupByLibrary.simpleMessage("検出に失敗しました"),
     "serviceStatus": MessageLookupByLibrary.simpleMessage("サービスの状態"),
     "settings": MessageLookupByLibrary.simpleMessage("設定"),
-    "shareLinkUnreadable": m61,
+    "shareLinkUnreadable": m60,
     "shareLinksInvalid": MessageLookupByLibrary.simpleMessage(
       "リンクからプロキシを読み取れませんでした",
     ),
@@ -1240,7 +1226,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "singBoxDegradationReasonGroupDropped":
         MessageLookupByLibrary.simpleMessage("利用可能なメンバーがないため、グループごと削除されました"),
-    "singBoxDegradationReasonGroupMember": m62,
+    "singBoxDegradationReasonGroupMember": m61,
     "singBoxDegradationReasonGroupMemberReject":
         MessageLookupByLibrary.simpleMessage(
           "REJECT には sing-box のアウトバウンドがなく、除外されました",
@@ -1248,18 +1234,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "singBoxDegradationReasonGroupNested": MessageLookupByLibrary.simpleMessage(
       "メンバーに他のグループが含まれます。ネストしたグループは引き継がれません",
     ),
-    "singBoxDegradationReasonGroupType": m63,
-    "singBoxDegradationReasonNodeProtocol": m64,
+    "singBoxDegradationReasonGroupType": m62,
+    "singBoxDegradationReasonNodeProtocol": m63,
     "singBoxDegradationReasonNodeUnusable":
         MessageLookupByLibrary.simpleMessage(
           "sing-box に必要な項目（WireGuard のローカルアドレス）が不足しています",
         ),
-    "singBoxDegradationReasonRouting": m65,
+    "singBoxDegradationReasonRouting": m64,
     "singBoxDegradationsAllCarried": MessageLookupByLibrary.simpleMessage(
       "すべて sing-box に引き継がれます",
     ),
-    "singBoxDegradationsCount": m66,
-    "singBoxDegradationsImportSummary": m67,
+    "singBoxDegradationsCount": m65,
+    "singBoxDegradationsImportSummary": m66,
     "singBoxDegradationsImportTitle": MessageLookupByLibrary.simpleMessage(
       "インポート完了（sing-box 降格あり）",
     ),
@@ -1275,11 +1261,11 @@ class MessageLookup extends MessageLookupByLibrary {
       "sing-box は同梱されていません。ピン留めされた公式ビルド（約 33 MB）をアプリのデータフォルダーにダウンロードできます。アプリを更新しても残ります。tools/singbox/README.md の手順で sing-box.exe を手動配置することもできます。",
     ),
     "singBoxDownloadRetry": MessageLookupByLibrary.simpleMessage("ダウンロードを再試行"),
-    "singBoxDownloading": m68,
-    "singBoxManagedBinary": m69,
+    "singBoxDownloading": m67,
+    "singBoxManagedBinary": m68,
     "singleAdd": MessageLookupByLibrary.simpleMessage("個別追加"),
     "singleImport": MessageLookupByLibrary.simpleMessage("個別インポート"),
-    "singleValueTip": m70,
+    "singleValueTip": m69,
     "skipCertVerify": MessageLookupByLibrary.simpleMessage("証明書の検証をスキップ"),
     "skipDomain": MessageLookupByLibrary.simpleMessage("スキップするドメイン"),
     "skipDstAddress": MessageLookupByLibrary.simpleMessage("スキップする宛先アドレス"),
@@ -1290,7 +1276,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "source": MessageLookupByLibrary.simpleMessage("ソース"),
     "specialProxy": MessageLookupByLibrary.simpleMessage("特殊プロキシ"),
     "specialRules": MessageLookupByLibrary.simpleMessage("特殊ルール"),
-    "spectrum": MessageLookupByLibrary.simpleMessage("スペクトル"),
     "speedStatistics": MessageLookupByLibrary.simpleMessage("速度統計"),
     "splitStrategy": MessageLookupByLibrary.simpleMessage("振り分け戦略"),
     "splitStrategyNotEmpty": MessageLookupByLibrary.simpleMessage(
@@ -1378,7 +1363,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "update": MessageLookupByLibrary.simpleMessage("更新"),
     "upload": MessageLookupByLibrary.simpleMessage("アップロード"),
     "url": MessageLookupByLibrary.simpleMessage("URL"),
-    "urlTip": m71,
+    "urlTip": m70,
     "useHosts": MessageLookupByLibrary.simpleMessage("Hostsを使用"),
     "useSystemHosts": MessageLookupByLibrary.simpleMessage("システムのHostsを使用"),
     "usedTraffic": MessageLookupByLibrary.simpleMessage("使用済みトラフィック"),
@@ -1394,8 +1379,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "vpnIpv6": MessageLookupByLibrary.simpleMessage("VPN IPv6"),
     "whitelistMode": MessageLookupByLibrary.simpleMessage("ホワイトリストモード"),
     "writeToSystem": MessageLookupByLibrary.simpleMessage("システムに書き込む"),
-    "yearsAgo": m72,
-    "yearsAgoShort": m73,
+    "yearsAgo": m71,
+    "yearsAgoShort": m72,
     "zhCN": MessageLookupByLibrary.simpleMessage("簡体字中国語"),
   };
 }
