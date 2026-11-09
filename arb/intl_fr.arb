@@ -447,6 +447,8 @@
   "backupAndRestore": "Sauvegarde et restauration",
   "restore": "Restaurer",
   "restoreSuccess": "Restauration réussie",
+  "restoreConvertedProfiles": "{count} profils personnalisés ont été convertis en profils ordinaires (leurs effets sont intégrés au fichier de profil)",
+  "restoreUnconvertedProfiles": "Conversion impossible : {names}. Ils ont été conservés tels quels et non appliqués.",
   "resetSettings": "Rétablir les réglages par défaut",
   "restoreDefaults": "Rétablir les valeurs par défaut",
   "resetSettingsDesc": "Tous les réglages seront rétablis à leurs valeurs par défaut (les valeurs d'usine ajustées).",

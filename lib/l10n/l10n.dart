@@ -3610,6 +3610,26 @@ class AppLocalizations {
     );
   }
 
+  /// `{count} custom profiles were converted to regular profiles (their effects are baked into the profile file)`
+  String restoreConvertedProfiles(Object count) {
+    return Intl.message(
+      '$count custom profiles were converted to regular profiles (their effects are baked into the profile file)',
+      name: 'restoreConvertedProfiles',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Could not convert: {names}. They were kept unchanged and not applied.`
+  String restoreUnconvertedProfiles(Object names) {
+    return Intl.message(
+      'Could not convert: $names. They were kept unchanged and not applied.',
+      name: 'restoreUnconvertedProfiles',
+      desc: '',
+      args: [names],
+    );
+  }
+
   /// `Restore default settings`
   String get resetSettings {
     return Intl.message(

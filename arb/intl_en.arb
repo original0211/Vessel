@@ -447,6 +447,8 @@
   "backupAndRestore": "Backup and restore",
   "restore": "Restore",
   "restoreSuccess": "Restore successful",
+  "restoreConvertedProfiles": "{count} custom profiles were converted to regular profiles (their effects are baked into the profile file)",
+  "restoreUnconvertedProfiles": "Could not convert: {names}. They were kept unchanged and not applied.",
   "resetSettings": "Restore default settings",
   "restoreDefaults": "Restore defaults",
   "resetSettingsDesc": "All settings will be restored to their defaults (the tuned factory defaults).",

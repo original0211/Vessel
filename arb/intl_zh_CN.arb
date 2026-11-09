@@ -447,6 +447,8 @@
   "backupAndRestore": "备份与恢复",
   "restore": "恢复",
   "restoreSuccess": "恢复成功",
+  "restoreConvertedProfiles": "{count} 个自定义配置已转换为普通配置（效果已固化进配置文件）",
+  "restoreUnconvertedProfiles": "以下自定义配置转换失败，已原样保留且未启用：{names}",
   "resetSettings": "恢复默认设置",
   "restoreDefaults": "恢复默认",
   "resetSettingsDesc": "将把全部设置恢复为默认（出厂最优默认）。",

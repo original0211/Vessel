@@ -447,6 +447,8 @@
   "backupAndRestore": "バックアップと復元",
   "restore": "復元",
   "restoreSuccess": "復元が完了しました",
+  "restoreConvertedProfiles": "{count} 件のカスタムプロファイルを通常のプロファイルに変換しました（効果はプロファイルファイルに固定されています）",
+  "restoreUnconvertedProfiles": "変換できませんでした：{names}。変更せず保持され、適用されていません。",
   "resetSettings": "設定をデフォルトに戻す",
   "restoreDefaults": "デフォルトに戻す",
   "resetSettingsDesc": "すべての設定をデフォルト（調整済みの工場出荷時デフォルト）に戻します。",

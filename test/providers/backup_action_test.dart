@@ -105,7 +105,8 @@ void main() {
         target,
       ).restore(RestoreOption.all, (_) async => archivePath);
 
-      expect(restored, isTrue);
+      expect(restored?.converted, 0);
+      expect(restored?.failedLabels, isEmpty);
       final stored = await testDatabase.profilesDao.query().get();
       expect(stored.map((item) => item.label), ['Backed up']);
       expect(profileFile.readAsStringSync(), 'proxies: []');
@@ -133,7 +134,7 @@ void main() {
         container,
       ).restore(RestoreOption.all, (_) async => null);
 
-      expect(restored, isFalse);
+      expect(restored, isNull);
     });
 
     test('an unreadable archive is reported and changes nothing', () async {

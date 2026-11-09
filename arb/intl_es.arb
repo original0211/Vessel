@@ -447,6 +447,8 @@
   "backupAndRestore": "Copia de seguridad y restauración",
   "restore": "Restaurar",
   "restoreSuccess": "Restauración completada",
+  "restoreConvertedProfiles": "{count} perfiles personalizados se convirtieron en perfiles normales (sus efectos están integrados en el archivo de perfil)",
+  "restoreUnconvertedProfiles": "No se pudieron convertir: {names}. Se conservaron sin cambios y no se aplicaron.",
   "resetSettings": "Restablecer ajustes predeterminados",
   "restoreDefaults": "Restablecer predeterminados",
   "resetSettingsDesc": "Todos los ajustes se restablecerán a sus valores predeterminados (los valores de fábrica ajustados).",

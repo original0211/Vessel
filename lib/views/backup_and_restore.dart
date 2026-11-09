@@ -48,13 +48,34 @@ class _BackupAndRestoreState extends ConsumerState<BackupAndRestore>
     );
   }
 
-  Future<void> _restore(RestoreOption option, BackupFetch fetch) {
+  Future<void> _restore(RestoreOption option, BackupFetch fetch) async {
     final appLocalizations = context.appLocalizations;
-    return _run(
+    final report = await globalState.loadingRun<RestoreConversionReport?>(
+      () => ref.read(backupActionProvider.notifier).restore(option, fetch),
+      tag: LoadingTag.backup_restore,
       title: appLocalizations.restore,
-      successMessage: appLocalizations.restoreSuccess,
-      task: () =>
-          ref.read(backupActionProvider.notifier).restore(option, fetch),
+    );
+    if (report == null) return;
+    final message = StringBuffer(appLocalizations.restoreSuccess);
+    if (report.converted > 0) {
+      message
+        ..writeln()
+        ..write(appLocalizations.restoreConvertedProfiles(report.converted));
+    }
+    if (report.failedLabels.isNotEmpty) {
+      message
+        ..writeln()
+        ..write(
+          appLocalizations.restoreUnconvertedProfiles(
+            report.failedLabels.join(', '),
+          ),
+        );
+    }
+    unawaited(
+      dialogs.showMessage(
+        title: appLocalizations.restore,
+        message: TextSpan(text: message.toString()),
+      ),
     );
   }
 

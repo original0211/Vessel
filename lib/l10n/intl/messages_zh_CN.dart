@@ -142,35 +142,39 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m57(count, label) =>
       "${Intl.plural(count, other: '${label} 个策略组')}";
 
-  static String m58(appName) => "${appName}（安全模式）";
+  static String m58(count) => "${count} 个自定义配置已转换为普通配置（效果已固化进配置文件）";
 
-  static String m59(count) => "${count} 秒";
+  static String m59(names) => "以下自定义配置转换失败，已原样保留且未启用：${names}";
 
-  static String m60(link) => "无法从 ${link} 中读取代理";
+  static String m60(appName) => "${appName}（安全模式）";
 
-  static String m61(member) => "成员 ${member} 在 sing-box 下不可用，已剪除";
+  static String m61(count) => "${count} 秒";
 
-  static String m62(type) => "组类型 ${type} 未承接，仅保留 select 与 url-test";
+  static String m62(link) => "无法从 ${link} 中读取代理";
 
-  static String m63(type) => "协议 ${type} 不受 sing-box 支持";
+  static String m63(member) => "成员 ${member} 在 sing-box 下不可用，已剪除";
 
-  static String m64(count) => "${count} 条订阅分流规则未移植，由内置模板替代";
+  static String m64(type) => "组类型 ${type} 未承接，仅保留 select 与 url-test";
 
-  static String m65(count) => "sing-box 降级 ${count} 项";
+  static String m65(type) => "协议 ${type} 不受 sing-box 支持";
 
-  static String m66(count) => "这份配置有 ${count} 项在 sing-box 下被降级，点名清单可逐项查看。";
+  static String m66(count) => "${count} 条订阅分流规则未移植，由内置模板替代";
 
-  static String m67(percent) => "正在下载 sing-box…${percent}%";
+  static String m67(count) => "sing-box 降级 ${count} 项";
 
-  static String m68(version, path) => "应用托管的二进制（版本 ${version}）：${path}";
+  static String m68(count) => "这份配置有 ${count} 项在 sing-box 下被降级，点名清单可逐项查看。";
 
-  static String m69(label) => "${label}只能是一项";
+  static String m69(percent) => "正在下载 sing-box…${percent}%";
 
-  static String m70(label) => "${label}必须为URL";
+  static String m70(version, path) => "应用托管的二进制（版本 ${version}）：${path}";
 
-  static String m71(count) => "${count} 年前";
+  static String m71(label) => "${label}只能是一项";
 
-  static String m72(count) => "${count} 年前";
+  static String m72(label) => "${label}必须为URL";
+
+  static String m73(count) => "${count} 年前";
+
+  static String m74(count) => "${count} 年前";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -950,9 +954,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "restartCoreTip": MessageLookupByLibrary.simpleMessage("您确定要重启核心吗？"),
     "restore": MessageLookupByLibrary.simpleMessage("恢复"),
     "restoreAllData": MessageLookupByLibrary.simpleMessage("恢复所有数据"),
+    "restoreConvertedProfiles": m58,
     "restoreDefaults": MessageLookupByLibrary.simpleMessage("恢复默认"),
     "restoreOnlyConfig": MessageLookupByLibrary.simpleMessage("仅恢复配置文件"),
     "restoreSuccess": MessageLookupByLibrary.simpleMessage("恢复成功"),
+    "restoreUnconvertedProfiles": m59,
     "result": MessageLookupByLibrary.simpleMessage("结果"),
     "retry": MessageLookupByLibrary.simpleMessage("重试"),
     "routeAddress": MessageLookupByLibrary.simpleMessage("路由地址"),
@@ -1068,13 +1074,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "running": MessageLookupByLibrary.simpleMessage("运行中"),
     "runtimeConfig": MessageLookupByLibrary.simpleMessage("运行时配置"),
     "safeMode": MessageLookupByLibrary.simpleMessage("安全模式"),
-    "safeModeAppTitle": m58,
+    "safeModeAppTitle": m60,
     "saturation": MessageLookupByLibrary.simpleMessage("饱和度"),
     "save": MessageLookupByLibrary.simpleMessage("保存"),
     "saveChanges": MessageLookupByLibrary.simpleMessage("是否保存更改？"),
     "search": MessageLookupByLibrary.simpleMessage("搜索"),
     "seconds": MessageLookupByLibrary.simpleMessage("秒"),
-    "secondsCount": m59,
+    "secondsCount": m61,
     "selectAll": MessageLookupByLibrary.simpleMessage("全选"),
     "selected": MessageLookupByLibrary.simpleMessage("已选择"),
     "server": MessageLookupByLibrary.simpleMessage("服务器"),
@@ -1082,7 +1088,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "serviceFailed": MessageLookupByLibrary.simpleMessage("检测失败"),
     "serviceStatus": MessageLookupByLibrary.simpleMessage("服务状态"),
     "settings": MessageLookupByLibrary.simpleMessage("设置"),
-    "shareLinkUnreadable": m60,
+    "shareLinkUnreadable": m62,
     "shareLinksInvalid": MessageLookupByLibrary.simpleMessage("无法从链接中读取代理"),
     "show": MessageLookupByLibrary.simpleMessage("显示"),
     "showLess": MessageLookupByLibrary.simpleMessage("收起"),
@@ -1126,24 +1132,24 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "singBoxDegradationReasonGroupDropped":
         MessageLookupByLibrary.simpleMessage("组内成员全部不可用，整组已跳过"),
-    "singBoxDegradationReasonGroupMember": m61,
+    "singBoxDegradationReasonGroupMember": m63,
     "singBoxDegradationReasonGroupMemberReject":
         MessageLookupByLibrary.simpleMessage("REJECT 在 sing-box 无对应出站，已剪除"),
     "singBoxDegradationReasonGroupNested": MessageLookupByLibrary.simpleMessage(
       "成员包含其他组，嵌套组未承接",
     ),
-    "singBoxDegradationReasonGroupType": m62,
-    "singBoxDegradationReasonNodeProtocol": m63,
+    "singBoxDegradationReasonGroupType": m64,
+    "singBoxDegradationReasonNodeProtocol": m65,
     "singBoxDegradationReasonNodeUnusable":
         MessageLookupByLibrary.simpleMessage(
           "缺少 sing-box 所需参数（WireGuard 本地地址）",
         ),
-    "singBoxDegradationReasonRouting": m64,
+    "singBoxDegradationReasonRouting": m66,
     "singBoxDegradationsAllCarried": MessageLookupByLibrary.simpleMessage(
       "全部承接，sing-box 下无降级",
     ),
-    "singBoxDegradationsCount": m65,
-    "singBoxDegradationsImportSummary": m66,
+    "singBoxDegradationsCount": m67,
+    "singBoxDegradationsImportSummary": m68,
     "singBoxDegradationsImportTitle": MessageLookupByLibrary.simpleMessage(
       "导入完成（有 sing-box 降级）",
     ),
@@ -1159,11 +1165,11 @@ class MessageLookup extends MessageLookupByLibrary {
       "sing-box 未随包附带。可下载官方钉版（约 33 MB）到应用数据目录，应用升级不会丢失；也可按 tools/singbox/README.md 手工摆放 sing-box.exe。",
     ),
     "singBoxDownloadRetry": MessageLookupByLibrary.simpleMessage("重试下载"),
-    "singBoxDownloading": m67,
-    "singBoxManagedBinary": m68,
+    "singBoxDownloading": m69,
+    "singBoxManagedBinary": m70,
     "singleAdd": MessageLookupByLibrary.simpleMessage("单条添加"),
     "singleImport": MessageLookupByLibrary.simpleMessage("单条导入"),
-    "singleValueTip": m69,
+    "singleValueTip": m71,
     "skipCertVerify": MessageLookupByLibrary.simpleMessage("跳过证书验证"),
     "skipDomain": MessageLookupByLibrary.simpleMessage("跳过域名"),
     "skipDstAddress": MessageLookupByLibrary.simpleMessage("跳过目标地址"),
@@ -1259,7 +1265,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "update": MessageLookupByLibrary.simpleMessage("更新"),
     "upload": MessageLookupByLibrary.simpleMessage("上传"),
     "url": MessageLookupByLibrary.simpleMessage("URL"),
-    "urlTip": m70,
+    "urlTip": m72,
     "useHosts": MessageLookupByLibrary.simpleMessage("使用Hosts"),
     "useSystemHosts": MessageLookupByLibrary.simpleMessage("使用系统Hosts"),
     "usedTraffic": MessageLookupByLibrary.simpleMessage("已用流量"),
@@ -1275,8 +1281,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "vpnIpv6": MessageLookupByLibrary.simpleMessage("VPN IPv6"),
     "whitelistMode": MessageLookupByLibrary.simpleMessage("白名单模式"),
     "writeToSystem": MessageLookupByLibrary.simpleMessage("写入系统"),
-    "yearsAgo": m71,
-    "yearsAgoShort": m72,
+    "yearsAgo": m73,
+    "yearsAgoShort": m74,
     "zhCN": MessageLookupByLibrary.simpleMessage("中文简体"),
   };
 }

@@ -447,6 +447,8 @@
   "backupAndRestore": "백업 및 복원",
   "restore": "복원",
   "restoreSuccess": "복원 완료",
+  "restoreConvertedProfiles": "사용자 지정 프로필 {count}개가 일반 프로필로 변환되었습니다 (효과가 프로필 파일에 고정됨)",
+  "restoreUnconvertedProfiles": "변환할 수 없음: {names}. 변경 없이 유지되었으며 적용되지 않았습니다.",
   "resetSettings": "기본 설정으로 복원",
   "restoreDefaults": "기본값으로 복원",
   "resetSettingsDesc": "모든 설정이 기본값(조정된 공장 기본값)으로 복원됩니다.",

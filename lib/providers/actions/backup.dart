@@ -17,11 +17,14 @@ class BackupAction extends _$BackupAction {
     });
   }
 
-  Future<bool> restore(RestoreOption option, BackupFetch fetch) {
+  Future<RestoreConversionReport?> restore(
+    RestoreOption option,
+    BackupFetch fetch,
+  ) {
     return _withWorkDir((workDir) async {
       final archivePath = await fetch(join(workDir, 'download.zip'));
       if (archivePath == null) {
-        return false;
+        return null;
       }
       final stagingDirPath = join(workDir, 'staging');
       final MigrationData data;
@@ -37,12 +40,11 @@ class BackupAction extends _$BackupAction {
             currentAppLocalizations.backupFromNewerVersion,
         });
       }
-      await applyRestore(data, option, stagingDirPath: stagingDirPath);
-      return true;
+      return applyRestore(data, option, stagingDirPath: stagingDirPath);
     });
   }
 
-  Future<bool> _withWorkDir(Future<bool> Function(String workDir) run) async {
+  Future<T> _withWorkDir<T>(Future<T> Function(String workDir) run) async {
     final workDir = Directory(join(await appPath.tempPath, 'backup$uniqueId'));
     await workDir.create(recursive: true);
     try {
@@ -82,11 +84,22 @@ class BackupAction extends _$BackupAction {
   }
 
   @visibleForTesting
-  Future<void> applyRestore(
-    MigrationData data,
+  Future<RestoreConversionReport> applyRestore(
+    MigrationData source,
     RestoreOption option, {
     String? stagingDirPath,
   }) async {
+    final sourceConfig =
+        option == RestoreOption.onlyProfiles || source.configMap == null
+        ? null
+        : Config.fromJson(source.configMap!);
+    final (:data, :report) = await materializeRestoredCustomProfiles(
+      ref,
+      source,
+      patchConfig:
+          sourceConfig?.patchClashConfig ?? ref.read(patchClashConfigProvider),
+      stagingDirPath: stagingDirPath,
+    );
     final configMap = data.configMap;
     final config = option == RestoreOption.onlyProfiles || configMap == null
         ? null
@@ -113,7 +126,7 @@ class BackupAction extends _$BackupAction {
     await _clearReplacedProviderCaches(previousProviders);
     await _clearOutdatedCompiledRuleSets(data.clashProviders);
     if (config == null) {
-      return;
+      return report;
     }
     // A desktop backup carries no package lists; the apps picked here stay.
     final accessControlProps = config.vpnProps.accessControlProps.hasPackages
@@ -127,6 +140,7 @@ class BackupAction extends _$BackupAction {
         ),
       ),
     );
+    return report;
   }
 
   /// The files go in before the rows that name them, so the returned callback
