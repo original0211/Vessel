@@ -44,23 +44,4 @@ void main() {
       );
     }
   });
-
-  test('an NTP server is a domain or an IP address', () {
-    for (final value in ['time.apple.com', '162.159.200.1', '2606:4700::1']) {
-      expect(validateHost(value, appLocalizations), isNull, reason: value);
-    }
-    for (final value in [
-      'https://time.apple.com',
-      'time.apple.com:123',
-      'time..com',
-      'time apple',
-      '-time.com',
-    ]) {
-      expect(
-        validateHost(value, appLocalizations),
-        appLocalizations.invalidHostContent,
-        reason: value,
-      );
-    }
-  });
 }

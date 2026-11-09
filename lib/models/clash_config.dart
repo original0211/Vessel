@@ -175,60 +175,7 @@ extension ProxyGroupExt on ProxyGroup {
     };
     return positions.isEmpty ? null : positions;
   }
-
-  String get definitionYaml => yaml.encode(definition);
-
-  /// What [definitionYaml] leaves out, such as an option added without a
-  /// value, was never there to remove, so it stays.
-  ProxyGroup withDefinitionYaml(String content) {
-    final document = _plainYaml(loadYaml(content));
-    if (document is! Map<String, Object?> ||
-        (document['name'] is! String && document['name'] is! num) ||
-        document['type'] is! String) {
-      throw const FormatException('Not a proxy group mapping');
-    }
-    final shown = definition;
-    final group = ProxyGroup.fromJson({
-      for (final MapEntry(:key, :value) in toJson().entries)
-        if (!shown.containsKey(key) && key != 'use-position') key: value,
-      ...document,
-      for (final key in proxyGroupTextKeys)
-        if (document[key] case final value? when value is! String)
-          key: value.toString(),
-      for (final key in const ['proxies', 'use'])
-        if (document[key] case final List<Object?> names)
-          key: [for (final name in names) name.toString()],
-      if (document.containsKey('use-position'))
-        'use-position': usePositionOf(document['use-position']),
-      'id': id,
-    }).copyWith(profileId: profileId, order: order);
-    return group.copyWith(usePosition: group.effectiveUsePosition);
-  }
 }
-
-Map<String, int>? usePositionOf(
-  Object? value, [
-  Map<String, String> names = const {},
-]) => switch (value) {
-  Map() => {
-    for (final MapEntry(:key, :value) in value.entries)
-      names['$key'] ?? '$key': ?int.tryParse('$value'),
-  },
-  _ => null,
-};
-
-const proxyGroupTextKeys = [
-  'name',
-  'url',
-  'filter',
-  'exclude-filter',
-  'exclude-type',
-  'expected-status',
-  'hash-key',
-  'default-selected',
-  'empty-fallback',
-  'icon',
-];
 
 @freezed
 abstract class Proxy with _$Proxy {
@@ -316,8 +263,6 @@ const _ssrCiphers = [
   'none',
 ];
 
-const _choiceEquality = ListEquality<String>();
-
 /// mihomo matches struct keys, like HTTP header names, in any case.
 Object? _keyIn(Map map, String key) {
   if (map.containsKey(key)) {
@@ -330,28 +275,6 @@ Object? _keyIn(Map map, String key) {
     }
   }
   return null;
-}
-
-Map<String, dynamic> _withPath(Map map, List<String> path, Object? value) {
-  final [key, ...rest] = path;
-  final next = Map<String, dynamic>.from(map);
-  final existing = _keyIn(next, key) as String? ?? key;
-  final child = rest.isEmpty
-      ? value
-      : _withPath(
-          switch (next[existing]) {
-            final Map map => map,
-            _ => const {},
-          },
-          rest,
-          value,
-        );
-  if (child == null || child == '' || child is Map && child.isEmpty) {
-    next.remove(existing);
-  } else {
-    next[existing] = child;
-  }
-  return next;
 }
 
 /// One app-level proxy, kept as the raw mapping the core parses, since each
@@ -403,32 +326,7 @@ extension CustomProxyExt on CustomProxy {
 
   List<String> get searchFields => [name, type, ?server];
 
-  Set<String> get requiredKeys => switch (type) {
-    'ss' => const {'server', 'port', 'password', 'cipher'},
-    'ssr' => const {'server', 'port', 'password', 'cipher', 'obfs', 'protocol'},
-    'vmess' => const {'server', 'port', 'uuid', 'alterId', 'cipher'},
-    'vless' => const {'server', 'port', 'uuid'},
-    'snell' => const {'server', 'port', 'psk'},
-    'trojan' || 'anytls' => const {'server', 'port', 'password'},
-    'hysteria' => const {'server', 'up', 'down'},
-    'hysteria2' => const {'server'},
-    'wireguard' => const {'private-key'},
-    'ssh' => const {'server', 'port', 'username'},
-    'mieru' => const {'server', 'transport', 'username', 'password'},
-    'sudoku' => const {'server', 'port', 'key'},
-    'masque' => const {'server', 'port', 'private-key', 'public-key'},
-    'openvpn' => const {'server', 'port', 'ca'},
-    'zerotier' => const {'network'},
-    'socks5' ||
-    'http' ||
-    'tuic' ||
-    'shadowquic' ||
-    'gost-relay' ||
-    'trusttunnel' => const {'server', 'port'},
-    _ => const {},
-  };
-
-  /// The rows the form always shows: the credentials and [requiredKeys].
+  /// The rows the form always shows.
   List<ProxyField> get fields => switch (type) {
     'ss' => const [ProxyField.cipher, ProxyField.password],
     'ssr' => const [
@@ -721,66 +619,6 @@ extension CustomProxyExt on CustomProxy {
     }
     return value;
   }
-
-  /// Drops the key on an empty [value], with any map left empty and the
-  /// options only the old value made available.
-  CustomProxy withField(ProxyField field, Object? value) {
-    final offered = options;
-    var next = copyWith(definition: _withPath(definition, field.path, value));
-    final stillOffered = next.options;
-    for (final option in offered) {
-      if (!stillOffered.contains(option)) {
-        next = next.copyWith(
-          definition: _withPath(next.definition, option.path, null),
-        );
-      }
-    }
-    return next;
-  }
-
-  /// Keeps the values the new type reads alike and fills the ones nearly
-  /// every server of it takes.
-  CustomProxy withType(String type) {
-    if (type == this.type) {
-      return this;
-    }
-    var next = withValue('type', type);
-    for (final field in ProxyField.values) {
-      final value = next.valueOf(field);
-      if (value == null) {
-        continue;
-      }
-      final choices = next.choicesOf(field);
-      final readsAlike =
-          (next.fields.contains(field) || next.options.contains(field)) &&
-          (_choiceEquality.equals(choicesOf(field), choices) ||
-              choices.contains(value));
-      if (!readsAlike) {
-        next = next.withField(field, null);
-      }
-    }
-    final defaults = switch (type) {
-      'vmess' => const {ProxyField.cipher: 'auto', ProxyField.alterId: 0},
-      'mieru' => const {ProxyField.transport: 'TCP'},
-      _ => const <ProxyField, Object>{},
-    };
-    for (final MapEntry(:key, :value) in defaults.entries) {
-      if (next.valueOf(key) == null) {
-        next = next.withField(key, value);
-      }
-    }
-    return next;
-  }
-
-  List<String> stringsOf(String key) =>
-      switch (definition[_keyIn(definition, key)]) {
-        final List items => [for (final item in items) item.toString()],
-        final String item when item.isNotEmpty => [item],
-        _ => const [],
-      };
-
-  CustomProxy withValue(String key, Object? value) =>
-      copyWith(definition: _withPath(definition, [key], value));
 }
 
 /// Per profile, since [target] names a proxy or group that profile defines.
@@ -882,9 +720,6 @@ Set<SnifferOverrideKey> _snifferOverrideKeysFromJson(List<Object?> json) => {
 extension SnifferOverrideExt on Sniffer {
   SnifferConfig sniffOf(SnifferOverrideKey key) =>
       sniff[key.field] ?? const SnifferConfig();
-
-  Sniffer withSniff(SnifferOverrideKey key, SnifferConfig config) =>
-      copyWith(sniff: {...sniff, key.field: config});
 
   // toJson leaves nested models as objects; the fragment is read as plain maps.
   Map<String, Object?> get _json {
@@ -1600,18 +1435,6 @@ extension ProxyProviderOptionsExt on ProxyProviderOptions {
 }
 
 extension ProfileOverridesExt on ProfileOverrides {
-  /// A custom profile brings no DNS section of its own, so it runs on
-  /// [baselineDnsOverrideKeys], which turn DNS on, unless its own `enable`
-  /// turns it off.
-  bool get customDnsEnabled =>
-      !dnsOverrideKeys.contains(DnsOverrideKey.enable) || dns.enable;
-
-  bool get customNtpEnabled =>
-      ntpOverrideKeys.contains(NtpOverrideKey.enable) && ntp.enable;
-
-  bool get customSnifferEnabled =>
-      snifferOverrideKeys.contains(SnifferOverrideKey.enable) && sniffer.enable;
-
   ProfileOverrides overAppTun(ProfileTun tun, Set<TunOverrideKey> keys) {
     final own = this.tun.toJson();
     return copyWith(
@@ -1697,13 +1520,6 @@ abstract class Rule with _$Rule {
 }
 
 extension RuleExt on Rule {
-  Rule autoOrder(Rule rule, String? a, String? b) {
-    final newRule = rule.order?.isNotEmpty != true
-        ? rule.copyWith(order: indexing.generateKeyBetween(a, b))
-        : rule;
-    return newRule;
-  }
-
   String? get realContent {
     return switch (ruleAction) {
       RuleAction.MATCH => null,

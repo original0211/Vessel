@@ -79,7 +79,7 @@ class _ToolViewState extends ConsumerState<ToolsView> {
         HaraHairline(color: palette.line),
         ...rows,
         if (footer != null) ...[
-          const SizedBox(height: 8),
+          const SizedBox(height: HaraSpace.sectionFooterGap),
           Text(footer, style: HaraText.profileMeta(context, palette.dim)),
         ],
       ],
@@ -387,7 +387,7 @@ class _LocaleRow extends ConsumerWidget {
                       _label(context, currentLocale),
                       style: HaraText.statusNode(context, palette.sub),
                     ),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: HaraSpace.localeGlyphGap),
                     GlyphIcon(AppGlyphs.picker, color: palette.sub),
                   ],
                 ),

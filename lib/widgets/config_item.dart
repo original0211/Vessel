@@ -36,10 +36,6 @@ bool _isHost(String value) => value.contains(':')
     ? _isIpv6(value)
     : value.length <= 253 && value.split('.').every(_domainLabel.hasMatch);
 
-String? validateHost(String? value, AppLocalizations appLocalizations) {
-  return _isHost(value ?? '') ? null : appLocalizations.invalidHostContent;
-}
-
 /// mihomo starts no DNS server, and only logs why, for an address this refuses.
 String? validateListenAddress(
   String? value,

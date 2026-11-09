@@ -314,20 +314,5 @@ void main() {
         isEmpty,
       );
     });
-
-    test('renames each set it names', () {
-      const names = {'Ads': 'Ad block'};
-
-      expect(
-        Rule.parse('RULE-SET,Ads,REJECT').renamedRuleSets(names).rawValue,
-        'RULE-SET,Ad block,REJECT',
-      );
-      expect(
-        Rule.parse(
-          'AND,((RULE-SET,Ads),(RULE-SET,Ads-old),(NETWORK,UDP)),REJECT',
-        ).renamedRuleSets(names).rawValue,
-        'AND,((RULE-SET,Ad block),(RULE-SET,Ads-old),(NETWORK,UDP)),REJECT',
-      );
-    });
   });
 }

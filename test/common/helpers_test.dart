@@ -195,29 +195,6 @@ void main() {
     });
   });
 
-  group('getProxiesColumns', () {
-    test('minimum 2 columns', () {
-      expect(getProxiesColumns(100, ProxiesLayout.standard), 2);
-    });
-
-    test('scales with width', () {
-      expect(getProxiesColumns(500, ProxiesLayout.standard), 2);
-      expect(getProxiesColumns(800, ProxiesLayout.standard), 4);
-    });
-
-    test('tight layout adds column', () {
-      final standard = getProxiesColumns(500, ProxiesLayout.standard);
-      final tight = getProxiesColumns(500, ProxiesLayout.tight);
-      expect(tight, standard + 1);
-    });
-
-    test('loose layout removes column', () {
-      final standard = getProxiesColumns(800, ProxiesLayout.standard);
-      final loose = getProxiesColumns(800, ProxiesLayout.loose);
-      expect(loose, standard - 1);
-    });
-  });
-
   group('getProfilesColumns', () {
     test('minimum 1 column', () {
       expect(getProfilesColumns(100), 1);

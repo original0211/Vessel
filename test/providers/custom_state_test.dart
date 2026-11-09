@@ -177,16 +177,6 @@ void main() {
       }
     });
 
-    test('the required keys are the ones each struct requires', () {
-      for (final type in customProxyTypes) {
-        expect(
-          CustomProxy(id: 0, definition: {'type': type}).requiredKeys,
-          keysOf(type, required: true).difference({'name'}),
-          reason: type,
-        );
-      }
-    });
-
     test('the form always shows every key a struct requires', () {
       // A PEM block does not fit a form row, and the form has no row for a
       // zerotier network yet.
@@ -199,11 +189,10 @@ void main() {
         expect(
           {for (final field in proxy.fields) field.path.single},
           containsAll(
-            proxy.requiredKeys.difference({
-              'server',
-              'port',
-              ...?notInForm[type],
-            }),
+            keysOf(
+              type,
+              required: true,
+            ).difference({'name', 'server', 'port', ...?notInForm[type]}),
           ),
           reason: type,
         );
@@ -284,110 +273,5 @@ void main() {
         }
       }
     });
-  });
-
-  test('a nested field adds and drops the maps that hold it, in any case the '
-      'core reads', () {
-    const proxy = CustomProxy(
-      id: 0,
-      definition: {'type': 'vless', 'network': 'ws'},
-    );
-    final withHost = proxy.withField(ProxyField.wsHost, 'cdn.example');
-
-    expect(withHost.definition['ws-opts'], {
-      'headers': {'Host': 'cdn.example'},
-    });
-    expect(withHost.valueOf(ProxyField.wsHost), 'cdn.example');
-    expect(
-      withHost.withField(ProxyField.wsHost, null).definition,
-      proxy.definition,
-    );
-
-    const lower = CustomProxy(
-      id: 0,
-      definition: {
-        'type': 'vless',
-        'network': 'ws',
-        'ws-opts': {
-          'headers': {'host': 'a.example'},
-        },
-      },
-    );
-    expect(lower.valueOf(ProxyField.wsHost), 'a.example');
-    expect(
-      lower.withField(ProxyField.wsHost, 'b.example').definition['ws-opts'],
-      {
-        'headers': {'host': 'b.example'},
-      },
-    );
-  });
-
-  test('a changed value drops the options only the old one made available', () {
-    const proxy = CustomProxy(
-      id: 0,
-      definition: {
-        'type': 'vless',
-        'network': 'ws',
-        'ws-opts': {
-          'path': '/a',
-          'headers': {'Host': 'a.example'},
-          'max-early-data': 2048,
-        },
-      },
-    );
-
-    expect(proxy.withField(ProxyField.network, 'grpc').definition, {
-      'type': 'vless',
-      'network': 'grpc',
-      'ws-opts': {'max-early-data': 2048},
-    });
-    expect(
-      const CustomProxy(
-        id: 0,
-        definition: {
-          'type': 'hysteria2',
-          'obfs': 'salamander',
-          'obfs-password': 'pw',
-        },
-      ).withField(ProxyField.obfs, null).definition,
-      {'type': 'hysteria2'},
-    );
-  });
-
-  test('a new type keeps what it reads alike and starts from the values '
-      'nearly every server takes', () {
-    const proxy = CustomProxy(
-      id: 0,
-      definition: {
-        'name': 'a',
-        'type': 'ss',
-        'cipher': 'aes-256-gcm',
-        'password': 'pw',
-        'udp-over-tcp': true,
-      },
-    );
-
-    final vmess = proxy.withType('vmess');
-    expect(vmess.definition, {
-      'name': 'a',
-      'type': 'vmess',
-      'cipher': 'auto',
-      'alterId': 0,
-    });
-    expect(vmess.definition.keys.first, 'name');
-    expect(vmess.withType('ss').definition, {'name': 'a', 'type': 'ss'});
-    expect(
-      proxy
-          .withField(ProxyField.cipher, 'aes-128-gcm')
-          .withType('vmess')
-          .definition['cipher'],
-      'aes-128-gcm',
-    );
-    expect(proxy.withType('trojan').definition, {
-      'name': 'a',
-      'type': 'trojan',
-      'password': 'pw',
-    });
-    expect(proxy.withType('ss'), same(proxy));
   });
 }

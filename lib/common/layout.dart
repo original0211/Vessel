@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:ui' show Size;
 
 import 'package:kfusion/enum/enum.dart';
@@ -59,15 +58,6 @@ Size windowControlsOverPage({
 }) {
   if (isMobileView) return Size.zero;
   return windowControlsOverSidebar(isMacOS: isMacOS, version: version);
-}
-
-int getProxiesColumns(double viewWidth, ProxiesLayout proxiesLayout) {
-  final columns = max((viewWidth / 250).ceil(), 2);
-  return switch (proxiesLayout) {
-    ProxiesLayout.tight => columns + 1,
-    ProxiesLayout.standard => columns,
-    ProxiesLayout.loose => columns - 1,
-  };
 }
 
 double cardSpacingOf(BuildContext context, ViewMode viewMode) =>

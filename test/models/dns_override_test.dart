@@ -355,32 +355,6 @@ proxy-server-nameserver-policy:
     expect(overrides.copyWith(dnsOverrideKeys: {}).ruleSets, isEmpty);
   });
 
-  test('a custom profile resolves unless it turns DNS off, and runs NTP and '
-      'sniffing only once it turns them on', () {
-    const fresh = ProfileOverrides();
-    expect(fresh.customDnsEnabled, isTrue);
-    expect(fresh.customNtpEnabled, isFalse);
-    expect(fresh.customSnifferEnabled, isFalse);
-
-    final picked = fresh.copyWith(
-      dns: const Dns(enable: false),
-      ntp: const Ntp(enable: true),
-      sniffer: const Sniffer(enable: true),
-    );
-    expect(picked.customDnsEnabled, isTrue);
-    expect(picked.customNtpEnabled, isFalse);
-    expect(picked.customSnifferEnabled, isFalse);
-
-    final on = picked.copyWith(
-      dnsOverrideKeys: {DnsOverrideKey.enable},
-      ntpOverrideKeys: {NtpOverrideKey.enable},
-      snifferOverrideKeys: {SnifferOverrideKey.enable},
-    );
-    expect(on.customDnsEnabled, isFalse);
-    expect(on.customNtpEnabled, isTrue);
-    expect(on.customSnifferEnabled, isTrue);
-  });
-
   group('ProxyProviderOptions', () {
     test('writes nothing until an option is set', () {
       expect(const ProxyProviderOptions().definition, isEmpty);

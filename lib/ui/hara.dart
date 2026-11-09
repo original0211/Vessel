@@ -303,6 +303,8 @@ abstract final class HaraSpace {
   static const titleToFirstGroup = 42.0;
   static const groupGap = 36.0;
   static const sectionTitleGap = 8.0;
+  static const sectionFooterGap = 8.0;
+  static const localeGlyphGap = 4.0;
   static const nodeRowVertical = 14.5;
   static const titleToList = 38.0;
   static const profileRowVertical = 20.0;

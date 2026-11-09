@@ -10,6 +10,8 @@ import 'dart:math' as math;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kfusion/ui/disc_motif.dart';
+import 'package:kfusion/ui/hara.dart';
+import 'package:material_ui/material_ui.dart';
 
 const aSurfaces = <String>[
   'lib/ui/hara.dart',
@@ -272,6 +274,24 @@ void main() {
       expect(DiscGeometry.dotRadius(216), closeTo(17.28, 1e-9));
       final center = DiscGeometry.dotCenter(const Offset(108, 108), 106.7);
       expect((center - const Offset(108, 108)).distance, closeTo(106.7, 1e-9));
+    });
+
+    test(
+      'the dot painted on the settled disc spans 17.176 across, since the '
+      'painter passes the ring mid-line radius rather than the disc size',
+      () {
+        const midLine = HaraSpace.ringSize / 2 - HaraSpace.ringStroke / 2;
+        expect(DiscGeometry.dotRadius(midLine) * 2, closeTo(17.176, 1e-9));
+      },
+    );
+
+    test('the vermilion keeps its settled values in both themes', () {
+      expect(HaraPalette.light.vermilion, const Color(0xFF7F0019));
+      expect(HaraPalette.dark.vermilion, const Color(0xFFB03A30));
+      expect(
+        HaraPalette.of(Brightness.dark, pureBlack: true).vermilion,
+        const Color(0xFFB03A30),
+      );
     });
   });
 }
