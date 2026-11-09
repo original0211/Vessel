@@ -107,10 +107,8 @@ void main() {
         dyOf(tester, l10n.backupAndRestore),
         lessThan(dyOf(tester, l10n.logs)),
       );
-      expect(
-        dyOf(tester, l10n.onDemand),
-        lessThan(dyOf(tester, l10n.backupAndRestore)),
-      );
+      // The on-demand entry is Android-only; this host is desktop.
+      expect(find.text(l10n.onDemand), findsNothing);
       expect(find.text(l10n.developerMode), findsOneWidget);
     });
 
@@ -135,14 +133,11 @@ void main() {
       expect(tester.takeException(), null);
     });
 
-    testWidgets('the desktop index carries the shared system proxy note', (
+    testWidgets('the desktop index carries the only system proxy switch', (
       tester,
     ) async {
       await pumpIndex(tester);
-      expect(
-        find.textContaining(currentAppLocalizations.systemProxySharedNote),
-        findsOneWidget,
-      );
+      expect(find.text(currentAppLocalizations.systemProxy), findsOneWidget);
     });
 
     testWidgets('the index TUN switch drives the shared config state', (
@@ -194,14 +189,11 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      // The TUN master row is gone: the name survives only as the
-      // detail section's title. The desktop system proxy row stands.
+      // The master rows are gone: the TUN name survives only as the
+      // detail section's title, and the system proxy switch lives
+      // only on the settings index.
       expect(find.text('TUN'), findsOneWidget);
-      expect(find.text(currentAppLocalizations.systemProxy), findsOneWidget);
-      expect(
-        find.textContaining(currentAppLocalizations.systemProxySharedNote),
-        findsOneWidget,
-      );
+      expect(find.text(currentAppLocalizations.systemProxy), findsNothing);
       expect(tester.takeException(), null);
     });
 

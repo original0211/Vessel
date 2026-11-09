@@ -375,7 +375,6 @@
   "color": "カラー",
   "unnamed": "名称未設定",
   "importFile": "ファイルからインポート",
-  "autoSetSystemDns": "システムDNSを自動設定",
   "details": "{label}の詳細",
   "process": "プロセス",
   "host": "ホスト",
@@ -652,7 +651,6 @@
   "label": "ラベル",
   "regex": "正規表現",
   "matchCase": "大文字と小文字を区別",
-  "iconSets": "アイコンセット",
   "invalidIconSet": "有効なアイコンセットではありません",
   "outbound": "アウトバウンド",
   "strictRoute": "厳格なルーティング",
@@ -661,7 +659,6 @@
   "routeExcludeAddress": "ルート除外アドレス",
   "keepAliveIdle": "TCP キープアライブ待機時間",
   "disableKeepAlive": "TCP キープアライブを無効化",
-  "routingMark": "ルーティングマーク",
   "strictRouteDesc": "厳格なルーティングは DNS などの通信が TUN を迂回するのを防ぎます。IPv6 がオフの場合、この端末の IPv6 通信は遮断されます。",
   "initFailed": "起動に失敗しました",
   "initFailedTip": "Vessel の起動中にエラーが発生したため、続行できません。詳細をコピーして問題を報告できます。繰り返し発生する場合は、データを消去すると起動できるようになることがあります。",
@@ -792,6 +789,5 @@
   "proxySettings": "プロキシと速度テスト",
   "kernel": "カーネル",
   "listDisplay": "リスト表示",
-  "nameResolution": "名前解決",
-  "systemProxySharedNote": "システムプロキシは、設定ページとネットワークページで同じスイッチです。"
+  "nameResolution": "名前解決"
 }

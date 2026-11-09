@@ -295,9 +295,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "autoRunDesc": MessageLookupByLibrary.simpleMessage(
       "Auto run starts the proxy when the app opens.",
     ),
-    "autoSetSystemDns": MessageLookupByLibrary.simpleMessage(
-      "Auto-set system DNS",
-    ),
     "autoUpdate": MessageLookupByLibrary.simpleMessage("Auto update"),
     "autoUpdateInterval": MessageLookupByLibrary.simpleMessage(
       "Auto-update interval",
@@ -802,7 +799,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "hue": MessageLookupByLibrary.simpleMessage("Hue"),
     "icon": MessageLookupByLibrary.simpleMessage("Icon"),
     "iconRecords": MessageLookupByLibrary.simpleMessage("Icon records"),
-    "iconSets": MessageLookupByLibrary.simpleMessage("Icon sets"),
     "ignoreBatteryOptimization": MessageLookupByLibrary.simpleMessage(
       "Ignore battery optimization",
     ),
@@ -1225,7 +1221,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "routeExcludeAddress": MessageLookupByLibrary.simpleMessage(
       "Route exclude addresses",
     ),
-    "routingMark": MessageLookupByLibrary.simpleMessage("Routing mark"),
     "ru": MessageLookupByLibrary.simpleMessage("Russian"),
     "rule": MessageLookupByLibrary.simpleMessage("Rule"),
     "ruleActionAndDesc": MessageLookupByLibrary.simpleMessage(
@@ -1540,9 +1535,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "system": MessageLookupByLibrary.simpleMessage("System"),
     "systemApp": MessageLookupByLibrary.simpleMessage("System apps"),
     "systemProxy": MessageLookupByLibrary.simpleMessage("System proxy"),
-    "systemProxySharedNote": MessageLookupByLibrary.simpleMessage(
-      "The system proxy is the same switch on the Settings and Network pages.",
-    ),
     "tapToAuthorize": MessageLookupByLibrary.simpleMessage("Tap to authorize"),
     "target": MessageLookupByLibrary.simpleMessage("Target"),
     "tcpConcurrent": MessageLookupByLibrary.simpleMessage("TCP concurrent"),

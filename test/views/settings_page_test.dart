@@ -81,7 +81,6 @@ void main() {
       'General',
       'Network',
       'DNS',
-      'On demand',
       'Logs',
       'Resources',
       'Data maintenance',
@@ -90,6 +89,8 @@ void main() {
     ]) {
       expect(find.text(label), findsOneWidget, reason: label);
     }
+    // The on-demand entry is Android-only; this host is desktop.
+    expect(find.text('On demand'), findsNothing);
     for (final label in ['Advanced', 'Advanced configuration']) {
       expect(find.text(label), findsNothing, reason: label);
     }

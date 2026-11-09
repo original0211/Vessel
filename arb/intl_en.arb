@@ -375,7 +375,6 @@
   "color": "Color",
   "unnamed": "Unnamed",
   "importFile": "Import from file",
-  "autoSetSystemDns": "Auto-set system DNS",
   "details": "{label} details",
   "process": "Process",
   "host": "Host",
@@ -652,7 +651,6 @@
   "label": "Label",
   "regex": "Regex",
   "matchCase": "Match case",
-  "iconSets": "Icon sets",
   "invalidIconSet": "Not a valid icon set",
   "outbound": "Outbound",
   "strictRoute": "Strict route",
@@ -661,7 +659,6 @@
   "routeExcludeAddress": "Route exclude addresses",
   "keepAliveIdle": "TCP keep-alive idle",
   "disableKeepAlive": "Disable TCP keep-alive",
-  "routingMark": "Routing mark",
   "strictRouteDesc": "Strict route keeps traffic such as DNS from bypassing TUN, and with IPv6 off it blocks this device's IPv6 connections.",
   "initFailed": "Startup failed",
   "initFailedTip": "Vessel ran into an error while starting and can't continue. Copy the details to report the problem. If it keeps happening, clearing the data usually lets the app start again.",
@@ -792,6 +789,5 @@
   "proxySettings": "Proxy and speed test",
   "kernel": "Kernel",
   "listDisplay": "List display",
-  "nameResolution": "Resolution",
-  "systemProxySharedNote": "The system proxy is the same switch on the Settings and Network pages."
+  "nameResolution": "Resolution"
 }

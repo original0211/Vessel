@@ -312,13 +312,7 @@ void main() {
       () => messenger.setMockMethodCallHandler(SystemChannels.platform, null),
     );
 
-    final iconSet = IconSet(
-      id: 1,
-      name: 'Remote icons',
-      url: 'https://example.com/icons.json',
-      lastUpdateTime: DateTime.now(),
-    );
-    final container = createContainer(iconSets: [iconSet]);
+    final container = createContainer();
     container.read(viewSizeProvider.notifier).update((_) => size);
 
     await tester.pumpWidget(
@@ -327,7 +321,7 @@ void main() {
         child: const TestApp(child: ResourcesView()),
       ),
     );
-    await pumpUntilFound(tester, find.text('Remote icons'));
+    await pumpUntilFound(tester, find.text(GeoResource.MMDB.name));
 
     final l10n = currentAppLocalizations;
     Future<void> openMenu(String title) async {
@@ -341,22 +335,6 @@ void main() {
     await tester.tap(find.text(l10n.copyLink));
     await tester.pumpAndSettle();
     expect(copied, defaultGeoXUrl[GeoResource.MMDB]);
-
-    await openMenu('Remote icons');
-    expect(find.text(l10n.sync), findsOneWidget);
-    expect(find.text(l10n.edit), findsNothing);
-    await tester.tap(find.text(l10n.copyLink));
-    await tester.pumpAndSettle();
-    expect(copied, iconSet.url);
-
-    container.read(updatingKeysProvider.notifier).start(iconSet.updatingKey);
-    await tester.pump();
-    await tester.pump(const Duration(seconds: 1));
-    await rightClick(tester, find.text('Remote icons'));
-    await tester.pump();
-    await tester.pump(const Duration(seconds: 1));
-    expect(find.text(l10n.copyLink), findsOneWidget);
-    expect(find.text(l10n.sync), findsNothing);
     expect(tester.takeException(), null);
 
     await tester.pumpWidget(const SizedBox.shrink());
@@ -401,60 +379,44 @@ void main() {
         child: const TestApp(child: ResourcesView()),
       ),
     );
-    await pumpUntilFound(tester, find.text('Remote icons'));
+    await pumpUntilFound(tester, find.text('Remote set'));
 
     final l10n = currentAppLocalizations;
-    for (final title in [l10n.iconSets, l10n.ruleProviders]) {
-      expect(find.text(title), findsOneWidget);
-    }
-    for (final label in ['Remote icons', 'Remote set']) {
-      expect(find.text(label), findsOneWidget);
-    }
+    expect(find.text(l10n.ruleProviders), findsOneWidget);
+    // The icon set section is retired: its data still loads, but
+    // no section or row renders.
+    expect(find.text('Icon sets'), findsNothing);
+    expect(find.text('Remote icons'), findsNothing);
+    expect(find.text('Remote set'), findsOneWidget);
     for (final label in ['Local icons', 'Local set']) {
       expect(find.text(label), findsNothing);
     }
-    final iconSetItem = find.ancestor(
-      of: find.text('Remote icons'),
+    expect(find.text(remoteIconSet.url), findsNothing);
+    final providerItem = find.ancestor(
+      of: find.text('Remote set'),
       matching: find.byType(ContextMenuRegion),
     );
-    final iconCount = find.descendant(
-      of: iconSetItem,
-      matching: find.text('2'),
-    );
-    expect(iconCount, findsOneWidget);
-    expect(
-      find.descendant(of: iconSetItem, matching: find.text(l10n.justNow)),
-      findsOneWidget,
-    );
-    expect(find.text(remoteIconSet.url), findsNothing);
     await pumpUntilFound(
       tester,
-      find.descendant(
-        of: find.ancestor(
-          of: find.text('Remote set'),
-          matching: find.byType(ContextMenuRegion),
-        ),
-        matching: find.text(l10n.unknown),
-      ),
+      find.descendant(of: providerItem, matching: find.text(l10n.unknown)),
     );
     expect(find.byType(CommonCircleLoading), findsNothing);
     expect(find.byGlyph(AppGlyphs.sync), findsOneWidget);
 
     container
         .read(updatingKeysProvider.notifier)
-        .start(remoteIconSet.updatingKey);
+        .start(remoteProvider.updatingKey);
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
     expect(
       find.descendant(
-        of: iconSetItem,
+        of: providerItem,
         matching: find.byType(CommonCircleLoading),
       ),
       findsOneWidget,
     );
-    expect(iconCount, findsNothing);
     expect(
-      find.descendant(of: iconSetItem, matching: find.text(l10n.justNow)),
+      find.descendant(of: providerItem, matching: find.text(l10n.unknown)),
       findsOneWidget,
     );
     expect(find.byGlyph(AppGlyphs.sync), findsNothing);
@@ -506,7 +468,9 @@ void main() {
 
     final l10n = currentAppLocalizations;
     await pumpUntilFound(tester, find.text(GeoResource.MMDB.name));
-    expect(find.text('Remote icons'), findsOneWidget);
+    // Icon set data is loaded with the rest, but the section is
+    // retired, so its rows never render.
+    expect(find.text('Remote icons'), findsNothing);
     expect(find.text(l10n.unknown), findsNWidgets(GeoResource.values.length));
     await tester.pumpAndSettle();
     expect(tester.takeException(), null);

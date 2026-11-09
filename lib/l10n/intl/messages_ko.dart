@@ -249,7 +249,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "autoRunDesc": MessageLookupByLibrary.simpleMessage(
       "자동 시작은 앱을 열 때 프록시를 시작합니다.",
     ),
-    "autoSetSystemDns": MessageLookupByLibrary.simpleMessage("시스템 DNS 자동 설정"),
     "autoUpdate": MessageLookupByLibrary.simpleMessage("자동 업데이트"),
     "autoUpdateInterval": MessageLookupByLibrary.simpleMessage("자동 업데이트 간격"),
     "back": MessageLookupByLibrary.simpleMessage("뒤로"),
@@ -674,7 +673,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "hue": MessageLookupByLibrary.simpleMessage("색조"),
     "icon": MessageLookupByLibrary.simpleMessage("아이콘"),
     "iconRecords": MessageLookupByLibrary.simpleMessage("아이콘 기록"),
-    "iconSets": MessageLookupByLibrary.simpleMessage("아이콘 세트"),
     "ignoreBatteryOptimization": MessageLookupByLibrary.simpleMessage(
       "배터리 최적화 무시",
     ),
@@ -1036,7 +1034,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "retry": MessageLookupByLibrary.simpleMessage("다시 시도"),
     "routeAddress": MessageLookupByLibrary.simpleMessage("라우팅 주소"),
     "routeExcludeAddress": MessageLookupByLibrary.simpleMessage("라우팅 제외 주소"),
-    "routingMark": MessageLookupByLibrary.simpleMessage("라우팅 마크"),
     "ru": MessageLookupByLibrary.simpleMessage("러시아어"),
     "rule": MessageLookupByLibrary.simpleMessage("규칙"),
     "ruleActionAndDesc": MessageLookupByLibrary.simpleMessage("논리 규칙 AND"),
@@ -1311,9 +1308,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "system": MessageLookupByLibrary.simpleMessage("시스템"),
     "systemApp": MessageLookupByLibrary.simpleMessage("시스템 앱"),
     "systemProxy": MessageLookupByLibrary.simpleMessage("시스템 프록시"),
-    "systemProxySharedNote": MessageLookupByLibrary.simpleMessage(
-      "시스템 프록시는 설정 페이지와 네트워크 페이지에서 동일한 스위치입니다.",
-    ),
     "tapToAuthorize": MessageLookupByLibrary.simpleMessage("눌러서 허용"),
     "target": MessageLookupByLibrary.simpleMessage("대상"),
     "tcpConcurrent": MessageLookupByLibrary.simpleMessage("TCP 동시 연결"),

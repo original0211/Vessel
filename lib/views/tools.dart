@@ -131,13 +131,14 @@ class _ToolViewState extends ConsumerState<ToolsView> {
         ),
       ),
       const _Destination('DNS', HaraOpenRow(label: 'DNS', target: DnsView())),
-      _Destination(
-        appLocalizations.onDemand,
-        HaraOpenRow(
-          label: appLocalizations.onDemand,
-          target: const OnDemandView(),
+      if (system.isAndroid)
+        _Destination(
+          appLocalizations.onDemand,
+          HaraOpenRow(
+            label: appLocalizations.onDemand,
+            target: const OnDemandView(),
+          ),
         ),
-      ),
       if (system.isAndroid)
         _Destination(
           appLocalizations.accessControl,
@@ -212,12 +213,7 @@ class _ToolViewState extends ConsumerState<ToolsView> {
           ].join('\n'),
         ),
         if (takeover.isNotEmpty)
-          _section(
-            rows: [for (final item in takeover) HaraBoundToggle(item)],
-            footer: system.isDesktop
-                ? appLocalizations.systemProxySharedNote
-                : null,
-          ),
+          _section(rows: [for (final item in takeover) HaraBoundToggle(item)]),
         _section(rows: [for (final item in daily) item.row]),
         _section(rows: [for (final item in configuration) item.row]),
         _section(rows: [for (final item in maintenance) item.row]),

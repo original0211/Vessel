@@ -55,12 +55,6 @@ final _toggleCases = <_ToggleCase>[
   ),
   _ToggleCase('ipv6', const Ipv6Item(), (c) => c.read(vpnSettingProvider).ipv6),
   _ToggleCase(
-    'auto set system dns',
-    const AutoSetSystemDnsItem(),
-    (c) => c.read(networkSettingProvider).autoSetSystemDns,
-    initial: true,
-  ),
-  _ToggleCase(
     'dns hijacking',
     const DNSHijackingItem(),
     (c) => c.read(vpnSettingProvider).dnsHijacking,
@@ -167,7 +161,6 @@ void main() {
     }) {
       return networkOptionsItems(
         isDesktop: isDesktop,
-        isMacOS: false,
         isCustomInterfaceName: isCustomInterfaceName,
       ).map((item) => item.runtimeType).toList();
     }
@@ -282,10 +275,9 @@ void main() {
       expect(container.read(patchClashConfigProvider).tun.mtu, 9000);
     });
 
-    test('keep-alive rows stay off Android and the mark is Linux only', () {
-      expect(outboundItems(isDesktop: false, isLinux: false), isEmpty);
-      expect(outboundItems(isDesktop: true, isLinux: false), hasLength(3));
-      expect(outboundItems(isDesktop: true, isLinux: true), hasLength(4));
+    test('keep-alive rows stay off Android', () {
+      expect(outboundItems(isDesktop: false), isEmpty);
+      expect(outboundItems(isDesktop: true), hasLength(3));
     });
   });
 }

@@ -218,14 +218,6 @@ class _ResourcesViewState extends ConsumerState<ResourcesView> {
                   ),
                   const SizedBox(height: HaraSpace.groupGap),
                   HaraSection(
-                    title: appLocalizations.iconSets,
-                    rows: [
-                      for (final iconSet in iconSets)
-                        _IconSetItem(iconSet, key: ValueKey(iconSet.id)),
-                    ],
-                  ),
-                  const SizedBox(height: HaraSpace.groupGap),
-                  HaraSection(
                     title: appLocalizations.ruleProviders,
                     rows: [
                       for (final provider in ruleProviders)
@@ -504,25 +496,6 @@ class _GeoResourceItem extends ConsumerWidget {
             .updateGeoResource(type),
         onEdit: url == null ? null : () => _updateUrl(context, ref, url),
       ),
-    );
-  }
-}
-
-class _IconSetItem extends ConsumerWidget {
-  final IconSet iconSet;
-
-  const _IconSetItem(this.iconSet, {super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return _ResourceItem(
-      title: iconSet.name,
-      url: iconSet.url,
-      chip: iconSet.icons.length.compact,
-      lastUpdateTime: iconSet.lastUpdateTime,
-      isUpdating: ref.watch(isUpdatingProvider(iconSet.updatingKey)),
-      onSync: () =>
-          ref.read(resourcesActionProvider.notifier).updateIconSet(iconSet),
     );
   }
 }

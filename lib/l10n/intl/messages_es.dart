@@ -308,9 +308,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "autoRunDesc": MessageLookupByLibrary.simpleMessage(
       "La ejecución automática inicia el proxy al abrir la app.",
     ),
-    "autoSetSystemDns": MessageLookupByLibrary.simpleMessage(
-      "Configurar DNS del sistema automáticamente",
-    ),
     "autoUpdate": MessageLookupByLibrary.simpleMessage(
       "Actualización automática",
     ),
@@ -845,7 +842,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "hue": MessageLookupByLibrary.simpleMessage("Tono"),
     "icon": MessageLookupByLibrary.simpleMessage("Icono"),
     "iconRecords": MessageLookupByLibrary.simpleMessage("Registros de iconos"),
-    "iconSets": MessageLookupByLibrary.simpleMessage("Conjuntos de iconos"),
     "ignoreBatteryOptimization": MessageLookupByLibrary.simpleMessage(
       "Ignorar optimización de batería",
     ),
@@ -1312,9 +1308,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "routeExcludeAddress": MessageLookupByLibrary.simpleMessage(
       "Direcciones excluidas de la ruta",
     ),
-    "routingMark": MessageLookupByLibrary.simpleMessage(
-      "Marca de enrutamiento",
-    ),
     "ru": MessageLookupByLibrary.simpleMessage("Ruso"),
     "rule": MessageLookupByLibrary.simpleMessage("Regla"),
     "ruleActionAndDesc": MessageLookupByLibrary.simpleMessage(
@@ -1646,9 +1639,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "system": MessageLookupByLibrary.simpleMessage("Sistema"),
     "systemApp": MessageLookupByLibrary.simpleMessage("Apps del sistema"),
     "systemProxy": MessageLookupByLibrary.simpleMessage("Proxy del sistema"),
-    "systemProxySharedNote": MessageLookupByLibrary.simpleMessage(
-      "El proxy del sistema es el mismo interruptor en las páginas de Ajustes y Red.",
-    ),
     "tapToAuthorize": MessageLookupByLibrary.simpleMessage(
       "Toca para autorizar",
     ),

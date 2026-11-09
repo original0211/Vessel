@@ -375,7 +375,6 @@
   "color": "颜色",
   "unnamed": "未命名",
   "importFile": "通过文件导入",
-  "autoSetSystemDns": "自动设置系统DNS",
   "details": "{label}详情",
   "process": "进程",
   "host": "主机",
@@ -652,7 +651,6 @@
   "label": "标签",
   "regex": "正则",
   "matchCase": "区分大小写",
-  "iconSets": "图标集",
   "invalidIconSet": "不是有效的图标集",
   "outbound": "出站",
   "strictRoute": "严格路由",
@@ -661,7 +659,6 @@
   "routeExcludeAddress": "排除路由地址",
   "keepAliveIdle": "TCP 保持活动空闲时间",
   "disableKeepAlive": "禁用 TCP 保持活动",
-  "routingMark": "路由标记",
   "strictRouteDesc": "严格路由防止 DNS 等流量绕过虚拟网卡，关闭 IPv6 时会阻断本机的 IPv6 连接。",
   "initFailed": "启动失败",
   "initFailedTip": "Vessel 启动时出错，无法继续运行。可以复制错误详情用于反馈；如果问题反复出现，清除数据后通常可以重新启动。",
@@ -792,6 +789,5 @@
   "proxySettings": "代理与测速",
   "kernel": "内核",
   "listDisplay": "列表显示",
-  "nameResolution": "解析",
-  "systemProxySharedNote": "系统代理在设置页与「网络」页为同一开关。"
+  "nameResolution": "解析"
 }

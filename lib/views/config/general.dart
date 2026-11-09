@@ -643,11 +643,12 @@ List<Widget> startupSettingItems() {
       select: (state) => state.autoRun,
       update: (state, value) => state.copyWith(autoRun: value),
     ),
-    _appSettingToggle(
-      title: (l) => l.minimizeOnExit,
-      select: (state) => state.minimizeOnExit,
-      update: (state, value) => state.copyWith(minimizeOnExit: value),
-    ),
+    if (system.isDesktop)
+      _appSettingToggle(
+        title: (l) => l.minimizeOnExit,
+        select: (state) => state.minimizeOnExit,
+        update: (state, value) => state.copyWith(minimizeOnExit: value),
+      ),
     if (system.isAndroid) ...[
       _appSettingToggle(
         title: (l) => l.exclude,

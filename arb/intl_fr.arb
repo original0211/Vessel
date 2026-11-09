@@ -375,7 +375,6 @@
   "color": "Couleur",
   "unnamed": "Sans nom",
   "importFile": "Importer depuis un fichier",
-  "autoSetSystemDns": "Définir automatiquement le DNS du système",
   "details": "Détails de {label}",
   "process": "Processus",
   "host": "Hôte",
@@ -652,7 +651,6 @@
   "label": "Libellé",
   "regex": "Regex",
   "matchCase": "Respecter la casse",
-  "iconSets": "Jeux d’icônes",
   "invalidIconSet": "Jeu d’icônes non valide",
   "outbound": "Sortant",
   "strictRoute": "Route stricte",
@@ -661,7 +659,6 @@
   "routeExcludeAddress": "Adresses de route exclues",
   "keepAliveIdle": "Inactivité keep-alive TCP",
   "disableKeepAlive": "Désactiver le keep-alive TCP",
-  "routingMark": "Marque de routage",
   "strictRouteDesc": "La route stricte empêche le trafic tel que le DNS de contourner TUN et, avec IPv6 désactivé, bloque les connexions IPv6 de cet appareil.",
   "initFailed": "Échec du démarrage",
   "initFailedTip": "Vessel a rencontré une erreur au démarrage et ne peut pas continuer. Copiez les détails pour signaler le problème. Si cela se reproduit, effacer les données permet généralement de relancer l’app.",
@@ -792,6 +789,5 @@
   "proxySettings": "Proxy et test de vitesse",
   "kernel": "Noyau",
   "listDisplay": "Affichage de la liste",
-  "nameResolution": "Résolution",
-  "systemProxySharedNote": "Le proxy système est le même interrupteur sur les pages Réglages et Réseau."
+  "nameResolution": "Résolution"
 }

@@ -145,21 +145,6 @@ class Ipv6Item extends ConsumerWidget {
   }
 }
 
-class AutoSetSystemDnsItem extends ConsumerWidget {
-  const AutoSetSystemDnsItem({super.key});
-
-  @override
-  Widget build(BuildContext context, ref) {
-    return HaraToggle(
-      _networkToggle(
-        title: (l) => l.autoSetSystemDns,
-        select: (state) => state.autoSetSystemDns,
-        update: (state, value) => state.copyWith(autoSetSystemDns: value),
-      ),
-    );
-  }
-}
-
 class DNSHijackingItem extends ConsumerWidget {
   const DNSHijackingItem({super.key});
 
@@ -487,8 +472,8 @@ class TunSection extends ConsumerWidget {
 }
 
 // mihomo keeps TCP keep-alive off on Android whatever the config says
-// (component/keepalive), and only Linux honours a routing mark.
-List<Widget> outboundItems({required bool isDesktop, required bool isLinux}) {
+// (component/keepalive).
+List<Widget> outboundItems({required bool isDesktop}) {
   return [
     if (isDesktop) ...[
       HaraToggle(
@@ -515,22 +500,14 @@ List<Widget> outboundItems({required bool isDesktop, required bool isLinux}) {
         update: (state, value) => state.copyWith(keepAliveInterval: value),
       ),
     ],
-    if (isLinux)
-      _NumberItem(
-        title: (l) => l.routingMark,
-        select: (state) => state.routingMark,
-        update: (state, value) => state.copyWith(routingMark: value),
-      ),
   ];
 }
 
 List<Widget> networkOptionsItems({
   required bool isDesktop,
-  required bool isMacOS,
   required bool isCustomInterfaceName,
 }) {
   return [
-    if (isMacOS) const AutoSetSystemDnsItem(),
     const TunStackItem(),
     // mihomo's DefaultSocketHook ignores interface-name on Android
     // (core/lib.go installHooks, vendored dialer.go), so these rows only
@@ -575,14 +552,10 @@ class SystemProxySection extends StatelessWidget {
     return HaraSection(
       title: appLocalizations.system,
       rows: [
-        const HaraBoundToggle(SystemProxyItem()),
         const BypassDomainItem(),
         if (system.isWindows) const LoopbackItem(),
       ],
-      footer: [
-        appLocalizations.bypassDomainDesc,
-        appLocalizations.systemProxySharedNote,
-      ].join('\n'),
+      footer: appLocalizations.bypassDomainDesc,
       topGap: false,
     );
   }
@@ -610,7 +583,6 @@ class NetworkOptionsSection extends ConsumerWidget {
       title: appLocalizations.options,
       rows: networkOptionsItems(
         isDesktop: system.isDesktop,
-        isMacOS: system.isMacOS,
         isCustomInterfaceName: isCustomInterfaceName,
       ),
       footer: footer.isEmpty ? null : footer.join('\n'),
@@ -643,17 +615,11 @@ class NetworkListView extends StatelessWidget {
                 isLinux: system.isLinux,
                 isWindows: system.isWindows,
               ),
-              if (outboundItems(
-                isDesktop: system.isDesktop,
-                isLinux: system.isLinux,
-              ).isNotEmpty)
+              if (outboundItems(isDesktop: system.isDesktop).isNotEmpty)
                 HaraSection(
                   topGap: true,
                   title: context.appLocalizations.outbound,
-                  rows: outboundItems(
-                    isDesktop: system.isDesktop,
-                    isLinux: system.isLinux,
-                  ),
+                  rows: outboundItems(isDesktop: system.isDesktop),
                   footer: context.appLocalizations.mihomoOnlyNote,
                 ),
             ],

@@ -2965,16 +2965,6 @@ class AppLocalizations {
     );
   }
 
-  /// `Auto-set system DNS`
-  String get autoSetSystemDns {
-    return Intl.message(
-      'Auto-set system DNS',
-      name: 'autoSetSystemDns',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `{label} details`
   String details(Object label) {
     return Intl.message(
@@ -5354,11 +5344,6 @@ class AppLocalizations {
     return Intl.message('Match case', name: 'matchCase', desc: '', args: []);
   }
 
-  /// `Icon sets`
-  String get iconSets {
-    return Intl.message('Icon sets', name: 'iconSets', desc: '', args: []);
-  }
-
   /// `Not a valid icon set`
   String get invalidIconSet {
     return Intl.message(
@@ -5429,16 +5414,6 @@ class AppLocalizations {
     return Intl.message(
       'Disable TCP keep-alive',
       name: 'disableKeepAlive',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Routing mark`
-  String get routingMark {
-    return Intl.message(
-      'Routing mark',
-      name: 'routingMark',
       desc: '',
       args: [],
     );
@@ -6626,16 +6601,6 @@ class AppLocalizations {
     return Intl.message(
       'Resolution',
       name: 'nameResolution',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `The system proxy is the same switch on the Settings and Network pages.`
-  String get systemProxySharedNote {
-    return Intl.message(
-      'The system proxy is the same switch on the Settings and Network pages.',
-      name: 'systemProxySharedNote',
       desc: '',
       args: [],
     );
