@@ -23,6 +23,42 @@ void main() {
     expect(peer, contains('const PORT_VALUE: &str = "$helperPortValue";'));
   });
 
+  test('the Helper registers under the service name Dart addresses', () {
+    final windows = File(
+      'services/helper/src/service/windows.rs',
+    ).readAsStringSync();
+    final hub = File('services/helper/src/service/hub.rs').readAsStringSync();
+
+    expect(
+      windows,
+      contains('const SERVICE_NAME: &str = "$appHelperService";'),
+    );
+    expect(
+      windows,
+      contains('const LEGACY_SERVICE_NAME: &str = "KFusionHelperService";'),
+    );
+    expect(windows, contains('remove_legacy_service(&manager);'));
+    expect(hub, contains('"$appHelperService"]'));
+  });
+
+  test('the installer retires the legacy Helper service on upgrade', () {
+    final script = File(
+      'windows/packaging/exe/inno_setup.iss',
+    ).readAsStringSync();
+
+    expect(
+      script,
+      contains("UnregisterHelperServiceNamed('KFusionHelperService.exe')"),
+    );
+    expect(script, contains("'delete KFusionHelperService'"));
+    expect(
+      script,
+      contains("UnregisterHelperServiceNamed('VesselHelperService.exe')"),
+    );
+    expect(script, contains("'Vessel.exe', 'VesselCore.exe'"));
+    expect(script, contains("'KFusion.exe', 'KFusionCore.exe'"));
+  });
+
   test(
     'start returns a Helper lease identity with matching session and PID',
     () async {
@@ -371,7 +407,7 @@ void main() {
     final adapter = _ResponseAdapter((options) {
       expect(options.queryParameters, {'coreSha256': _coreSha256});
       return ResponseBody.fromString(
-        r'C:\Program Files\KFusion\KFusionHelperService.exe',
+        r'C:\Program Files\Vessel\VesselHelperService.exe',
         200,
         headers: {
           helperProtocolVersionHeader: [helperProtocolVersion],
@@ -382,7 +418,7 @@ void main() {
     final client = _client(
       adapter,
       expectedHelperPath: () =>
-          r'C:\Program Files\KFusion\KFusionHelperService.exe',
+          r'C:\Program Files\Vessel\VesselHelperService.exe',
     );
 
     expect(await client.readiness(), HelperReadiness.ready);

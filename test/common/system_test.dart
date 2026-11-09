@@ -145,7 +145,7 @@ void main() {
     });
 
     test('passes a path containing spaces through untouched', () {
-      const path = '/Users/a b/KFusion.app/Contents/MacOS/KFusionCore';
+      const path = '/Users/a b/Vessel.app/Contents/MacOS/VesselCore';
       for (final isMacOS in [true, false]) {
         final arguments = System.statArguments(path, isMacOS: isMacOS);
         expect(arguments.last, path);
@@ -332,14 +332,14 @@ void main() {
     });
 
     test('Linux hands the Core to the requesting user\'s group', () {
-      final shell = System.linuxElevationShell('/opt/KFusion/KFusionCore');
+      final shell = System.linuxElevationShell('/opt/KFusion/VesselCore');
 
       expect(
         shell,
         startsWith(r'group=$(id -g "${PKEXEC_UID:-$SUDO_UID}") && '),
       );
       expect(shell, contains(r'chown "root:$group" '));
-      expect(shell, endsWith("chmod 4750 '/opt/KFusion/KFusionCore'"));
+      expect(shell, endsWith("chmod 4750 '/opt/KFusion/VesselCore'"));
     });
 
     test('neither leaves execute to others', () {

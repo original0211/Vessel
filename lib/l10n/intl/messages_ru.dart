@@ -26,7 +26,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m1(detail) => "Не удалось очистить данные: ${detail}";
 
   static String m2(code) =>
-      "Windows отказалась запускать KFusionCore.exe (ошибка ${code}). Политики контроля приложений, такие как Smart App Control или AppLocker, блокируют неподписанные программы; разрешите Vessel в этой политике или отключите её и повторите попытку.";
+      "Windows отказалась запускать VesselCore.exe (ошибка ${code}). Политики контроля приложений, такие как Smart App Control или AppLocker, блокируют неподписанные программы; разрешите Vessel в этой политике или отключите её и повторите попытку.";
 
   static String m3(core) => "${core} не запущен";
 
@@ -446,7 +446,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "core": MessageLookupByLibrary.simpleMessage("Ядро"),
     "coreBlockedByPolicyTip": m2,
     "coreBlockedBySmartAppControlTip": MessageLookupByLibrary.simpleMessage(
-      "Smart App Control в Windows заблокировал неподписанный KFusionCore.exe. Откройте Безопасность Windows → Управление приложениями и браузером → Параметры Smart App Control, выберите «Выкл.» и снова запустите Vessel. Повторно включить Smart App Control без переустановки Windows нельзя.",
+      "Smart App Control в Windows заблокировал неподписанный VesselCore.exe. Откройте Безопасность Windows → Управление приложениями и браузером → Параметры Smart App Control, выберите «Выкл.» и снова запустите Vessel. Повторно включить Smart App Control без переустановки Windows нельзя.",
     ),
     "coreIpv6": MessageLookupByLibrary.simpleMessage("IPv6 ядра"),
     "coreNotConnectedTip": MessageLookupByLibrary.simpleMessage(

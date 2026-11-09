@@ -7,8 +7,8 @@ display_name: Vessel
 # Pinned explicitly: the packaging toolchain otherwise derives the install
 # folder from the package name instead of the display name.
 install_dir_name: '{autopf64}\Vessel'
-executable_name: KFusion.exe
-output_base_file_name: KFusion.exe
+executable_name: Vessel.exe
+output_base_file_name: Vessel.exe
 # Resolved against the project root: flutter_distributor turns this into an
 # absolute path via Directory.current.
 setup_icon_file: windows\runner\resources\app_icon.ico

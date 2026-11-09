@@ -25,7 +25,10 @@ var
   i: Integer;
   ResultCode: Integer;
 begin
-  Processes := ['KFusion.exe', 'KFusionCore.exe', 'KFusionHelperService.exe'];
+  // Legacy names stay listed so an upgrade also stops the pre-rename
+  // processes; keep them for at least two releases after the rename.
+  Processes := ['Vessel.exe', 'VesselCore.exe', 'VesselHelperService.exe',
+    'KFusion.exe', 'KFusionCore.exe', 'KFusionHelperService.exe'];
 
   for i := 0 to GetArrayLength(Processes)-1 do
   begin
@@ -33,16 +36,30 @@ begin
   end;
 end;
 
-procedure UnregisterHelperService;
+procedure UnregisterHelperServiceNamed(const ExeName: String);
 var
   HelperPath: String;
   ResultCode: Integer;
 begin
-  HelperPath := ExpandConstant('{app}\\KFusionHelperService.exe');
+  HelperPath := ExpandConstant('{app}\\' + ExeName);
   if FileExists(HelperPath) then
   begin
     Exec(HelperPath, 'uninstall', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
   end;
+end;
+
+procedure UnregisterHelperService;
+var
+  ResultCode: Integer;
+begin
+  // The pre-rename service is registered under the legacy name, which no
+  // new code addresses. On upgrade the old executable is still on disk at
+  // this point, so retire the legacy service through it first; the sc
+  // fallback deletes the registration if that executable can no longer
+  // run. Every result is ignored: a failed cleanup must not block setup.
+  UnregisterHelperServiceNamed('KFusionHelperService.exe');
+  Exec('sc.exe', 'delete KFusionHelperService', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+  UnregisterHelperServiceNamed('VesselHelperService.exe');
 end;
 
 procedure ClearStaleProxy;

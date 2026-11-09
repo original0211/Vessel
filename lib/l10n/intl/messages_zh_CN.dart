@@ -25,7 +25,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m1(detail) => "清除数据失败：${detail}";
 
   static String m2(code) =>
-      "Windows 拒绝运行 KFusionCore.exe（错误 ${code}）。智能应用控制、AppLocker 等应用控制策略会拦截未签名程序，请在该策略中放行 Vessel 或关闭策略后重试。";
+      "Windows 拒绝运行 VesselCore.exe（错误 ${code}）。智能应用控制、AppLocker 等应用控制策略会拦截未签名程序，请在该策略中放行 Vessel 或关闭策略后重试。";
 
   static String m3(core) => "${core} 未运行";
 
@@ -330,7 +330,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "core": MessageLookupByLibrary.simpleMessage("内核"),
     "coreBlockedByPolicyTip": m2,
     "coreBlockedBySmartAppControlTip": MessageLookupByLibrary.simpleMessage(
-      "Windows 智能应用控制拦截了未签名的 KFusionCore.exe。请打开 Windows 安全中心 → 应用和浏览器控制 → 智能应用控制设置，选择「关闭」后重新启动 Vessel。智能应用控制关闭后无法再开启，除非重装 Windows。",
+      "Windows 智能应用控制拦截了未签名的 VesselCore.exe。请打开 Windows 安全中心 → 应用和浏览器控制 → 智能应用控制设置，选择「关闭」后重新启动 Vessel。智能应用控制关闭后无法再开启，除非重装 Windows。",
     ),
     "coreIpv6": MessageLookupByLibrary.simpleMessage("核心 IPv6"),
     "coreNotConnectedTip": MessageLookupByLibrary.simpleMessage(

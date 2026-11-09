@@ -25,7 +25,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m1(detail) => "데이터를 지우지 못했습니다: ${detail}";
 
   static String m2(code) =>
-      "Windows에서 KFusionCore.exe 실행을 거부했습니다(오류 ${code}). Smart App Control이나 AppLocker와 같은 앱 제어 정책이 서명되지 않은 프로그램을 차단합니다. 해당 정책에서 Vessel를 허용하거나 정책을 끈 후 다시 시도하세요.";
+      "Windows에서 VesselCore.exe 실행을 거부했습니다(오류 ${code}). Smart App Control이나 AppLocker와 같은 앱 제어 정책이 서명되지 않은 프로그램을 차단합니다. 해당 정책에서 Vessel를 허용하거나 정책을 끈 후 다시 시도하세요.";
 
   static String m3(core) => "${core} 실행 중 아님";
 
@@ -352,7 +352,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "core": MessageLookupByLibrary.simpleMessage("코어"),
     "coreBlockedByPolicyTip": m2,
     "coreBlockedBySmartAppControlTip": MessageLookupByLibrary.simpleMessage(
-      "서명되지 않아 Windows Smart App Control이 KFusionCore.exe를 차단했습니다. Windows 보안 → 앱 및 브라우저 컨트롤 → Smart App Control 설정에서 끔을 선택한 후 Vessel를 다시 시작하세요. Smart App Control은 Windows를 다시 설치하지 않으면 다시 켤 수 없습니다.",
+      "서명되지 않아 Windows Smart App Control이 VesselCore.exe를 차단했습니다. Windows 보안 → 앱 및 브라우저 컨트롤 → Smart App Control 설정에서 끔을 선택한 후 Vessel를 다시 시작하세요. Smart App Control은 Windows를 다시 설치하지 않으면 다시 켤 수 없습니다.",
     ),
     "coreIpv6": MessageLookupByLibrary.simpleMessage("코어 IPv6"),
     "coreNotConnectedTip": MessageLookupByLibrary.simpleMessage(

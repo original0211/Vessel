@@ -26,7 +26,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m1(detail) => "Impossible d’effacer les données : ${detail}";
 
   static String m2(code) =>
-      "Windows a refusé d’exécuter KFusionCore.exe (erreur ${code}). Une stratégie de contrôle des applications, telle que Smart App Control ou AppLocker, bloque les programmes non signés ; autorisez Vessel dans cette stratégie ou désactivez-la, puis réessayez.";
+      "Windows a refusé d’exécuter VesselCore.exe (erreur ${code}). Une stratégie de contrôle des applications, telle que Smart App Control ou AppLocker, bloque les programmes non signés ; autorisez Vessel dans cette stratégie ou désactivez-la, puis réessayez.";
 
   static String m3(core) => "${core} à l’arrêt";
 
@@ -459,7 +459,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "core": MessageLookupByLibrary.simpleMessage("Cœur"),
     "coreBlockedByPolicyTip": m2,
     "coreBlockedBySmartAppControlTip": MessageLookupByLibrary.simpleMessage(
-      "Windows Smart App Control a bloqué KFusionCore.exe car il n’est pas signé. Ouvrez Sécurité Windows → Contrôle des applications et du navigateur → Paramètres de Smart App Control, choisissez Désactivé, puis relancez Vessel. Smart App Control ne peut pas être réactivé sans réinstaller Windows.",
+      "Windows Smart App Control a bloqué VesselCore.exe car il n’est pas signé. Ouvrez Sécurité Windows → Contrôle des applications et du navigateur → Paramètres de Smart App Control, choisissez Désactivé, puis relancez Vessel. Smart App Control ne peut pas être réactivé sans réinstaller Windows.",
     ),
     "coreIpv6": MessageLookupByLibrary.simpleMessage("IPv6 du noyau"),
     "coreNotConnectedTip": MessageLookupByLibrary.simpleMessage(

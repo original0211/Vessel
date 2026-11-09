@@ -1148,7 +1148,7 @@ Future<String> portOccupiedDetail({
   final imageName = owner.imageName.isNotEmpty
       ? owner.imageName
       : owner.executablePath.split('\\').last;
-  if (imageName.toLowerCase() == 'kfusioncore.exe') {
+  if (imageName.toLowerCase() == 'vesselcore.exe') {
     return '端口 $port 仍被本应用 mihomo 核心进程（PID ${owner.pid}）占用，sing-box 未启动';
   }
   if (imageName.isEmpty) {

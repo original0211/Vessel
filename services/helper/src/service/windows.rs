@@ -1,5 +1,5 @@
 use crate::service::owner::{owner_sid_arguments, service_command, ServiceCommand};
-use crate::service::peer::{process_sid, serve_until};
+use crate::service::peer::{delete_legacy_port_key, process_sid, serve_until};
 
 use anyhow::{bail, Context, Result};
 use once_cell::sync::OnceCell;
@@ -23,12 +23,8 @@ use windows_service::{
     service_manager::{ServiceManager, ServiceManagerAccess},
 };
 
-// The service name is the SCM identity other components address, so it stays
-// frozen; only the display name shown in the Services console follows the
-// current brand. Registration deletes and recreates the service under the
-// same name on every install, so the new display name lands without an
-// orphaned entry.
-const SERVICE_NAME: &str = "KFusionHelperService";
+const SERVICE_NAME: &str = "VesselHelperService";
+const LEGACY_SERVICE_NAME: &str = "KFusionHelperService";
 const SERVICE_DISPLAY_NAME: &str = "Vessel Helper Service";
 const SERVICE_TYPE: ServiceType = ServiceType::OWN_PROCESS;
 const SERVICE_OPERATION_TIMEOUT: Duration = Duration::from_secs(10);
@@ -158,6 +154,7 @@ fn install_service(owner_pid: u32) -> Result<()> {
         ServiceManagerAccess::CONNECT | ServiceManagerAccess::CREATE_SERVICE,
     )
     .context("open Windows service manager")?;
+    remove_legacy_service(&manager);
     remove_existing_service(&manager)?;
 
     let executable_path = std::env::current_exe().context("resolve helper executable path")?;
@@ -210,13 +207,22 @@ fn uninstall_service() -> Result<()> {
     remove_existing_service(&manager)
 }
 
+fn remove_legacy_service(manager: &ServiceManager) {
+    let _ = remove_service_named(manager, LEGACY_SERVICE_NAME);
+    delete_legacy_port_key();
+}
+
 fn remove_existing_service(manager: &ServiceManager) -> Result<()> {
+    remove_service_named(manager, SERVICE_NAME)
+}
+
+fn remove_service_named(manager: &ServiceManager, name: &str) -> Result<()> {
     let access = ServiceAccess::QUERY_STATUS | ServiceAccess::STOP | ServiceAccess::DELETE;
-    let service = match manager.open_service(SERVICE_NAME, access) {
+    let service = match manager.open_service(name, access) {
         Ok(service) => service,
         Err(error) if has_error_code(&error, ERROR_SERVICE_DOES_NOT_EXIST) => return Ok(()),
         Err(error) if has_error_code(&error, ERROR_SERVICE_MARKED_FOR_DELETE) => {
-            return wait_for_deletion(manager)
+            return wait_for_deletion(manager, name)
         }
         Err(error) => return Err(error).context("open existing helper service"),
     };
@@ -230,7 +236,7 @@ fn remove_existing_service(manager: &ServiceManager) -> Result<()> {
         }
     }
     drop(service);
-    wait_for_deletion(manager)
+    wait_for_deletion(manager, name)
 }
 
 fn stop_service(service: &Service) -> Result<()> {
@@ -260,10 +266,10 @@ fn stop_service(service: &Service) -> Result<()> {
     }
 }
 
-fn wait_for_deletion(manager: &ServiceManager) -> Result<()> {
+fn wait_for_deletion(manager: &ServiceManager, name: &str) -> Result<()> {
     let started_at = Instant::now();
     loop {
-        match manager.open_service(SERVICE_NAME, ServiceAccess::QUERY_STATUS) {
+        match manager.open_service(name, ServiceAccess::QUERY_STATUS) {
             Err(error) if has_error_code(&error, ERROR_SERVICE_DOES_NOT_EXIST) => return Ok(()),
             Err(error) if !has_error_code(&error, ERROR_SERVICE_MARKED_FOR_DELETE) => {
                 return Err(error).context("check helper service deletion")

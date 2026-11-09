@@ -26,7 +26,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m1(detail) => "No se pudieron borrar los datos: ${detail}";
 
   static String m2(code) =>
-      "Windows se negó a ejecutar KFusionCore.exe (error ${code}). Una directiva de control de aplicaciones, como Smart App Control o AppLocker, bloquea los programas sin firmar; permite Vessel en esa directiva o desactívala e inténtalo de nuevo.";
+      "Windows se negó a ejecutar VesselCore.exe (error ${code}). Una directiva de control de aplicaciones, como Smart App Control o AppLocker, bloquea los programas sin firmar; permite Vessel en esa directiva o desactívala e inténtalo de nuevo.";
 
   static String m3(core) => "${core} detenido";
 
@@ -460,7 +460,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "core": MessageLookupByLibrary.simpleMessage("Núcleo"),
     "coreBlockedByPolicyTip": m2,
     "coreBlockedBySmartAppControlTip": MessageLookupByLibrary.simpleMessage(
-      "Smart App Control de Windows bloqueó KFusionCore.exe porque no está firmado. Abre Seguridad de Windows → Control de aplicaciones y navegador → Configuración de Smart App Control, elige Desactivado y vuelve a iniciar Vessel. Smart App Control no se puede volver a activar sin reinstalar Windows.",
+      "Smart App Control de Windows bloqueó VesselCore.exe porque no está firmado. Abre Seguridad de Windows → Control de aplicaciones y navegador → Configuración de Smart App Control, elige Desactivado y vuelve a iniciar Vessel. Smart App Control no se puede volver a activar sin reinstalar Windows.",
     ),
     "coreIpv6": MessageLookupByLibrary.simpleMessage("IPv6 del núcleo"),
     "coreNotConnectedTip": MessageLookupByLibrary.simpleMessage(

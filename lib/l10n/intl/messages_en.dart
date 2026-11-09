@@ -26,7 +26,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m1(detail) => "Couldn\'t clear the data: ${detail}";
 
   static String m2(code) =>
-      "Windows refused to run KFusionCore.exe (error ${code}). An app control policy such as Smart App Control or AppLocker blocks unsigned programs; allow Vessel in that policy or turn it off, then try again.";
+      "Windows refused to run VesselCore.exe (error ${code}). An app control policy such as Smart App Control or AppLocker blocks unsigned programs; allow Vessel in that policy or turn it off, then try again.";
 
   static String m3(core) => "${core} not running";
 
@@ -433,7 +433,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "core": MessageLookupByLibrary.simpleMessage("Core"),
     "coreBlockedByPolicyTip": m2,
     "coreBlockedBySmartAppControlTip": MessageLookupByLibrary.simpleMessage(
-      "Windows Smart App Control blocked KFusionCore.exe because it is not signed. Open Windows Security → App & browser control → Smart App Control settings, choose Off, then start Vessel again. Smart App Control cannot be turned back on without reinstalling Windows.",
+      "Windows Smart App Control blocked VesselCore.exe because it is not signed. Open Windows Security → App & browser control → Smart App Control settings, choose Off, then start Vessel again. Smart App Control cannot be turned back on without reinstalling Windows.",
     ),
     "coreIpv6": MessageLookupByLibrary.simpleMessage("Core IPv6"),
     "coreNotConnectedTip": MessageLookupByLibrary.simpleMessage(

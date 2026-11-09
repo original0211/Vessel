@@ -59,7 +59,7 @@ class AppPath {
   }
 
   String get corePath {
-    return join(executableDirPath, 'KFusionCore$executableExtension');
+    return join(executableDirPath, 'VesselCore$executableExtension');
   }
 
   String get helperPath {

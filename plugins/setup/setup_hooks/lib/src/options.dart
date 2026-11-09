@@ -32,10 +32,10 @@ class BuildConfig {
     goLdflags: '-w -s',
     coreVersion: '',
     coreDir: 'core',
-    coreName: 'KFusionCore',
+    coreName: 'VesselCore',
     outputDir: 'libclash',
     helperDir: 'services/helper',
-    helperName: 'KFusionHelperService',
+    helperName: 'VesselHelperService',
   );
 
   static BuildConfig load({required String rootDir}) {

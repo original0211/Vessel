@@ -34,7 +34,8 @@ use windows_sys::Win32::System::Threading::{
 const AF_INET: u32 = 2;
 /// Hyper-V and WinNAT reserve ranges that can cover any fixed port; only admins
 /// write this volatile key under the service's own, and a reboot clears it.
-const PORT_KEY: &str = r"SYSTEM\CurrentControlSet\Services\KFusionHelperService\Runtime";
+const PORT_KEY: &str = r"SYSTEM\CurrentControlSet\Services\VesselHelperService\Runtime";
+const LEGACY_PORT_KEY: &str = r"SYSTEM\CurrentControlSet\Services\KFusionHelperService\Runtime";
 const PORT_VALUE: &str = "Port";
 const TABLE_ATTEMPTS: usize = 5;
 const ACCEPT_RETRY_DELAY: Duration = Duration::from_secs(1);
@@ -208,6 +209,16 @@ impl Stream for AuthorizedIncoming {
 
 fn wide(value: &str) -> Vec<u16> {
     value.encode_utf16().chain(std::iter::once(0)).collect()
+}
+
+/// Drops the Runtime key the pre-rename service published its port under.
+/// The key is volatile, so this only matters for a machine that upgrades
+/// without rebooting in between; the result is ignored either way.
+pub fn delete_legacy_port_key() {
+    let key_path = wide(LEGACY_PORT_KEY);
+    unsafe {
+        RegDeleteKeyW(HKEY_LOCAL_MACHINE, key_path.as_ptr());
+    }
 }
 
 struct PublishedPort;

@@ -138,8 +138,8 @@ void main() {
         singBoxBinary: binary,
         findOwner: (_) async => const PortOwnerInfo(
           pid: 888,
-          imageName: 'KFusionCore.exe',
-          executablePath: r'C:\Program Files\Vessel\KFusionCore.exe',
+          imageName: 'VesselCore.exe',
+          executablePath: r'C:\Program Files\Vessel\VesselCore.exe',
         ),
       );
       expect(detail, '端口 7890 仍被本应用 mihomo 核心进程（PID 888）占用，sing-box 未启动');

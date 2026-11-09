@@ -771,7 +771,7 @@ pub(super) fn routes() -> impl Filter<Extract = (impl Reply,), Error = Infallibl
             let local_host = host.is_none_or(|host| {
                 host.parse::<warp::http::uri::Authority>()
                     .is_ok_and(|authority| {
-                        ["127.0.0.1", "localhost", "KFusionHelperService"]
+                        ["127.0.0.1", "localhost", "VesselHelperService"]
                             .iter()
                             .any(|host| authority.host().eq_ignore_ascii_case(host))
                     })
@@ -944,7 +944,7 @@ mod tests {
 
     #[tokio::test]
     async fn ping_returns_running_helper_path_for_verified_core() {
-        let response = ping_response(Ok(PathBuf::from("KFusionHelperService.exe")));
+        let response = ping_response(Ok(PathBuf::from("VesselHelperService.exe")));
 
         assert_eq!(response.status(), StatusCode::OK);
         assert_eq!(
@@ -955,7 +955,7 @@ mod tests {
             warp::hyper::body::to_bytes(response.into_body())
                 .await
                 .unwrap(),
-            "KFusionHelperService.exe"
+            "VesselHelperService.exe"
         );
     }
 
@@ -1426,6 +1426,7 @@ mod tests {
                 ("origin", "https://attacker.test"),
                 ("origin", "null"),
                 ("host", "attacker.test:47890"),
+                ("host", "KFusionHelperService"),
             ] {
                 let response = warp::test::request()
                     .method(method)
@@ -1440,7 +1441,7 @@ mod tests {
                     .is_none());
             }
         }
-        for host in ["127.0.0.1:47890", "localhost:47890", "KFusionHelperService"] {
+        for host in ["127.0.0.1:47890", "localhost:47890", "VesselHelperService"] {
             let response = warp::test::request()
                 .path("/logs")
                 .header("host", host)

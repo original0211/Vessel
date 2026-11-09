@@ -38,7 +38,7 @@ void main() {
   });
 
   test('reads the OS error from a direct launch failure', () {
-    const error = ProcessException('KFusionCore.exe', [], 'refused', 225);
+    const error = ProcessException('VesselCore.exe', [], 'refused', 225);
 
     expect(launchOsError(error), 225);
     expect(isPolicyBlockedLaunch(error), isTrue);
@@ -49,7 +49,7 @@ void main() {
       code: 'start_failed',
       phase: DesktopCorePhase.starting,
       revision: 1,
-      cause: ProcessException('KFusionCore.exe', [], 'refused', 577),
+      cause: ProcessException('VesselCore.exe', [], 'refused', 577),
     );
 
     expect(launchOsError(failure), 577);
@@ -59,7 +59,7 @@ void main() {
   test('a missing file or a plain crash is not a policy block', () {
     expect(
       isPolicyBlockedLaunch(
-        const ProcessException('KFusionCore.exe', [], 'not found', 2),
+        const ProcessException('VesselCore.exe', [], 'not found', 2),
       ),
       isFalse,
     );

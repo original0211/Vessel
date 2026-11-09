@@ -10,7 +10,7 @@ import 'package:kfusion/models/models.dart';
 import 'package:material_ui/material_ui.dart';
 
 const appName = 'Vessel';
-const appHelperService = 'KFusionHelperService';
+const appHelperService = 'VesselHelperService';
 const coreManifestName = 'manifest.json';
 const browserUa =
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';

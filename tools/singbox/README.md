@@ -5,7 +5,7 @@ Vessel does not ship a sing-box binary in git. The Windows sidecar
 order:
 
 1. The path stored in the `singboxBinaryPath` preference, when set.
-2. `sing-box.exe` next to the KFusion.exe executable.
+2. `sing-box.exe` next to the Vessel.exe executable.
 3. `singbox/sing-box.exe` inside the application support directory.
 
 ## Managed download (default)
