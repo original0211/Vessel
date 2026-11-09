@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.4.0 (2026-11-09)
+
+**Features**
+
+- **theme** Removed the sidebar blur setting (3a3f178)
+- **settings** Settings tidy-up: duplicate switches merged and retired rows removed (7112d72)
+
 ## v1.3.0 (2026-11-09)
 
 Internal improvements only.

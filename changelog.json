@@ -2,6 +2,29 @@
   "schemaVersion": 2,
   "versions": [
     {
+      "version": "1.4.0",
+      "tag": "v1.4.0",
+      "date": "2026-11-09",
+      "prerelease": false,
+      "groups": [
+        {
+          "type": "feat",
+          "entries": [
+            {
+              "id": "3a3f178",
+              "scope": "theme",
+              "text": "Removed the sidebar blur setting"
+            },
+            {
+              "id": "7112d72",
+              "scope": "settings",
+              "text": "Settings tidy-up: duplicate switches merged and retired rows removed"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "version": "1.3.0",
       "tag": "v1.3.0",
       "date": "2026-11-09",
