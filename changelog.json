@@ -2,6 +2,29 @@
   "schemaVersion": 2,
   "versions": [
     {
+      "version": "1.4.2",
+      "tag": "v1.4.2",
+      "date": "2026-11-11",
+      "prerelease": false,
+      "groups": [
+        {
+          "type": "fix",
+          "entries": [
+            {
+              "id": "4dc990c",
+              "scope": "settings",
+              "text": "Removed the Android system proxy switch — it had no effect on the sing-box core and little on mihomo"
+            },
+            {
+              "id": "42b06ac",
+              "scope": "settings",
+              "text": "The VPN switch now shows the VPN's real state — off while disconnected, on once connected"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "version": "1.4.1",
       "tag": "v1.4.1",
       "date": "2026-11-11",

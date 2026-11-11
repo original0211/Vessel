@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.4.2 (2026-11-11)
+
+**Bug Fixes**
+
+- **settings** Removed the Android system proxy switch — it had no effect on the sing-box core and little on mihomo (4dc990c)
+- **settings** The VPN switch now shows the VPN's real state — off while disconnected, on once connected (42b06ac)
+
 ## v1.4.1 (2026-11-11)
 
 **Bug Fixes**
