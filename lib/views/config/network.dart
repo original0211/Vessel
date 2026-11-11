@@ -110,19 +110,6 @@ class AllowBypassItem extends ConsumerWidget {
   }
 }
 
-class VpnSystemProxyItem extends ConsumerWidget {
-  const VpnSystemProxyItem({super.key});
-
-  @override
-  Widget build(BuildContext context, ref) {
-    return _vpnToggle(
-      title: (l) => l.systemProxy,
-      select: (state) => state.systemProxy,
-      update: (state, value) => state.copyWith(systemProxy: value),
-    );
-  }
-}
-
 class SystemProxyItem extends ConsumerWidget {
   const SystemProxyItem({super.key});
 

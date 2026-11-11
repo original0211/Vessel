@@ -50,12 +50,6 @@ final _toggleCases = <_ToggleCase>[
     initial: true,
   ),
   _ToggleCase(
-    'vpn system proxy',
-    const VpnSystemProxyItem(),
-    (c) => c.read(vpnSettingProvider).systemProxy,
-    initial: true,
-  ),
-  _ToggleCase(
     'system proxy',
     const SystemProxyItem(),
     (c) => c.read(networkSettingProvider).systemProxy,

@@ -77,6 +77,18 @@ void main() {
     await tester.pumpWidget(const SizedBox.shrink());
   });
 
+  test('the vpn options still carry the system proxy preference', () async {
+    expect(container.read(vpnSettingProvider).systemProxy, isTrue);
+    final options = await container.read(vpnOptionsProvider.future);
+    expect(options.systemProxy, isTrue);
+
+    container
+        .read(vpnSettingProvider.notifier)
+        .update((state) => state.copyWith(systemProxy: false));
+    final updated = await container.read(vpnOptionsProvider.future);
+    expect(updated.systemProxy, isFalse);
+  });
+
   testWidgets('a stop the service reports turns the running state off', (
     tester,
   ) async {

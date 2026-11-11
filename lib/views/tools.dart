@@ -59,7 +59,7 @@ class _ToolViewState extends ConsumerState<ToolsView> {
   // The takeover masters; their detail rows stay on the network page.
   List<ConsumerWidget> _takeoverItems() {
     if (system.isAndroid) {
-      return const [VPNItem(), VpnSystemProxyItem()];
+      return const [VPNItem()];
     }
     if (system.isDesktop) {
       return const [SystemProxyItem(), TUNItem()];

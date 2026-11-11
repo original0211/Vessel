@@ -99,6 +99,20 @@ void main() {
       );
     });
 
+    test('the android takeover list carries no system proxy row', () {
+      final tools = File('lib/views/tools.dart').readAsStringSync();
+      final start = tools.indexOf('List<ConsumerWidget> _takeoverItems()');
+      final end = tools.indexOf('Widget _section', start);
+      expect(start, greaterThanOrEqualTo(0));
+      expect(end, greaterThan(start));
+      final takeover = tools.substring(start, end);
+      expect(takeover.contains('VPNItem()'), isTrue);
+      expect(takeover.contains('VpnSystemProxyItem'), isFalse);
+      final network = File('lib/views/config/network.dart').readAsStringSync();
+      expect(network.contains('VpnSystemProxyItem'), isFalse);
+      expect(network.contains('class SystemProxyItem'), isTrue);
+    });
+
     testWidgets('the moved entries stand in their new groups', (tester) async {
       await pumpIndex(tester);
       final l10n = currentAppLocalizations;
@@ -214,7 +228,6 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(VPNItem), findsNothing);
-      expect(find.byType(VpnSystemProxyItem), findsNothing);
       expect(find.byType(BypassDomainItem), findsOneWidget);
       expect(find.byType(AllowBypassItem), findsOneWidget);
       expect(find.byType(Ipv6Item), findsOneWidget);
