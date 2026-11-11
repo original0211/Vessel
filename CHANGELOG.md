@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.4.1 (2026-11-11)
+
+**Bug Fixes**
+
+- **settings** The system proxy switch now shows the proxy's real state — off while disconnected, on once connected (8be6a8c)
+
 ## v1.4.0 (2026-11-09)
 
 **Features**

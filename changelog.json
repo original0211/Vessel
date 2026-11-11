@@ -2,6 +2,24 @@
   "schemaVersion": 2,
   "versions": [
     {
+      "version": "1.4.1",
+      "tag": "v1.4.1",
+      "date": "2026-11-11",
+      "prerelease": false,
+      "groups": [
+        {
+          "type": "fix",
+          "entries": [
+            {
+              "id": "8be6a8c",
+              "scope": "settings",
+              "text": "The system proxy switch now shows the proxy's real state — off while disconnected, on once connected"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "version": "1.4.0",
       "tag": "v1.4.0",
       "date": "2026-11-09",
