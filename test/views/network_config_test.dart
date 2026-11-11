@@ -7,6 +7,7 @@ import 'package:kfusion/providers/database.dart';
 import 'package:kfusion/state.dart';
 import 'package:kfusion/views/config/network.dart';
 import 'package:kfusion/views/config/tun.dart';
+import 'package:kfusion/widgets/widgets.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -115,6 +116,69 @@ void main() {
         expect(testCase.read(container), testCase.initial);
       });
     }
+  });
+
+  group('system proxy row reports the applied state', () {
+    Future<void> pumpRow(
+      WidgetTester tester, {
+      required bool preference,
+      required bool running,
+    }) async {
+      container
+          .read(networkSettingProvider.notifier)
+          .update((state) => state.copyWith(systemProxy: preference));
+      container
+          .read(runTimeProvider.notifier)
+          .update(
+            (_) => running ? DateTime(2026).millisecondsSinceEpoch : null,
+          );
+      await pumpItem(tester, const HaraBoundToggle(SystemProxyItem()));
+    }
+
+    void expectWord(String word) {
+      final l10n = currentAppLocalizations;
+      expect(find.text(word), findsOneWidget);
+      expect(
+        find.text(word == l10n.enabled ? l10n.disabled : l10n.enabled),
+        findsNothing,
+      );
+    }
+
+    testWidgets('preference on and running shows enabled', (tester) async {
+      await pumpRow(tester, preference: true, running: true);
+      expectWord(currentAppLocalizations.enabled);
+    });
+
+    testWidgets('preference on and stopped shows disabled', (tester) async {
+      await pumpRow(tester, preference: true, running: false);
+      expectWord(currentAppLocalizations.disabled);
+    });
+
+    testWidgets('preference off and running shows disabled', (tester) async {
+      await pumpRow(tester, preference: false, running: true);
+      expectWord(currentAppLocalizations.disabled);
+    });
+
+    testWidgets('preference off and stopped shows disabled', (tester) async {
+      await pumpRow(tester, preference: false, running: false);
+      expectWord(currentAppLocalizations.disabled);
+    });
+
+    testWidgets('a tap flips the preference, not the reported state', (
+      tester,
+    ) async {
+      await pumpRow(tester, preference: true, running: false);
+      await tester.tap(find.byType(HaraBoundToggle));
+      await tester.pumpAndSettle();
+      expect(container.read(networkSettingProvider).systemProxy, isFalse);
+      expectWord(currentAppLocalizations.disabled);
+
+      await pumpRow(tester, preference: false, running: true);
+      await tester.tap(find.byType(HaraBoundToggle));
+      await tester.pumpAndSettle();
+      expect(container.read(networkSettingProvider).systemProxy, isTrue);
+      expectWord(currentAppLocalizations.enabled);
+    });
   });
 
   group('option pickers', () {

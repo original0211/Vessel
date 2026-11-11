@@ -5,6 +5,7 @@ import 'package:kfusion/common/common.dart';
 import 'package:kfusion/enum/enum.dart';
 import 'package:kfusion/models/models.dart';
 import 'package:kfusion/providers/config.dart';
+import 'package:kfusion/providers/state.dart';
 import 'package:kfusion/views/config/override.dart';
 import 'package:kfusion/views/config/tun.dart';
 import 'package:kfusion/widgets/widgets.dart';
@@ -122,10 +123,17 @@ class SystemProxyItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    return _networkToggle(
+    // The row reports the applied state — the proxy queue's own
+    // criterion on the same proxy state — while a tap only flips
+    // the stored preference.
+    return ConfigToggleItem(
       title: (l) => l.systemProxy,
-      select: (state) => state.systemProxy,
-      update: (state, value) => state.copyWith(systemProxy: value),
+      selector: proxyStateProvider.select(
+        (state) => state.isStart && state.systemProxy,
+      ),
+      onChanged: (ref, _) => ref
+          .read(networkSettingProvider.notifier)
+          .update((state) => state.copyWith(systemProxy: !state.systemProxy)),
     );
   }
 }

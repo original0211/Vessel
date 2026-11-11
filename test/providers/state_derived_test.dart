@@ -506,6 +506,31 @@ void main() {
     expect(container.read(filterGroupsStateProvider('hk jp')).value, isEmpty);
   });
 
+  test('tray system proxy reports the applied state', () {
+    final subscription = container.listen(trayStateProvider, (_, _) {});
+    addTearDown(subscription.close);
+
+    void apply({required bool preference, required bool running}) {
+      container
+          .read(networkSettingProvider.notifier)
+          .update((state) => state.copyWith(systemProxy: preference));
+      container
+          .read(runTimeProvider.notifier)
+          .update(
+            (_) => running ? DateTime(2026).millisecondsSinceEpoch : null,
+          );
+    }
+
+    apply(preference: true, running: true);
+    expect(container.read(trayStateProvider).systemProxy, isTrue);
+    apply(preference: true, running: false);
+    expect(container.read(trayStateProvider).systemProxy, isFalse);
+    apply(preference: false, running: true);
+    expect(container.read(trayStateProvider).systemProxy, isFalse);
+    apply(preference: false, running: false);
+    expect(container.read(trayStateProvider).systemProxy, isFalse);
+  });
+
   test('runtime, VPN, tray, and DNS states follow live state', () async {
     container
         .read(runTimeProvider.notifier)

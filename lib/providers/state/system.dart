@@ -34,8 +34,10 @@ setupPatch(Ref ref) {
 @riverpod
 TrayState trayState(Ref ref) {
   final isStart = ref.watch(runTimeProvider.select((state) => state != null));
+  // The checkbox reports the applied state, on the proxy queue's own
+  // criterion; the click still only flips the stored preference.
   final systemProxy = ref.watch(
-    networkSettingProvider.select((state) => state.systemProxy),
+    proxyStateProvider.select((state) => state.isStart && state.systemProxy),
   );
   final clashConfig = ref.watch(
     patchClashConfigProvider.select(
