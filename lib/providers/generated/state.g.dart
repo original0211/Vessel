@@ -179,7 +179,7 @@ final class TrayStateProvider
   }
 }
 
-String _$trayStateHash() => r'b7da57e41143cd8c284260d33b368b1be044bd01';
+String _$trayStateHash() => r'48423974487ee1acc71a108522e2ad1308e61917';
 
 /// Measured delays of the proxies the tray lists, by group and then proxy
 /// name. Resolved like a proxy card, so a nested group shows its selection.
@@ -361,6 +361,67 @@ final class SharedStateProvider
 }
 
 String _$sharedStateHash() => r'c78c01097468ec6de887e0c94a9d5432403730a1';
+
+/// Whether the VPN is actually in effect: a core running with the
+/// enable preference on. The mihomo half reads the proxy state's
+/// start flag, which folds out on-demand suspension — the tunnel is
+/// down then, as the key icon shows; the sing-box half reads its
+/// action state, as the dashboard's connected phase does. Safe mode
+/// starts neither core, so both halves stay false there.
+
+@ProviderFor(vpnAppliedState)
+final vpnAppliedStateProvider = VpnAppliedStateProvider._();
+
+/// Whether the VPN is actually in effect: a core running with the
+/// enable preference on. The mihomo half reads the proxy state's
+/// start flag, which folds out on-demand suspension — the tunnel is
+/// down then, as the key icon shows; the sing-box half reads its
+/// action state, as the dashboard's connected phase does. Safe mode
+/// starts neither core, so both halves stay false there.
+
+final class VpnAppliedStateProvider
+    extends $FunctionalProvider<bool, bool, bool>
+    with $Provider<bool> {
+  /// Whether the VPN is actually in effect: a core running with the
+  /// enable preference on. The mihomo half reads the proxy state's
+  /// start flag, which folds out on-demand suspension — the tunnel is
+  /// down then, as the key icon shows; the sing-box half reads its
+  /// action state, as the dashboard's connected phase does. Safe mode
+  /// starts neither core, so both halves stay false there.
+  VpnAppliedStateProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'vpnAppliedStateProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$vpnAppliedStateHash();
+
+  @$internal
+  @override
+  $ProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  bool create(Ref ref) {
+    return vpnAppliedState(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$vpnAppliedStateHash() => r'f2170d1df9c4e5cc8ef3ca989723e58db86a7012';
 
 @ProviderFor(vpnRouteAddress)
 final vpnRouteAddressProvider = VpnRouteAddressProvider._();

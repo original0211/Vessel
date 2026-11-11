@@ -3,6 +3,7 @@ import 'package:kfusion/common/cidr.dart';
 import 'package:kfusion/common/constant.dart';
 import 'package:kfusion/common/system.dart';
 import 'package:kfusion/enum/enum.dart';
+import 'package:kfusion/features/config_hub/singbox_action.dart';
 import 'package:kfusion/l10n/l10n.dart';
 import 'package:kfusion/models/models.dart';
 import 'package:kfusion/providers/app.dart';
@@ -15,6 +16,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:riverpod/riverpod.dart';
 
 import '../helpers/test_profiles.dart';
+
+class _RunningSingBoxAction extends SingBoxAction {
+  @override
+  Future<SingBoxStatus> build() async =>
+      const SingBoxStatus(state: SingBoxState.running);
+}
 
 void main() {
   late ProviderContainer container;
@@ -529,6 +536,53 @@ void main() {
     expect(container.read(trayStateProvider).systemProxy, isFalse);
     apply(preference: false, running: false);
     expect(container.read(trayStateProvider).systemProxy, isFalse);
+  });
+
+  test('vpn applied state follows the mihomo run and the preference', () {
+    final subscription = container.listen(vpnAppliedStateProvider, (_, _) {});
+    addTearDown(subscription.close);
+
+    void apply({required bool preference, required bool running}) {
+      container
+          .read(vpnSettingProvider.notifier)
+          .update((state) => state.copyWith(enable: preference));
+      container
+          .read(runTimeProvider.notifier)
+          .update(
+            (_) => running ? DateTime(2026).millisecondsSinceEpoch : null,
+          );
+    }
+
+    apply(preference: true, running: true);
+    expect(container.read(vpnAppliedStateProvider), isTrue);
+    apply(preference: true, running: false);
+    expect(container.read(vpnAppliedStateProvider), isFalse);
+    apply(preference: false, running: true);
+    expect(container.read(vpnAppliedStateProvider), isFalse);
+    apply(preference: false, running: false);
+    expect(container.read(vpnAppliedStateProvider), isFalse);
+  });
+
+  test('vpn applied state follows a sing-box run', () async {
+    final scope = ProviderContainer(
+      overrides: [
+        profilesProvider.overrideWith(TestProfiles.new),
+        singBoxActionProvider.overrideWith(_RunningSingBoxAction.new),
+      ],
+    );
+    addTearDown(scope.dispose);
+    final subscription = scope.listen(vpnAppliedStateProvider, (_, _) {});
+    addTearDown(subscription.close);
+    await scope.read(singBoxActionProvider.future);
+
+    scope
+        .read(vpnSettingProvider.notifier)
+        .update((state) => state.copyWith(enable: true));
+    expect(scope.read(vpnAppliedStateProvider), isTrue);
+    scope
+        .read(vpnSettingProvider.notifier)
+        .update((state) => state.copyWith(enable: false));
+    expect(scope.read(vpnAppliedStateProvider), isFalse);
   });
 
   test('runtime, VPN, tray, and DNS states follow live state', () async {

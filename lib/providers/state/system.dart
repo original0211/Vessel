@@ -194,6 +194,23 @@ SharedState sharedState(Ref ref) {
   );
 }
 
+/// Whether the VPN is actually in effect: a core running with the
+/// enable preference on. The mihomo half reads the proxy state's
+/// start flag, which folds out on-demand suspension — the tunnel is
+/// down then, as the key icon shows; the sing-box half reads its
+/// action state, as the dashboard's connected phase does. Safe mode
+/// starts neither core, so both halves stay false there.
+@riverpod
+bool vpnAppliedState(Ref ref) {
+  final singBoxRunning =
+      ref.watch(singBoxActionProvider).value?.state == SingBoxState.running;
+  final running =
+      singBoxRunning ||
+      ref.watch(proxyStateProvider.select((state) => state.isStart));
+  final enable = ref.watch(vpnSettingProvider.select((state) => state.enable));
+  return running && enable;
+}
+
 @Riverpod(keepAlive: true)
 Future<List<String>> vpnRouteAddress(Ref ref) {
   final routes = ref.watch(

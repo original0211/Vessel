@@ -67,10 +67,15 @@ class VPNItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    return _vpnToggle(
+    // The row reports the applied state — a core actually running
+    // with the preference on — while a tap only flips the stored
+    // preference.
+    return ConfigToggleItem(
       title: (l) => 'VPN',
-      select: (state) => state.enable,
-      update: (state, value) => state.copyWith(enable: value),
+      selector: vpnAppliedStateProvider,
+      onChanged: (ref, _) => ref
+          .read(vpnSettingProvider.notifier)
+          .update((state) => state.copyWith(enable: !state.enable)),
     );
   }
 }

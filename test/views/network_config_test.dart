@@ -1,5 +1,6 @@
 import 'package:kfusion/common/common.dart';
 import 'package:kfusion/enum/enum.dart';
+import 'package:kfusion/features/config_hub/singbox_action.dart';
 import 'package:kfusion/models/models.dart';
 import 'package:kfusion/providers/app.dart';
 import 'package:kfusion/providers/config.dart';
@@ -22,6 +23,12 @@ class _ToggleCase {
   final bool initial;
 
   const _ToggleCase(this.name, this.widget, this.read, {this.initial = false});
+}
+
+class _RunningSingBoxAction extends SingBoxAction {
+  @override
+  Future<SingBoxStatus> build() async =>
+      const SingBoxStatus(state: SingBoxState.running);
 }
 
 final _toggleCases = <_ToggleCase>[
@@ -177,6 +184,130 @@ void main() {
       await tester.tap(find.byType(HaraBoundToggle));
       await tester.pumpAndSettle();
       expect(container.read(networkSettingProvider).systemProxy, isTrue);
+      expectWord(currentAppLocalizations.enabled);
+    });
+  });
+
+  group('vpn row reports the applied state', () {
+    Future<void> pumpRow(
+      WidgetTester tester, {
+      required bool preference,
+      required bool mihomoRunning,
+      ProviderContainer? scope,
+    }) async {
+      final target = scope ?? container;
+      target
+          .read(vpnSettingProvider.notifier)
+          .update((state) => state.copyWith(enable: preference));
+      target
+          .read(runTimeProvider.notifier)
+          .update(
+            (_) => mihomoRunning ? DateTime(2026).millisecondsSinceEpoch : null,
+          );
+      if (scope == null) {
+        await pumpItem(tester, const HaraBoundToggle(VPNItem()));
+        return;
+      }
+      tester.view.physicalSize = const Size(1200, 1000);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: scope,
+          child: TestApp(
+            child: Scaffold(
+              body: ListView(children: const [HaraBoundToggle(VPNItem())]),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    ProviderContainer singBoxScope() {
+      final scope = ProviderContainer(
+        overrides: [
+          profilesProvider.overrideWith(TestProfiles.new),
+          singBoxActionProvider.overrideWith(_RunningSingBoxAction.new),
+        ],
+      );
+      addTearDown(scope.dispose);
+      globalState.container = scope;
+      scope.read(viewSizeProvider.notifier).value = const Size(1200, 1000);
+      return scope;
+    }
+
+    void expectWord(String word) {
+      final l10n = currentAppLocalizations;
+      expect(find.text(word), findsOneWidget);
+      expect(
+        find.text(word == l10n.enabled ? l10n.disabled : l10n.enabled),
+        findsNothing,
+      );
+    }
+
+    testWidgets('preference on and mihomo running shows enabled', (
+      tester,
+    ) async {
+      await pumpRow(tester, preference: true, mihomoRunning: true);
+      expectWord(currentAppLocalizations.enabled);
+    });
+
+    testWidgets('preference on and stopped shows disabled', (tester) async {
+      await pumpRow(tester, preference: true, mihomoRunning: false);
+      expectWord(currentAppLocalizations.disabled);
+    });
+
+    testWidgets('preference off and mihomo running shows disabled', (
+      tester,
+    ) async {
+      await pumpRow(tester, preference: false, mihomoRunning: true);
+      expectWord(currentAppLocalizations.disabled);
+    });
+
+    testWidgets('preference off and stopped shows disabled', (tester) async {
+      await pumpRow(tester, preference: false, mihomoRunning: false);
+      expectWord(currentAppLocalizations.disabled);
+    });
+
+    testWidgets('preference on and sing-box running shows enabled', (
+      tester,
+    ) async {
+      await pumpRow(
+        tester,
+        preference: true,
+        mihomoRunning: false,
+        scope: singBoxScope(),
+      );
+      expectWord(currentAppLocalizations.enabled);
+    });
+
+    testWidgets('preference off and sing-box running shows disabled', (
+      tester,
+    ) async {
+      await pumpRow(
+        tester,
+        preference: false,
+        mihomoRunning: false,
+        scope: singBoxScope(),
+      );
+      expectWord(currentAppLocalizations.disabled);
+    });
+
+    testWidgets('a tap flips the preference, not the reported state', (
+      tester,
+    ) async {
+      await pumpRow(tester, preference: true, mihomoRunning: false);
+      await tester.tap(find.byType(HaraBoundToggle));
+      await tester.pumpAndSettle();
+      expect(container.read(vpnSettingProvider).enable, isFalse);
+      expectWord(currentAppLocalizations.disabled);
+
+      await pumpRow(tester, preference: false, mihomoRunning: true);
+      await tester.tap(find.byType(HaraBoundToggle));
+      await tester.pumpAndSettle();
+      expect(container.read(vpnSettingProvider).enable, isTrue);
       expectWord(currentAppLocalizations.enabled);
     });
   });
