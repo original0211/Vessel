@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kfusion/common/common.dart';
 import 'package:kfusion/enum/enum.dart';
 import 'package:kfusion/features/config_hub/singbox_action.dart';
+import 'package:kfusion/features/proxies/delay_stability.dart';
 import 'package:kfusion/models/models.dart';
 import 'package:kfusion/providers/providers.dart';
 import 'package:kfusion/ui/icons/icons.dart';
@@ -531,6 +532,9 @@ class _HaraDelay extends ConsumerWidget {
     final delay = ref.watch(
       delayProvider(proxyName: proxy.name, testUrl: group.testUrl),
     );
+    final stability = ref.watch(
+      delayStabilityProvider(proxyName: proxy.name, testUrl: group.testUrl),
+    );
     // Watched so the slot rebuilds when a test starts and lands.
     ref.watch(
       delayTestPhaseProvider(proxyName: proxy.name, testUrl: group.testUrl),
@@ -542,31 +546,72 @@ class _HaraDelay extends ConsumerWidget {
           .proxyDelayTest(proxy, group.testUrl),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-        child: _content(context, palette, delay),
+        child: _content(context, palette, delay, stability),
       ),
     );
   }
 
-  Widget _content(BuildContext context, HaraPalette palette, int? delay) {
+  Widget _content(
+    BuildContext context,
+    HaraPalette palette,
+    int? delay,
+    DelayStability? stability,
+  ) {
+    final Widget reading;
     if (delay == null) {
-      return Text('—', style: HaraText.untested(context, palette.dim));
-    }
-    if (delay <= 0) {
-      return Text(
+      reading = Text('—', style: HaraText.untested(context, palette.dim));
+    } else if (delay <= 0) {
+      reading = Text(
         delayFailureText(delay, context.appLocalizations),
         style: HaraText.delay(context, palette.sub),
       );
+    } else {
+      reading = Text.rich(
+        TextSpan(
+          children: [
+            TextSpan(
+              text: '$delay',
+              style: HaraText.delay(context, palette.sub),
+            ),
+            TextSpan(
+              text: ' ms',
+              style: HaraText.delayUnit(context, palette.sub),
+            ),
+          ],
+        ),
+      );
     }
-    return Text.rich(
-      TextSpan(
-        children: [
-          TextSpan(text: '$delay', style: HaraText.delay(context, palette.sub)),
-          TextSpan(
-            text: ' ms',
-            style: HaraText.delayUnit(context, palette.sub),
-          ),
-        ],
-      ),
+    if (stability == null) {
+      return reading;
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        reading,
+        Text(
+          _stabilityText(context, stability),
+          style: HaraText.inUse(context, palette.dim),
+        ),
+      ],
     );
+  }
+
+  String _stabilityText(BuildContext context, DelayStability stability) {
+    final appLocalizations = context.appLocalizations;
+    final text = StringBuffer(
+      appLocalizations.delayStabilityRecent(stability.sampleCount),
+    );
+    final minDelay = stability.minDelay;
+    final maxDelay = stability.maxDelay;
+    if (minDelay != null && maxDelay != null) {
+      text.write(' $minDelay–$maxDelay');
+    }
+    if (stability.failureCount > 0) {
+      text.write(
+        appLocalizations.delayStabilityFailures(stability.failureCount),
+      );
+    }
+    return text.toString();
   }
 }

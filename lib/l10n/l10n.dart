@@ -4250,6 +4250,26 @@ class AppLocalizations {
     return Intl.message('Failed', name: 'delayFailed', desc: '', args: []);
   }
 
+  /// `last {count}`
+  String delayStabilityRecent(Object count) {
+    return Intl.message(
+      'last $count',
+      name: 'delayStabilityRecent',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// ` · {count} failed`
+  String delayStabilityFailures(Object count) {
+    return Intl.message(
+      ' · $count failed',
+      name: 'delayStabilityFailures',
+      desc: '',
+      args: [count],
+    );
+  }
+
   /// `{subRule} is an invalid SUB_RULE`
   String invalidSubRule(Object subRule) {
     return Intl.message(

@@ -361,6 +361,39 @@ class DelayDataSource extends _$DelayDataSource with AutoDisposeNotifierMixin {
   }
 }
 
+/// This session's recent delay results, per delay-test key; memory only.
+@Riverpod(keepAlive: true)
+class DelaySamples extends _$DelaySamples with AutoDisposeNotifierMixin {
+  Map<String, List<int?>>? _owned;
+  Map<String, List<int?>>? _published;
+
+  @override
+  Map<String, List<int?>> build() {
+    return const {};
+  }
+
+  void record(Delay delay) {
+    final samplesMap = _ownedSamplesMap();
+    final key = delayTestKey(delay.url, delay.name);
+    final samples = [...?samplesMap[key], delay.value];
+    if (samples.length > delaySamplesWindow) {
+      samples.removeRange(0, samples.length - delaySamplesWindow);
+    }
+    samplesMap[key] = samples;
+    value = _published = UnmodifiableMapView(samplesMap);
+  }
+
+  Map<String, List<int?>> _ownedSamplesMap() {
+    final owned = _owned;
+    if (owned != null && identical(state, _published)) {
+      return owned;
+    }
+    return _owned = {
+      for (final entry in state.entries) entry.key: [...entry.value],
+    };
+  }
+}
+
 @Riverpod(keepAlive: true)
 class PendingDelayTests extends _$PendingDelayTests
     with AutoDisposeNotifierMixin {

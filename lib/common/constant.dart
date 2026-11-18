@@ -58,6 +58,10 @@ const delayTestGuardDuration = Duration(seconds: 30);
 
 const delayTimedOutValue = -1;
 
+/// How many of a node's recent delay results the session keeps for the
+/// stability reading on its row.
+const delaySamplesWindow = 10;
+
 const probeTimeoutDuration = Duration(seconds: 10);
 
 const downloadTimeoutDuration = Duration(seconds: 20);

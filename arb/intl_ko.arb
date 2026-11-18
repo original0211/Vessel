@@ -516,6 +516,8 @@
   "splitStrategyNotEmpty": "분할 전략을 입력하세요",
   "timeout": "시간 초과",
   "delayFailed": "실패",
+  "delayStabilityRecent": "최근 {count}회",
+  "delayStabilityFailures": " · 실패 {count}",
   "invalidSubRule": "올바르지 않은 SUB_RULE: {subRule}",
   "invalidPolicy": "올바르지 않은 정책: {target}",
   "invalidRuleSet": "올바르지 않은 규칙 세트: {ruleSet}",

@@ -1488,6 +1488,69 @@ abstract class _$DelayDataSource extends $Notifier<DelayMap> {
   }
 }
 
+/// The recent delay results of this session, per delay-test key. Memory
+/// only: a restart starts every node's history empty.
+
+@ProviderFor(DelaySamples)
+final delaySamplesProvider = DelaySamplesProvider._();
+
+/// The recent delay results of this session, per delay-test key. Memory
+/// only: a restart starts every node's history empty.
+final class DelaySamplesProvider
+    extends $NotifierProvider<DelaySamples, Map<String, List<int?>>> {
+  /// The recent delay results of this session, per delay-test key. Memory
+  /// only: a restart starts every node's history empty.
+  DelaySamplesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'delaySamplesProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$delaySamplesHash();
+
+  @$internal
+  @override
+  DelaySamples create() => DelaySamples();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Map<String, List<int?>> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Map<String, List<int?>>>(value),
+    );
+  }
+}
+
+String _$delaySamplesHash() => r'35fa70386d450693e3a6ce70c6e90b5d4ea48eb3';
+
+/// The recent delay results of this session, per delay-test key. Memory
+/// only: a restart starts every node's history empty.
+
+abstract class _$DelaySamples extends $Notifier<Map<String, List<int?>>> {
+  Map<String, List<int?>> build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref =
+        this.ref as $Ref<Map<String, List<int?>>, Map<String, List<int?>>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<Map<String, List<int?>>, Map<String, List<int?>>>,
+              Map<String, List<int?>>,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}
+
 @ProviderFor(PendingDelayTests)
 final pendingDelayTestsProvider = PendingDelayTestsProvider._();
 

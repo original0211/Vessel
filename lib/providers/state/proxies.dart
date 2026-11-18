@@ -189,6 +189,20 @@ int? delay(Ref ref, {required String proxyName, String? testUrl}) {
 }
 
 @riverpod
+DelayStability? delayStability(
+  Ref ref, {
+  required String proxyName,
+  String? testUrl,
+}) {
+  final currentTestUrl = ref.watch(realTestUrlProvider(testUrl));
+  final proxyState = ref.watch(realSelectedProxyStateProvider(proxyName));
+  final effectiveTestUrl = proxyState.testUrl.takeFirstValid([currentTestUrl]);
+  final key = delayTestKey(effectiveTestUrl, proxyState.proxyName);
+  final samples = ref.watch(delaySamplesProvider.select((state) => state[key]));
+  return samples == null ? null : summarizeDelayStability(samples);
+}
+
+@riverpod
 DelayTestPhase? delayTestPhase(
   Ref ref, {
   required String proxyName,

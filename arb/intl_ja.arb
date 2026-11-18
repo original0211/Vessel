@@ -516,6 +516,8 @@
   "splitStrategyNotEmpty": "振り分け戦略は空にできません",
   "timeout": "タイムアウト",
   "delayFailed": "失敗",
+  "delayStabilityRecent": "直近{count}回",
+  "delayStabilityFailures": " · 失敗{count}",
   "invalidSubRule": "{subRule} は無効な SUB_RULE です",
   "invalidPolicy": "{target} は無効なポリシーです",
   "invalidRuleSet": "{ruleSet} は無効なルールセットです",

@@ -516,6 +516,8 @@
   "splitStrategyNotEmpty": "Стратегия распределения не может быть пустой",
   "timeout": "Тайм-аут",
   "delayFailed": "Сбой",
+  "delayStabilityRecent": "последние {count}",
+  "delayStabilityFailures": " · ошибок: {count}",
   "invalidSubRule": "{subRule} — недопустимый SUB_RULE",
   "invalidPolicy": "{target} — недопустимая политика",
   "invalidRuleSet": "{ruleSet} — недопустимый набор правил",

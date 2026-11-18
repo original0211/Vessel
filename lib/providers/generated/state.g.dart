@@ -1237,6 +1237,95 @@ final class DelayFamily extends $Family
   String toString() => r'delayProvider';
 }
 
+@ProviderFor(delayStability)
+final delayStabilityProvider = DelayStabilityFamily._();
+
+final class DelayStabilityProvider
+    extends
+        $FunctionalProvider<DelayStability?, DelayStability?, DelayStability?>
+    with $Provider<DelayStability?> {
+  DelayStabilityProvider._({
+    required DelayStabilityFamily super.from,
+    required ({String proxyName, String? testUrl}) super.argument,
+  }) : super(
+         retry: null,
+         name: r'delayStabilityProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$delayStabilityHash();
+
+  @override
+  String toString() {
+    return r'delayStabilityProvider'
+        ''
+        '$argument';
+  }
+
+  @$internal
+  @override
+  $ProviderElement<DelayStability?> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  DelayStability? create(Ref ref) {
+    final argument = this.argument as ({String proxyName, String? testUrl});
+    return delayStability(
+      ref,
+      proxyName: argument.proxyName,
+      testUrl: argument.testUrl,
+    );
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(DelayStability? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<DelayStability?>(value),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is DelayStabilityProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$delayStabilityHash() => r'26e7f7ae1142e13e426a6e355cd5314b6f763477';
+
+final class DelayStabilityFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          DelayStability?,
+          ({String proxyName, String? testUrl})
+        > {
+  DelayStabilityFamily._()
+    : super(
+        retry: null,
+        name: r'delayStabilityProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  DelayStabilityProvider call({required String proxyName, String? testUrl}) =>
+      DelayStabilityProvider._(
+        argument: (proxyName: proxyName, testUrl: testUrl),
+        from: this,
+      );
+
+  @override
+  String toString() => r'delayStabilityProvider';
+}
+
 @ProviderFor(delayTestPhase)
 final delayTestPhaseProvider = DelayTestPhaseFamily._();
 

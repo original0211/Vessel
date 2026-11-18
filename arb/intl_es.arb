@@ -516,6 +516,8 @@
   "splitStrategyNotEmpty": "La estrategia de división no puede estar vacía",
   "timeout": "Tiempo agotado",
   "delayFailed": "Fallido",
+  "delayStabilityRecent": "últimos {count}",
+  "delayStabilityFailures": " · {count} fallos",
   "invalidSubRule": "{subRule} no es una SUB_RULE válida",
   "invalidPolicy": "{target} no es una política válida",
   "invalidRuleSet": "{ruleSet} no es un conjunto de reglas válido",

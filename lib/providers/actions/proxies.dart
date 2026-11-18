@@ -171,6 +171,7 @@ class ProxiesAction extends _$ProxiesAction {
   }
 
   void setDelay(Delay delay) {
+    ref.read(delaySamplesProvider.notifier).record(delay);
     _bufferedDelays.add(delay);
     _scheduleDelayFlush();
   }

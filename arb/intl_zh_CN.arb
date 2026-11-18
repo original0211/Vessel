@@ -516,6 +516,8 @@
   "splitStrategyNotEmpty": "分流策略不能为空",
   "timeout": "超时",
   "delayFailed": "失败",
+  "delayStabilityRecent": "近{count}次",
+  "delayStabilityFailures": " · 失败{count}",
   "invalidSubRule": "{subRule} 是一个无效的SUB_RULE",
   "invalidPolicy": "{target} 是一个无效的策略",
   "invalidRuleSet": "{ruleSet} 不是有效的规则集",

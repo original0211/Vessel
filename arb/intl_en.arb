@@ -516,6 +516,8 @@
   "splitStrategyNotEmpty": "Split strategy cannot be empty",
   "timeout": "Timeout",
   "delayFailed": "Failed",
+  "delayStabilityRecent": "last {count}",
+  "delayStabilityFailures": " · {count} failed",
   "invalidSubRule": "{subRule} is an invalid SUB_RULE",
   "invalidPolicy": "{target} is an invalid policy",
   "invalidRuleSet": "{ruleSet} is an invalid rule set",

@@ -516,6 +516,8 @@
   "splitStrategyNotEmpty": "La stratégie de répartition ne peut pas être vide",
   "timeout": "Expiré",
   "delayFailed": "Échec",
+  "delayStabilityRecent": "{count} derniers",
+  "delayStabilityFailures": " · {count} échecs",
   "invalidSubRule": "{subRule} n’est pas un SUB_RULE valide",
   "invalidPolicy": "{target} n’est pas une stratégie valide",
   "invalidRuleSet": "{ruleSet} n’est pas un jeu de règles valide",
