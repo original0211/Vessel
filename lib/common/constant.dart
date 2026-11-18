@@ -62,6 +62,19 @@ const delayTimedOutValue = -1;
 /// stability reading on its row.
 const delaySamplesWindow = 10;
 
+/// How long the Core may spend on one speed test; it stops the download at
+/// this cap or at its byte cap, whichever comes first. Kept in step with
+/// defaultSpeedTestTimeout in core/speedtest.go.
+const speedTestTimeoutDuration = Duration(seconds: 10);
+
+const speedTestGuardDuration = Duration(seconds: 30);
+
+/// Download sources for a speed test, in the order the Core tries them.
+const speedTestDownloadUrls = [
+  'https://speed.cloudflare.com/__down?bytes=104857600',
+  'https://speed.hetzner.de/100MB.bin',
+];
+
 const probeTimeoutDuration = Duration(seconds: 10);
 
 const downloadTimeoutDuration = Duration(seconds: 20);

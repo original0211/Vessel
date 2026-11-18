@@ -203,6 +203,7 @@ var methodHandlers = map[CoreMethod]methodHandler{
 	getProxiesMethod:               withoutArguments(handleGetProxies),
 	changeProxyMethod:              withArguments(handleChangeProxy),
 	asyncTestDelayMethod:           withArguments(handleTestDelay),
+	asyncTestSpeedMethod:           withArguments(handleTestSpeed),
 	watchRouteMethod:               watchRouteHandler,
 	probeMethod:                    withArguments(handleProbe),
 	outboundIpMethod:               withArguments(handleOutboundIp),

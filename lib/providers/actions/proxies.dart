@@ -22,6 +22,14 @@ class _DelayTestJob {
   bool cancelled = false;
 }
 
+class _SpeedTestJob {
+  _SpeedTestJob(this.proxyName, this.previous);
+
+  final String proxyName;
+  final SpeedTestState? previous;
+  bool cancelled = false;
+}
+
 @Riverpod(keepAlive: true)
 class ProxiesAction extends _$ProxiesAction {
   CoreController get _core => ref.read(coreHandlerProvider);
@@ -40,12 +48,15 @@ class ProxiesAction extends _$ProxiesAction {
 
   final Map<String, String> _pendingSelectedRollback = {};
 
+  _SpeedTestJob? _speedTestJob;
+
   @override
   void build() {
     ref.onDispose(() => _delayFlushTimer?.cancel());
     ref.listen(coreStatusProvider, (_, next) {
       if (next != CoreStatus.connected) {
         cancelDelayTests();
+        cancelSpeedTest();
       }
     });
   }
@@ -302,6 +313,76 @@ class ProxiesAction extends _$ProxiesAction {
     return _runDelayTests([
       (proxies: [proxy], testUrl: testUrl),
     ]);
+  }
+
+  /// Measures the node [proxy] resolves to, through the mihomo core alone;
+  /// one test at a time, as a test saturates the link it measures.
+  Future<void> proxySpeedTest(Proxy proxy) async {
+    if (bearingSingBoxApi(ref) != null || _speedTestJob != null) {
+      return;
+    }
+    final target = computeRealSelectedProxyState(
+      proxy.name,
+      groups: ref.read(groupsProvider),
+      selectedMap: ref.read(
+        currentProfileProvider.select((state) => state?.selectedMap ?? {}),
+      ),
+    ).proxyName;
+    if (target.isEmpty) {
+      return;
+    }
+    final store = ref.read(speedTestResultsProvider.notifier);
+    final job = _SpeedTestJob(
+      target,
+      ref.read(speedTestResultsProvider)[target],
+    );
+    _speedTestJob = job;
+    store.set(target, const SpeedTestState.running());
+    try {
+      final result = await _core.testSpeed(target);
+      if (job.cancelled) {
+        return;
+      }
+      if (result != null && result.succeeded) {
+        store.set(
+          target,
+          SpeedTestState.succeeded(
+            mbps: result.mbps!,
+            totalBytes: result.totalBytes,
+          ),
+        );
+      } else {
+        store.set(target, const SpeedTestState.failed());
+      }
+    } catch (error) {
+      commonPrint.log(
+        'Speed test failed for $target: $error',
+        logLevel: coreFailureLogLevel(error),
+      );
+      if (!job.cancelled) {
+        store.set(target, const SpeedTestState.failed());
+      }
+    } finally {
+      if (identical(_speedTestJob, job)) {
+        _speedTestJob = null;
+      }
+    }
+  }
+
+  void cancelSpeedTest() {
+    final job = _speedTestJob;
+    if (job == null) {
+      return;
+    }
+    job.cancelled = true;
+    _speedTestJob = null;
+    final store = ref.read(speedTestResultsProvider.notifier);
+    final previous = job.previous;
+    if (previous == null || previous.phase == SpeedTestPhase.running) {
+      store.clear(job.proxyName);
+    } else {
+      store.set(job.proxyName, previous);
+    }
   }
 
   Future<void> delayTest(List<Proxy> proxies, [String? testUrl]) async {

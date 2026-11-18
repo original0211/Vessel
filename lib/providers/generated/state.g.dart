@@ -1326,6 +1326,148 @@ final class DelayStabilityFamily extends $Family
   String toString() => r'delayStabilityProvider';
 }
 
+/// The speed test state of the node [proxyName] resolves to; speed tests
+/// key by node name alone, as the download source is the app's own.
+
+@ProviderFor(speedTest)
+final speedTestProvider = SpeedTestFamily._();
+
+/// The speed test state of the node [proxyName] resolves to; speed tests
+/// key by node name alone, as the download source is the app's own.
+
+final class SpeedTestProvider
+    extends
+        $FunctionalProvider<SpeedTestState?, SpeedTestState?, SpeedTestState?>
+    with $Provider<SpeedTestState?> {
+  /// The speed test state of the node [proxyName] resolves to; speed tests
+  /// key by node name alone, as the download source is the app's own.
+  SpeedTestProvider._({
+    required SpeedTestFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'speedTestProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$speedTestHash();
+
+  @override
+  String toString() {
+    return r'speedTestProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $ProviderElement<SpeedTestState?> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  SpeedTestState? create(Ref ref) {
+    final argument = this.argument as String;
+    return speedTest(ref, proxyName: argument);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SpeedTestState? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SpeedTestState?>(value),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is SpeedTestProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$speedTestHash() => r'6c2b721cfa56d0f783f54fc60a064b544d846301';
+
+/// The speed test state of the node [proxyName] resolves to; speed tests
+/// key by node name alone, as the download source is the app's own.
+
+final class SpeedTestFamily extends $Family
+    with $FunctionalFamilyOverride<SpeedTestState?, String> {
+  SpeedTestFamily._()
+    : super(
+        retry: null,
+        name: r'speedTestProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// The speed test state of the node [proxyName] resolves to; speed tests
+  /// key by node name alone, as the download source is the app's own.
+
+  SpeedTestProvider call({required String proxyName}) =>
+      SpeedTestProvider._(argument: proxyName, from: this);
+
+  @override
+  String toString() => r'speedTestProvider';
+}
+
+/// The node a speed test is currently running against, if any; a second
+/// test never starts while one is running.
+
+@ProviderFor(speedTestActiveName)
+final speedTestActiveNameProvider = SpeedTestActiveNameProvider._();
+
+/// The node a speed test is currently running against, if any; a second
+/// test never starts while one is running.
+
+final class SpeedTestActiveNameProvider
+    extends $FunctionalProvider<String?, String?, String?>
+    with $Provider<String?> {
+  /// The node a speed test is currently running against, if any; a second
+  /// test never starts while one is running.
+  SpeedTestActiveNameProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'speedTestActiveNameProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$speedTestActiveNameHash();
+
+  @$internal
+  @override
+  $ProviderElement<String?> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  String? create(Ref ref) {
+    return speedTestActiveName(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(String? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<String?>(value),
+    );
+  }
+}
+
+String _$speedTestActiveNameHash() =>
+    r'75c3f468eb178a7a38516ed8decc49ab063eee98';
+
 @ProviderFor(delayTestPhase)
 final delayTestPhaseProvider = DelayTestPhaseFamily._();
 

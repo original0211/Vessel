@@ -3,6 +3,7 @@ import 'package:kfusion/common/common.dart';
 import 'package:kfusion/enum/enum.dart';
 import 'package:kfusion/features/config_hub/singbox_action.dart';
 import 'package:kfusion/features/proxies/delay_stability.dart';
+import 'package:kfusion/features/proxies/speed_test.dart';
 import 'package:kfusion/models/models.dart';
 import 'package:kfusion/providers/providers.dart';
 import 'package:kfusion/ui/icons/icons.dart';
@@ -396,9 +397,25 @@ class _HaraAutoRow extends ConsumerWidget {
                   const SizedBox(width: 16),
                 ],
                 if (childNow.isNotEmpty)
-                  _HaraDelay(
-                    group: group,
-                    proxy: Proxy(name: childNow, type: 'URLTest'),
+                  Flexible(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(
+                          child: _HaraSpeedTest(
+                            proxy: Proxy(name: childNow, type: 'URLTest'),
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Flexible(
+                          child: _HaraDelay(
+                            group: group,
+                            proxy: Proxy(name: childNow, type: 'URLTest'),
+                          ),
+                        ),
+                      ],
+                    ),
                   )
                 else
                   Text('—', style: HaraText.untested(context, palette.dim)),
@@ -485,7 +502,19 @@ class _HaraProxyRow extends ConsumerWidget {
                 if (isGroup)
                   _HaraRealSelected(group: group, proxy: proxy)
                 else
-                  _HaraDelay(group: group, proxy: proxy),
+                  Flexible(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(child: _HaraSpeedTest(proxy: proxy)),
+                        const SizedBox(width: 16),
+                        Flexible(
+                          child: _HaraDelay(group: group, proxy: proxy),
+                        ),
+                      ],
+                    ),
+                  ),
               ],
             ),
           ),
@@ -494,6 +523,170 @@ class _HaraProxyRow extends ConsumerWidget {
       ),
     );
   }
+}
+
+/// The leaf row's speed test slot, left of the delay reading. It states
+/// only what is true: an invitation, a running test, a measured reading
+/// with its single-connection basis, or that no measurement could be made.
+class _HaraSpeedTest extends ConsumerWidget {
+  const _HaraSpeedTest({required this.proxy});
+
+  final Proxy proxy;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final palette = context.haraPalette;
+    final appLocalizations = context.appLocalizations;
+    final bearing =
+        ref.watch(singBoxActionProvider).value?.state == SingBoxState.running &&
+        ref.read(singBoxActionProvider.notifier).api != null;
+    final state = ref.watch(speedTestProvider(proxyName: proxy.name));
+    final activeName = ref.watch(speedTestActiveNameProvider);
+    final resolved = ref
+        .watch(realSelectedProxyStateProvider(proxy.name))
+        .proxyName;
+    final busy = activeName != null && activeName != resolved;
+
+    final String text;
+    final Color color;
+    if (bearing) {
+      text = appLocalizations.speedTest;
+      color = palette.dim;
+    } else if (state == null) {
+      text = appLocalizations.speedTest;
+      color = busy ? palette.dim : palette.sub;
+    } else {
+      switch (state.phase) {
+        case SpeedTestPhase.running:
+          text = appLocalizations.speedTesting;
+          color = palette.sub;
+        case SpeedTestPhase.succeeded:
+          text = appLocalizations.speedTestReading(
+            formatSpeedMbps(state.mbps!),
+          );
+          color = palette.sub;
+        case SpeedTestPhase.failed:
+          text = appLocalizations.speedTestUnmeasurable;
+          color = palette.dim;
+      }
+    }
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => _onTap(
+        context,
+        ref,
+        bearing: bearing,
+        busy: busy,
+        phase: state?.phase,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+        child: Text(
+          text,
+          style: HaraText.inUse(context, color),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _onTap(
+    BuildContext context,
+    WidgetRef ref, {
+    required bool bearing,
+    required bool busy,
+    required SpeedTestPhase? phase,
+  }) async {
+    if (bearing) {
+      dialogs.showNotifier(
+        context.appLocalizations.speedTestUnavailableUnderSingBox,
+      );
+      return;
+    }
+    final action = ref.read(proxiesActionProvider.notifier);
+    if (phase == SpeedTestPhase.running) {
+      action.cancelSpeedTest();
+      return;
+    }
+    if (busy) {
+      return;
+    }
+    if (!ref.read(appSettingProvider).speedTestNoticeAccepted) {
+      final accepted = await _confirmSpeedTestTraffic(context, ref);
+      if (!accepted) {
+        return;
+      }
+    }
+    await action.proxySpeedTest(proxy);
+  }
+}
+
+Future<bool> _confirmSpeedTestTraffic(
+  BuildContext context,
+  WidgetRef ref,
+) async {
+  var suppress = false;
+  final accepted = await dialogs.showCommonDialog<bool>(
+    context: context,
+    child: StatefulBuilder(
+      builder: (context, setState) {
+        final appLocalizations = context.appLocalizations;
+        final palette = context.haraPalette;
+        return CommonDialog(
+          title: appLocalizations.speedTest,
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text(appLocalizations.cancel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(appLocalizations.confirm),
+            ),
+          ],
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                appLocalizations.speedTestTrafficNotice,
+                style: HaraText.nodeName(context, palette.sub, current: false),
+              ),
+              const SizedBox(height: 12),
+              InkWell(
+                customBorder: AppShape.hara,
+                onTap: () => setState(() => suppress = !suppress),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Checkbox(
+                      value: suppress,
+                      onChanged: (value) =>
+                          setState(() => suppress = value ?? false),
+                    ),
+                    Text(
+                      appLocalizations.noLongerRemind,
+                      style: HaraText.inUse(context, palette.sub),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    ),
+  );
+  if (accepted != true) {
+    return false;
+  }
+  if (suppress) {
+    ref
+        .read(appSettingProvider.notifier)
+        .update((state) => state.copyWith(speedTestNoticeAccepted: true));
+  }
+  return true;
 }
 
 class _HaraRealSelected extends ConsumerWidget {
@@ -592,6 +785,8 @@ class _HaraDelay extends ConsumerWidget {
         Text(
           _stabilityText(context, stability),
           style: HaraText.inUse(context, palette.dim),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
       ],
     );

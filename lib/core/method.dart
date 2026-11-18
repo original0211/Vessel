@@ -28,6 +28,7 @@ enum CoreMethod {
   getTotalTraffic,
   resetTraffic,
   asyncTestDelay,
+  asyncTestSpeed,
   probe,
   outboundIp,
   serviceCheck,

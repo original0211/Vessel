@@ -198,12 +198,14 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m71(label) => "${label} must be a single item";
 
-  static String m72(label) => "${label} must be a URL";
+  static String m72(mbps) => "↓ ${mbps} Mbps · single connection";
 
-  static String m73(count) =>
+  static String m73(label) => "${label} must be a URL";
+
+  static String m74(count) =>
       "${Intl.plural(count, one: '1 year ago', other: '${count} years ago')}";
 
-  static String m74(count) => "${Intl.plural(count, other: '${count}y ago')}";
+  static String m75(count) => "${Intl.plural(count, other: '${count}y ago')}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -1482,6 +1484,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "specialProxy": MessageLookupByLibrary.simpleMessage("Special proxy"),
     "specialRules": MessageLookupByLibrary.simpleMessage("Special rules"),
     "speedStatistics": MessageLookupByLibrary.simpleMessage("Speed statistics"),
+    "speedTest": MessageLookupByLibrary.simpleMessage("Speed test"),
+    "speedTestReading": m72,
+    "speedTestTrafficNotice": MessageLookupByLibrary.simpleMessage(
+      "A speed test downloads about 20–100 MB through this node. On a mobile network, mind your data plan.",
+    ),
+    "speedTestUnavailableUnderSingBox": MessageLookupByLibrary.simpleMessage(
+      "Speed test is unavailable under the sing-box core",
+    ),
+    "speedTestUnmeasurable": MessageLookupByLibrary.simpleMessage(
+      "Can\'t measure",
+    ),
+    "speedTesting": MessageLookupByLibrary.simpleMessage("Testing…"),
     "splitStrategy": MessageLookupByLibrary.simpleMessage("Split strategy"),
     "splitStrategyNotEmpty": MessageLookupByLibrary.simpleMessage(
       "Split strategy cannot be empty",
@@ -1578,7 +1592,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "update": MessageLookupByLibrary.simpleMessage("Update"),
     "upload": MessageLookupByLibrary.simpleMessage("Upload"),
     "url": MessageLookupByLibrary.simpleMessage("URL"),
-    "urlTip": m72,
+    "urlTip": m73,
     "useHosts": MessageLookupByLibrary.simpleMessage("Use hosts"),
     "useSystemHosts": MessageLookupByLibrary.simpleMessage("Use system hosts"),
     "usedTraffic": MessageLookupByLibrary.simpleMessage("Used traffic"),
@@ -1594,8 +1608,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "vpnIpv6": MessageLookupByLibrary.simpleMessage("VPN IPv6"),
     "whitelistMode": MessageLookupByLibrary.simpleMessage("Whitelist mode"),
     "writeToSystem": MessageLookupByLibrary.simpleMessage("Write to system"),
-    "yearsAgo": m73,
-    "yearsAgoShort": m74,
+    "yearsAgo": m74,
+    "yearsAgoShort": m75,
     "zhCN": MessageLookupByLibrary.simpleMessage("Simplified Chinese"),
   };
 }

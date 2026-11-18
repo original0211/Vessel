@@ -177,11 +177,13 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m71(label) => "${label}は1項目のみ指定できます";
 
-  static String m72(label) => "${label}はURLである必要があります";
+  static String m72(mbps) => "↓ ${mbps} Mbps · 単一接続";
 
-  static String m73(count) => "${count} 年前";
+  static String m73(label) => "${label}はURLである必要があります";
 
   static String m74(count) => "${count} 年前";
+
+  static String m75(count) => "${count} 年前";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -1283,6 +1285,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "specialProxy": MessageLookupByLibrary.simpleMessage("特殊プロキシ"),
     "specialRules": MessageLookupByLibrary.simpleMessage("特殊ルール"),
     "speedStatistics": MessageLookupByLibrary.simpleMessage("速度統計"),
+    "speedTest": MessageLookupByLibrary.simpleMessage("速度測定"),
+    "speedTestReading": m72,
+    "speedTestTrafficNotice": MessageLookupByLibrary.simpleMessage(
+      "速度測定ではこのノード経由で約 20–100 MB をダウンロードします。モバイル回線ではデータ通信量にご注意ください。",
+    ),
+    "speedTestUnavailableUnderSingBox": MessageLookupByLibrary.simpleMessage(
+      "sing-box コアでは速度測定を利用できません",
+    ),
+    "speedTestUnmeasurable": MessageLookupByLibrary.simpleMessage("測定不可"),
+    "speedTesting": MessageLookupByLibrary.simpleMessage("測定中…"),
     "splitStrategy": MessageLookupByLibrary.simpleMessage("振り分け戦略"),
     "splitStrategyNotEmpty": MessageLookupByLibrary.simpleMessage(
       "振り分け戦略は空にできません",
@@ -1369,7 +1381,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "update": MessageLookupByLibrary.simpleMessage("更新"),
     "upload": MessageLookupByLibrary.simpleMessage("アップロード"),
     "url": MessageLookupByLibrary.simpleMessage("URL"),
-    "urlTip": m72,
+    "urlTip": m73,
     "useHosts": MessageLookupByLibrary.simpleMessage("Hostsを使用"),
     "useSystemHosts": MessageLookupByLibrary.simpleMessage("システムのHostsを使用"),
     "usedTraffic": MessageLookupByLibrary.simpleMessage("使用済みトラフィック"),
@@ -1385,8 +1397,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "vpnIpv6": MessageLookupByLibrary.simpleMessage("VPN IPv6"),
     "whitelistMode": MessageLookupByLibrary.simpleMessage("ホワイトリストモード"),
     "writeToSystem": MessageLookupByLibrary.simpleMessage("システムに書き込む"),
-    "yearsAgo": m73,
-    "yearsAgoShort": m74,
+    "yearsAgo": m74,
+    "yearsAgoShort": m75,
     "zhCN": MessageLookupByLibrary.simpleMessage("簡体字中国語"),
   };
 }

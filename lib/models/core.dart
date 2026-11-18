@@ -187,6 +187,31 @@ abstract class Delay with _$Delay {
   factory Delay.fromJson(Map<String, Object?> json) => _$DelayFromJson(json);
 }
 
+class SpeedTestResult {
+  const SpeedTestResult({
+    required this.name,
+    this.mbps,
+    this.totalBytes = 0,
+    this.error = '',
+  });
+
+  factory SpeedTestResult.fromJson(Map<String, Object?> json) {
+    return SpeedTestResult(
+      name: json['name'] as String,
+      mbps: (json['mbps'] as num?)?.toDouble(),
+      totalBytes: (json['total-bytes'] as num?)?.toInt() ?? 0,
+      error: json['error'] as String? ?? '',
+    );
+  }
+
+  final String name;
+  final double? mbps;
+  final int totalBytes;
+  final String error;
+
+  bool get succeeded => error.isEmpty && mbps != null;
+}
+
 @freezed
 abstract class ProbeParams with _$ProbeParams {
   const factory ProbeParams({

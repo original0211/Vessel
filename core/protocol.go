@@ -34,6 +34,7 @@ const (
 	getTotalTrafficMethod          CoreMethod = "getTotalTraffic"
 	resetTrafficMethod             CoreMethod = "resetTraffic"
 	asyncTestDelayMethod           CoreMethod = "asyncTestDelay"
+	asyncTestSpeedMethod           CoreMethod = "asyncTestSpeed"
 	probeMethod                    CoreMethod = "probe"
 	outboundIpMethod               CoreMethod = "outboundIp"
 	serviceCheckMethod             CoreMethod = "serviceCheck"
@@ -193,6 +194,19 @@ type Delay struct {
 	Url   string `json:"url"`
 	Name  string `json:"name"`
 	Value int32  `json:"value"`
+}
+
+type TestSpeedParams struct {
+	ProxyName string   `json:"proxy-name"`
+	Urls      []string `json:"urls"`
+	Timeout   int64    `json:"timeout"`
+}
+
+type SpeedTestResult struct {
+	Name       string  `json:"name"`
+	Mbps       float64 `json:"mbps"`
+	TotalBytes int64   `json:"total-bytes"`
+	Error      string  `json:"error,omitempty"`
 }
 
 type ProbeParams struct {

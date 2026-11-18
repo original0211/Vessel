@@ -177,11 +177,13 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m71(label) => "${label}은(는) 하나만 입력해야 합니다";
 
-  static String m72(label) => "${label}은(는) URL이어야 합니다";
+  static String m72(mbps) => "↓ ${mbps} Mbps · 단일 연결";
 
-  static String m73(count) => "${Intl.plural(count, other: '${count}년 전')}";
+  static String m73(label) => "${label}은(는) URL이어야 합니다";
 
   static String m74(count) => "${Intl.plural(count, other: '${count}년 전')}";
+
+  static String m75(count) => "${Intl.plural(count, other: '${count}년 전')}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -1261,6 +1263,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "specialProxy": MessageLookupByLibrary.simpleMessage("특수 프록시"),
     "specialRules": MessageLookupByLibrary.simpleMessage("특수 규칙"),
     "speedStatistics": MessageLookupByLibrary.simpleMessage("속도 통계"),
+    "speedTest": MessageLookupByLibrary.simpleMessage("속도 측정"),
+    "speedTestReading": m72,
+    "speedTestTrafficNotice": MessageLookupByLibrary.simpleMessage(
+      "속도 측정은 이 노드를 통해 약 20–100 MB를 다운로드합니다. 모바일 네트워크에서는 데이터 사용량에 유의하세요.",
+    ),
+    "speedTestUnavailableUnderSingBox": MessageLookupByLibrary.simpleMessage(
+      "sing-box 코어에서는 속도 측정을 사용할 수 없습니다",
+    ),
+    "speedTestUnmeasurable": MessageLookupByLibrary.simpleMessage("측정 불가"),
+    "speedTesting": MessageLookupByLibrary.simpleMessage("측정 중…"),
     "splitStrategy": MessageLookupByLibrary.simpleMessage("분할 전략"),
     "splitStrategyNotEmpty": MessageLookupByLibrary.simpleMessage(
       "분할 전략을 입력하세요",
@@ -1351,7 +1363,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "update": MessageLookupByLibrary.simpleMessage("업데이트"),
     "upload": MessageLookupByLibrary.simpleMessage("업로드"),
     "url": MessageLookupByLibrary.simpleMessage("URL"),
-    "urlTip": m72,
+    "urlTip": m73,
     "useHosts": MessageLookupByLibrary.simpleMessage("hosts 사용"),
     "useSystemHosts": MessageLookupByLibrary.simpleMessage("시스템 hosts 사용"),
     "usedTraffic": MessageLookupByLibrary.simpleMessage("사용한 트래픽"),
@@ -1367,8 +1379,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "vpnIpv6": MessageLookupByLibrary.simpleMessage("VPN IPv6"),
     "whitelistMode": MessageLookupByLibrary.simpleMessage("화이트리스트 모드"),
     "writeToSystem": MessageLookupByLibrary.simpleMessage("시스템에 기록"),
-    "yearsAgo": m73,
-    "yearsAgoShort": m74,
+    "yearsAgo": m74,
+    "yearsAgoShort": m75,
     "zhCN": MessageLookupByLibrary.simpleMessage("중국어 간체"),
   };
 }

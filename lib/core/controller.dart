@@ -279,6 +279,10 @@ class CoreController {
     return _interface.asyncTestDelay(url, proxyName);
   }
 
+  Future<SpeedTestResult?> testSpeed(String proxyName) async {
+    return _interface.asyncTestSpeed(proxyName);
+  }
+
   Future<ProbeResult?> probe(ProbeParams params) => _interface.probe(params);
 
   Future<OutboundIpResult?> outboundIp(OutboundIpParams params) =>

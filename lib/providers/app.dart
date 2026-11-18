@@ -5,6 +5,7 @@ import 'dart:ui' show Locale;
 
 import 'package:kfusion/common/common.dart';
 import 'package:kfusion/enum/enum.dart';
+import 'package:kfusion/features/proxies/speed_test.dart';
 import 'package:kfusion/models/models.dart';
 import 'package:kfusion/providers/core.dart';
 import 'package:flutter/services.dart';
@@ -358,6 +359,27 @@ class DelayDataSource extends _$DelayDataSource with AutoDisposeNotifierMixin {
     return _owned = {
       for (final entry in state.entries) entry.key: {...entry.value},
     };
+  }
+}
+
+/// This session's speed test state, per node name; memory only.
+@Riverpod(keepAlive: true)
+class SpeedTestResults extends _$SpeedTestResults
+    with AutoDisposeNotifierMixin {
+  @override
+  Map<String, SpeedTestState> build() {
+    return const {};
+  }
+
+  void set(String proxyName, SpeedTestState result) {
+    value = {...state, proxyName: result};
+  }
+
+  void clear(String proxyName) {
+    if (!state.containsKey(proxyName)) {
+      return;
+    }
+    value = {...state}..remove(proxyName);
   }
 }
 

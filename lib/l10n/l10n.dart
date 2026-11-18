@@ -4270,6 +4270,56 @@ class AppLocalizations {
     );
   }
 
+  /// `Speed test`
+  String get speedTest {
+    return Intl.message('Speed test', name: 'speedTest', desc: '', args: []);
+  }
+
+  /// `Testing…`
+  String get speedTesting {
+    return Intl.message('Testing…', name: 'speedTesting', desc: '', args: []);
+  }
+
+  /// `↓ {mbps} Mbps · single connection`
+  String speedTestReading(Object mbps) {
+    return Intl.message(
+      '↓ $mbps Mbps · single connection',
+      name: 'speedTestReading',
+      desc: '',
+      args: [mbps],
+    );
+  }
+
+  /// `Can't measure`
+  String get speedTestUnmeasurable {
+    return Intl.message(
+      'Can\'t measure',
+      name: 'speedTestUnmeasurable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A speed test downloads about 20–100 MB through this node. On a mobile network, mind your data plan.`
+  String get speedTestTrafficNotice {
+    return Intl.message(
+      'A speed test downloads about 20–100 MB through this node. On a mobile network, mind your data plan.',
+      name: 'speedTestTrafficNotice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Speed test is unavailable under the sing-box core`
+  String get speedTestUnavailableUnderSingBox {
+    return Intl.message(
+      'Speed test is unavailable under the sing-box core',
+      name: 'speedTestUnavailableUnderSingBox',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `{subRule} is an invalid SUB_RULE`
   String invalidSubRule(Object subRule) {
     return Intl.message(

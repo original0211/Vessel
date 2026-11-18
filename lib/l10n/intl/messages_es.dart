@@ -203,12 +203,14 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m71(label) => "${label} debe ser un solo elemento";
 
-  static String m72(label) => "${label} debe ser una URL";
+  static String m72(mbps) => "↓ ${mbps} Mbps · conexión única";
 
-  static String m73(count) =>
+  static String m73(label) => "${label} debe ser una URL";
+
+  static String m74(count) =>
       "${Intl.plural(count, one: 'hace 1 año', other: 'hace ${count} años')}";
 
-  static String m74(count) => "${Intl.plural(count, other: 'hace ${count} a')}";
+  static String m75(count) => "${Intl.plural(count, other: 'hace ${count} a')}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -1582,6 +1584,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "speedStatistics": MessageLookupByLibrary.simpleMessage(
       "Estadísticas de velocidad",
     ),
+    "speedTest": MessageLookupByLibrary.simpleMessage("Prueba de velocidad"),
+    "speedTestReading": m72,
+    "speedTestTrafficNotice": MessageLookupByLibrary.simpleMessage(
+      "Una prueba de velocidad descarga entre 20 y 100 MB a través de este nodo. En una red móvil, ten en cuenta tu plan de datos.",
+    ),
+    "speedTestUnavailableUnderSingBox": MessageLookupByLibrary.simpleMessage(
+      "La prueba de velocidad no está disponible con el núcleo sing-box",
+    ),
+    "speedTestUnmeasurable": MessageLookupByLibrary.simpleMessage("No medible"),
+    "speedTesting": MessageLookupByLibrary.simpleMessage("Probando…"),
     "splitStrategy": MessageLookupByLibrary.simpleMessage(
       "Estrategia de división",
     ),
@@ -1684,7 +1696,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "update": MessageLookupByLibrary.simpleMessage("Actualizar"),
     "upload": MessageLookupByLibrary.simpleMessage("Subida"),
     "url": MessageLookupByLibrary.simpleMessage("URL"),
-    "urlTip": m72,
+    "urlTip": m73,
     "useHosts": MessageLookupByLibrary.simpleMessage("Usar hosts"),
     "useSystemHosts": MessageLookupByLibrary.simpleMessage(
       "Usar hosts del sistema",
@@ -1704,8 +1716,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "writeToSystem": MessageLookupByLibrary.simpleMessage(
       "Escribir en el sistema",
     ),
-    "yearsAgo": m73,
-    "yearsAgoShort": m74,
+    "yearsAgo": m74,
+    "yearsAgoShort": m75,
     "zhCN": MessageLookupByLibrary.simpleMessage("Chino simplificado"),
   };
 }

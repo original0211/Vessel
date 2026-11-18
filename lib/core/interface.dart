@@ -50,6 +50,8 @@ mixin CoreInterface {
 
   Future<Delay?> asyncTestDelay(String url, String proxyName);
 
+  Future<SpeedTestResult?> asyncTestSpeed(String proxyName);
+
   Future<ProbeResult?> probe(ProbeParams params);
 
   Future<OutboundIpResult?> outboundIp(OutboundIpParams params);
@@ -568,6 +570,21 @@ abstract class CoreHandlerInterface with CoreInterface {
       timeout: delayTestGuardDuration,
     );
     return data == null ? null : Delay.fromJson(data);
+  }
+
+  @override
+  Future<SpeedTestResult?> asyncTestSpeed(String proxyName) async {
+    final speedParams = {
+      'proxy-name': proxyName,
+      'timeout': speedTestTimeoutDuration.inMilliseconds,
+      'urls': speedTestDownloadUrls,
+    };
+    final data = await _invokeMethod<Map<String, dynamic>>(
+      method: CoreMethod.asyncTestSpeed,
+      arguments: speedParams,
+      timeout: speedTestGuardDuration,
+    );
+    return data == null ? null : SpeedTestResult.fromJson(data);
   }
 
   @override

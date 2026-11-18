@@ -1488,18 +1488,79 @@ abstract class _$DelayDataSource extends $Notifier<DelayMap> {
   }
 }
 
-/// The recent delay results of this session, per delay-test key. Memory
-/// only: a restart starts every node's history empty.
+/// This session's speed test state, per node name; memory only.
+
+@ProviderFor(SpeedTestResults)
+final speedTestResultsProvider = SpeedTestResultsProvider._();
+
+/// This session's speed test state, per node name; memory only.
+final class SpeedTestResultsProvider
+    extends $NotifierProvider<SpeedTestResults, Map<String, SpeedTestState>> {
+  /// This session's speed test state, per node name; memory only.
+  SpeedTestResultsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'speedTestResultsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$speedTestResultsHash();
+
+  @$internal
+  @override
+  SpeedTestResults create() => SpeedTestResults();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Map<String, SpeedTestState> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Map<String, SpeedTestState>>(value),
+    );
+  }
+}
+
+String _$speedTestResultsHash() => r'8a952516920724b5c48195c2dcb800ec4b8b5688';
+
+/// This session's speed test state, per node name; memory only.
+
+abstract class _$SpeedTestResults
+    extends $Notifier<Map<String, SpeedTestState>> {
+  Map<String, SpeedTestState> build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref =
+        this.ref
+            as $Ref<Map<String, SpeedTestState>, Map<String, SpeedTestState>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<
+                Map<String, SpeedTestState>,
+                Map<String, SpeedTestState>
+              >,
+              Map<String, SpeedTestState>,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}
+
+/// This session's recent delay results, per delay-test key; memory only.
 
 @ProviderFor(DelaySamples)
 final delaySamplesProvider = DelaySamplesProvider._();
 
-/// The recent delay results of this session, per delay-test key. Memory
-/// only: a restart starts every node's history empty.
+/// This session's recent delay results, per delay-test key; memory only.
 final class DelaySamplesProvider
     extends $NotifierProvider<DelaySamples, Map<String, List<int?>>> {
-  /// The recent delay results of this session, per delay-test key. Memory
-  /// only: a restart starts every node's history empty.
+  /// This session's recent delay results, per delay-test key; memory only.
   DelaySamplesProvider._()
     : super(
         from: null,
@@ -1529,8 +1590,7 @@ final class DelaySamplesProvider
 
 String _$delaySamplesHash() => r'35fa70386d450693e3a6ce70c6e90b5d4ea48eb3';
 
-/// The recent delay results of this session, per delay-test key. Memory
-/// only: a restart starts every node's history empty.
+/// This session's recent delay results, per delay-test key; memory only.
 
 abstract class _$DelaySamples extends $Notifier<Map<String, List<int?>>> {
   Map<String, List<int?>> build();

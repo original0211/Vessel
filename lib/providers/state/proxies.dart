@@ -202,6 +202,26 @@ DelayStability? delayStability(
   return samples == null ? null : summarizeDelayStability(samples);
 }
 
+/// Speed tests key by resolved node name alone, as the source is fixed.
+@riverpod
+SpeedTestState? speedTest(Ref ref, {required String proxyName}) {
+  final proxyState = ref.watch(realSelectedProxyStateProvider(proxyName));
+  return ref.watch(
+    speedTestResultsProvider.select((state) => state[proxyState.proxyName]),
+  );
+}
+
+@riverpod
+String? speedTestActiveName(Ref ref) {
+  final results = ref.watch(speedTestResultsProvider);
+  for (final entry in results.entries) {
+    if (entry.value.phase == SpeedTestPhase.running) {
+      return entry.key;
+    }
+  }
+  return null;
+}
+
 @riverpod
 DelayTestPhase? delayTestPhase(
   Ref ref, {

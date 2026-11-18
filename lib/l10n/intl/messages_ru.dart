@@ -198,12 +198,14 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m71(label) => "«${label}» — только одно значение";
 
-  static String m72(label) => "Значение «${label}» должно быть URL";
+  static String m72(mbps) => "↓ ${mbps} Mbps · одно соединение";
 
-  static String m73(count) =>
-      "${Intl.plural(count, one: '${count} год назад', few: '${count} года назад', many: '${count} лет назад', other: '${count} года назад')}";
+  static String m73(label) => "Значение «${label}» должно быть URL";
 
   static String m74(count) =>
+      "${Intl.plural(count, one: '${count} год назад', few: '${count} года назад', many: '${count} лет назад', other: '${count} года назад')}";
+
+  static String m75(count) =>
       "${Intl.plural(count, one: '${count} г. назад', few: '${count} г. назад', many: '${count} л. назад', other: '${count} г. назад')}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
@@ -1543,6 +1545,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "speedStatistics": MessageLookupByLibrary.simpleMessage(
       "Статистика скорости",
     ),
+    "speedTest": MessageLookupByLibrary.simpleMessage("Замер скорости"),
+    "speedTestReading": m72,
+    "speedTestTrafficNotice": MessageLookupByLibrary.simpleMessage(
+      "Замер скорости скачает через этот узел около 20–100 МБ. В мобильной сети учитывайте свой тариф.",
+    ),
+    "speedTestUnavailableUnderSingBox": MessageLookupByLibrary.simpleMessage(
+      "Замер скорости недоступен на ядре sing-box",
+    ),
+    "speedTestUnmeasurable": MessageLookupByLibrary.simpleMessage(
+      "Не измеряется",
+    ),
+    "speedTesting": MessageLookupByLibrary.simpleMessage("Идёт замер…"),
     "splitStrategy": MessageLookupByLibrary.simpleMessage(
       "Стратегия распределения",
     ),
@@ -1647,7 +1661,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "update": MessageLookupByLibrary.simpleMessage("Обновить"),
     "upload": MessageLookupByLibrary.simpleMessage("Отдача"),
     "url": MessageLookupByLibrary.simpleMessage("URL"),
-    "urlTip": m72,
+    "urlTip": m73,
     "useHosts": MessageLookupByLibrary.simpleMessage("Использовать hosts"),
     "useSystemHosts": MessageLookupByLibrary.simpleMessage(
       "Использовать системный hosts",
@@ -1671,8 +1685,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "writeToSystem": MessageLookupByLibrary.simpleMessage(
       "Записывать в систему",
     ),
-    "yearsAgo": m73,
-    "yearsAgoShort": m74,
+    "yearsAgo": m74,
+    "yearsAgoShort": m75,
     "zhCN": MessageLookupByLibrary.simpleMessage("Упрощённый китайский"),
   };
 }
