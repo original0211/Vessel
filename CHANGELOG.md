@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.4.4 (2026-11-19)
+
+**Features**
+
+- **proxies** Node rows can now run a speed test under the sing-box core on Windows (0840054)
+
+**Bug Fixes**
+
+- **proxies** Fixed node speed tests that always reported unmeasurable (ab7143f)
+
 ## v1.4.3 (2026-11-18)
 
 **Features**

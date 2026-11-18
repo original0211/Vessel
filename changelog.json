@@ -2,6 +2,34 @@
   "schemaVersion": 2,
   "versions": [
     {
+      "version": "1.4.4",
+      "tag": "v1.4.4",
+      "date": "2026-11-19",
+      "prerelease": false,
+      "groups": [
+        {
+          "type": "feat",
+          "entries": [
+            {
+              "id": "0840054",
+              "scope": "proxies",
+              "text": "Node rows can now run a speed test under the sing-box core on Windows"
+            }
+          ]
+        },
+        {
+          "type": "fix",
+          "entries": [
+            {
+              "id": "ab7143f",
+              "scope": "proxies",
+              "text": "Fixed node speed tests that always reported unmeasurable"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "version": "1.4.3",
       "tag": "v1.4.3",
       "date": "2026-11-18",
