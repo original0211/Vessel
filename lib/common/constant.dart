@@ -79,6 +79,20 @@ const speedTestDownloadUrls = [
   'https://proof.ovh.net/files/100Mb.dat',
 ];
 
+/// A speed test stops at this many downloaded bytes, mirroring
+/// speedTestMaxBytes in core/speedtest.go.
+const speedTestMaxBytes = 100 << 20;
+
+/// The warmup a speed test discards ends at the first of this duration or
+/// [speedTestWarmupBytes], mirroring core/speedtest.go.
+const speedTestWarmupDuration = Duration(seconds: 1);
+
+const speedTestWarmupBytes = 512 << 10;
+
+/// A measured window shorter than this is not a reading, mirroring
+/// speedTestMinWindow in core/speedtest.go.
+const speedTestMinWindowDuration = Duration(milliseconds: 200);
+
 const probeTimeoutDuration = Duration(seconds: 10);
 
 const downloadTimeoutDuration = Duration(seconds: 20);

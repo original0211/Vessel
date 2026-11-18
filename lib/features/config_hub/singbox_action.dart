@@ -11,6 +11,7 @@ import 'package:kfusion/features/config_hub/core_switch.dart';
 import 'package:kfusion/features/config_hub/singbox_degradations.dart';
 import 'package:kfusion/features/config_hub/singbox_native.dart';
 import 'package:kfusion/features/config_hub/singbox_render.dart';
+import 'package:kfusion/features/config_hub/singbox_speedtest.dart';
 import 'package:kfusion/models/models.dart';
 import 'package:kfusion/plugins/singbox.dart';
 import 'package:kfusion/providers/providers.dart';
@@ -842,13 +843,23 @@ class SingBoxAction extends AsyncNotifier<SingBoxStatus> {
         final configPath =
             '$homeDir${Platform.pathSeparator}singbox'
             '${Platform.pathSeparator}config.json';
-        return reclaimOrphanedSingBoxProcesses(
+        var reclaimed = await reclaimOrphanedSingBoxProcesses(
           executable: binary,
           configPath: configPath,
           corroborationPort: singBoxMixedPort,
           onEvent: (message) =>
               commonPrint.log(message, logLevel: LogLevel.warning),
         );
+        reclaimed += await reclaimOrphanedSingBoxProcesses(
+          executable: binary,
+          configPath: singBoxSpeedTestConfigPath(homeDir),
+          onEvent: (message) =>
+              commonPrint.log(message, logLevel: LogLevel.warning),
+        );
+        try {
+          await singBoxSpeedTestDir(homeDir).delete(recursive: true);
+        } catch (_) {}
+        return reclaimed;
       },
       portFree: () => CoreSwitch(
         portWaitTimeout: const Duration(seconds: 2),

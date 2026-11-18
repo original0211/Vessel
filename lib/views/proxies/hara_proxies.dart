@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kfusion/common/common.dart';
 import 'package:kfusion/enum/enum.dart';
 import 'package:kfusion/features/config_hub/singbox_action.dart';
+import 'package:kfusion/features/config_hub/singbox_speedtest.dart';
 import 'package:kfusion/features/proxies/delay_stability.dart';
 import 'package:kfusion/features/proxies/speed_test.dart';
 import 'package:kfusion/models/models.dart';
@@ -540,6 +541,12 @@ class _HaraSpeedTest extends ConsumerWidget {
     final bearing =
         ref.watch(singBoxActionProvider).value?.state == SingBoxState.running &&
         ref.read(singBoxActionProvider.notifier).api != null;
+    final unavailable =
+        bearing &&
+        !speedTestEntryEnabled(
+          singBoxBearing: true,
+          windowsPlatform: ref.watch(speedTestSingBoxSupportedProvider),
+        );
     final state = ref.watch(speedTestProvider(proxyName: proxy.name));
     final activeName = ref.watch(speedTestActiveNameProvider);
     final resolved = ref
@@ -549,7 +556,7 @@ class _HaraSpeedTest extends ConsumerWidget {
 
     final String text;
     final Color color;
-    if (bearing) {
+    if (unavailable) {
       text = appLocalizations.speedTest;
       color = palette.dim;
     } else if (state == null) {
@@ -575,7 +582,7 @@ class _HaraSpeedTest extends ConsumerWidget {
       onTap: () => _onTap(
         context,
         ref,
-        bearing: bearing,
+        unavailable: unavailable,
         busy: busy,
         phase: state?.phase,
       ),
@@ -594,11 +601,11 @@ class _HaraSpeedTest extends ConsumerWidget {
   Future<void> _onTap(
     BuildContext context,
     WidgetRef ref, {
-    required bool bearing,
+    required bool unavailable,
     required bool busy,
     required SpeedTestPhase? phase,
   }) async {
-    if (bearing) {
+    if (unavailable) {
       dialogs.showNotifier(
         context.appLocalizations.speedTestUnavailableUnderSingBox,
       );

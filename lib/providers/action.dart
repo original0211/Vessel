@@ -13,6 +13,7 @@ import 'package:kfusion/core/singbox/singbox_runner.dart';
 import 'package:kfusion/database/database.dart';
 import 'package:kfusion/enum/enum.dart';
 import 'package:kfusion/features/config_hub/singbox_action.dart';
+import 'package:kfusion/features/config_hub/singbox_speedtest.dart';
 import 'package:kfusion/features/proxies/speed_test.dart';
 import 'package:kfusion/features/config_hub/singbox_degradations.dart';
 import 'package:kfusion/features/config_hub/singbox_native.dart';

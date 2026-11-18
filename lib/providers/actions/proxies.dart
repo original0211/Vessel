@@ -28,6 +28,8 @@ class _SpeedTestJob {
   final String proxyName;
   final SpeedTestState? previous;
   bool cancelled = false;
+
+  void Function()? abort;
 }
 
 @Riverpod(keepAlive: true)
@@ -315,10 +317,13 @@ class ProxiesAction extends _$ProxiesAction {
     ]);
   }
 
-  /// Measures the node [proxy] resolves to, through the mihomo core alone;
-  /// one test at a time, as a test saturates the link it measures.
+  /// Measures the node [proxy] resolves to; one test at a time, as a test saturates the link it measures.
   Future<void> proxySpeedTest(Proxy proxy) async {
-    if (bearingSingBoxApi(ref) != null || _speedTestJob != null) {
+    if (_speedTestJob != null) {
+      return;
+    }
+    final singBoxBearing = bearingSingBoxApi(ref) != null;
+    if (singBoxBearing && !ref.read(speedTestSingBoxSupportedProvider)) {
       return;
     }
     final target = computeRealSelectedProxyState(
@@ -339,7 +344,9 @@ class ProxiesAction extends _$ProxiesAction {
     _speedTestJob = job;
     store.set(target, const SpeedTestState.running());
     try {
-      final result = await _core.testSpeed(target);
+      final result = singBoxBearing
+          ? await _singBoxSpeedTest(target, job)
+          : await _core.testSpeed(target);
       if (job.cancelled) {
         return;
       }
@@ -376,6 +383,30 @@ class ProxiesAction extends _$ProxiesAction {
     }
   }
 
+  Future<SpeedTestResult?> _singBoxSpeedTest(
+    String target,
+    _SpeedTestJob job,
+  ) async {
+    final profile = ref.read(currentProfileProvider);
+    if (profile == null) {
+      return null;
+    }
+    final text = await readTextFileTask(
+      await appPath.getProfilePath(profile.id.toString()),
+    );
+    if (text == null || text.isEmpty) {
+      return null;
+    }
+    final tester = ref.read(singBoxSpeedTesterProvider);
+    job.abort = tester.cancel;
+    return tester.measure(
+      targetName: target,
+      profileText: text,
+      homeDir: await appPath.homeDirPath,
+      cancelled: () => job.cancelled,
+    );
+  }
+
   void cancelSpeedTest() {
     final job = _speedTestJob;
     if (job == null) {
@@ -383,6 +414,7 @@ class ProxiesAction extends _$ProxiesAction {
     }
     job.cancelled = true;
     _speedTestJob = null;
+    job.abort?.call();
     final store = ref.read(speedTestResultsProvider.notifier);
     final previous = job.previous;
     if (previous == null || previous.phase == SpeedTestPhase.running) {
