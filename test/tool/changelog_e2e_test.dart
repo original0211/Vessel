@@ -212,8 +212,8 @@ void main() {
   });
 
   test('the default boundary keeps the closed 0.x line frozen', () {
-    git(['tag', 'v1.4.3']);
-    git(['tag', 'v0.2.48', 'v1.4.3']);
+    git(['tag', 'v1.4.4']);
+    git(['tag', 'v0.2.48', 'v1.4.4']);
 
     final versions = ChangelogBuilder(
       Git(workingDirectory: repo.path),
@@ -230,6 +230,7 @@ void main() {
     expect(isFrozenTag('v1.4.1'), isTrue);
     expect(isFrozenTag('v1.4.2'), isTrue);
     expect(isFrozenTag('v1.4.3'), isTrue);
+    expect(isFrozenTag('v1.4.4'), isTrue);
   });
 
   test('recorded history survives a rewrite it cannot re-derive', () {
