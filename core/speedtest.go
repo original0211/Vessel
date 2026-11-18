@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"net/url"
+	"strings"
 	"time"
 
 	"github.com/metacubex/http"
@@ -65,22 +67,33 @@ func speedMbps(windowBytes int64, window time.Duration) float64 {
 	return float64(windowBytes) * 8 / window.Seconds() / 1e6
 }
 
-func measureSpeedDownload(ctx context.Context, client *http.Client, url string) (float64, int64, error) {
-	request, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+// sizedDownload reports whether the source generates its body to the byte count named in its URL (Cloudflare's __down form), which makes one response a chunk of the window rather than the whole of it.
+func sizedDownload(rawURL string) bool {
+	parsed, err := url.Parse(rawURL)
 	if err != nil {
-		return 0, 0, err
+		return false
+	}
+	return parsed.Query().Has("bytes")
+}
+
+func readSpeedChunk(ctx context.Context, client *http.Client, rawURL string, meter *speedMeter) (completed bool, err error) {
+	request, err := http.NewRequestWithContext(ctx, http.MethodGet, rawURL, nil)
+	if err != nil {
+		return true, err
 	}
 	response, err := client.Do(request)
 	if err != nil {
-		return 0, 0, err
+		if ctx.Err() != nil {
+			return false, nil
+		}
+		return true, err
 	}
 	defer func() {
 		_ = response.Body.Close()
 	}()
 	if response.StatusCode != http.StatusOK {
-		return 0, 0, fmt.Errorf("speed test source answered %s", response.Status)
+		return true, fmt.Errorf("speed test source answered %s", response.Status)
 	}
-	meter := &speedMeter{startedAt: time.Now()}
 	buffer := make([]byte, speedTestReadBuffer)
 	for meter.totalBytes < speedTestMaxBytes {
 		n, readErr := response.Body.Read(buffer)
@@ -88,12 +101,28 @@ func measureSpeedDownload(ctx context.Context, client *http.Client, url string) 
 			meter.add(n, time.Now())
 		}
 		if readErr == io.EOF {
-			break
+			return true, nil
 		}
 		if readErr != nil {
-			if ctx.Err() == nil {
-				return 0, meter.totalBytes, readErr
+			if ctx.Err() != nil {
+				return false, nil
 			}
+			return true, readErr
+		}
+	}
+	return true, nil
+}
+
+func measureSpeedDownload(ctx context.Context, client *http.Client, rawURL string) (float64, int64, error) {
+	meter := &speedMeter{startedAt: time.Now()}
+	chunked := sizedDownload(rawURL)
+	for meter.totalBytes < speedTestMaxBytes {
+		before := meter.totalBytes
+		cont, err := readSpeedChunk(ctx, client, rawURL, meter)
+		if err != nil {
+			return 0, meter.totalBytes, err
+		}
+		if !cont || !chunked || meter.totalBytes == before {
 			break
 		}
 	}
@@ -102,6 +131,18 @@ func measureSpeedDownload(ctx context.Context, client *http.Client, url string) 
 		return 0, meter.totalBytes, errSpeedTestInsufficient
 	}
 	return speedMbps(windowBytes, windowDuration), meter.totalBytes, nil
+}
+
+// speedTestErrorText joins the per-source failures so a dead primary is never hidden behind the backup's error; a single failure keeps its own wording, with no source prefix to mistake for part of the message.
+func speedTestErrorText(urls []string, errs []error) string {
+	if len(errs) == 1 {
+		return errs[0].Error()
+	}
+	parts := make([]string, len(errs))
+	for i, err := range errs {
+		parts[i] = fmt.Sprintf("%s: %s", urls[i], err)
+	}
+	return strings.Join(parts, "; ")
 }
 
 func runSpeedTest(parent context.Context, proxy constant.Proxy, name string, urls []string, timeout time.Duration) *SpeedTestResult {
@@ -124,21 +165,21 @@ func runSpeedTest(parent context.Context, proxy constant.Proxy, name string, url
 
 	ctx, cancel := context.WithTimeout(parent, timeout)
 	defer cancel()
-	var lastErr error
-	for _, url := range urls {
-		mbps, totalBytes, err := measureSpeedDownload(ctx, client, url)
+	var sourceErrs []error
+	for _, rawURL := range urls {
+		mbps, totalBytes, err := measureSpeedDownload(ctx, client, rawURL)
 		if err == nil {
 			result.Mbps = mbps
 			result.TotalBytes = totalBytes
 			return result
 		}
-		lastErr = err
+		sourceErrs = append(sourceErrs, err)
 		if ctx.Err() != nil {
 			break
 		}
 	}
-	if lastErr != nil {
-		result.Error = lastErr.Error()
+	if len(sourceErrs) > 0 {
+		result.Error = speedTestErrorText(urls[:len(sourceErrs)], sourceErrs)
 	}
 	return result
 }

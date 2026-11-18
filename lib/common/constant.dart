@@ -69,10 +69,14 @@ const speedTestTimeoutDuration = Duration(seconds: 10);
 
 const speedTestGuardDuration = Duration(seconds: 30);
 
-/// Download sources for a speed test, in the order the Core tries them.
+/// Download sources for a speed test, in the order the Core tries them. The
+/// Cloudflare source generates its body to the count in its URL and refuses
+/// counts of 100,000,000 and above, so one request stays below that and the
+/// Core continues the window with further requests; the OVH file is a plain
+/// download the Core reads once.
 const speedTestDownloadUrls = [
-  'https://speed.cloudflare.com/__down?bytes=104857600',
-  'https://speed.hetzner.de/100MB.bin',
+  'https://speed.cloudflare.com/__down?bytes=25000000',
+  'https://proof.ovh.net/files/100Mb.dat',
 ];
 
 const probeTimeoutDuration = Duration(seconds: 10);

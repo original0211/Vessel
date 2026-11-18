@@ -36,5 +36,13 @@ void main() {
       expect(state.mbps, isNull);
       expect(state.totalBytes, 0);
     });
+
+    test('a failed test retains why it failed', () {
+      const state = SpeedTestState.failed(error: 'source answered 403');
+      expect(state.phase, SpeedTestPhase.failed);
+      expect(state.error, 'source answered 403');
+      expect(state.mbps, isNull);
+      expect(const SpeedTestState.failed().error, isNull);
+    });
   });
 }

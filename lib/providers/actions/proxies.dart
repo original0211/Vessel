@@ -352,7 +352,14 @@ class ProxiesAction extends _$ProxiesAction {
           ),
         );
       } else {
-        store.set(target, const SpeedTestState.failed());
+        final error = result?.error ?? '';
+        if (error.isNotEmpty) {
+          commonPrint.log('Speed test failed for $target: $error');
+        }
+        store.set(
+          target,
+          SpeedTestState.failed(error: error.isEmpty ? null : error),
+        );
       }
     } catch (error) {
       commonPrint.log(
@@ -360,7 +367,7 @@ class ProxiesAction extends _$ProxiesAction {
         logLevel: coreFailureLogLevel(error),
       );
       if (!job.cancelled) {
-        store.set(target, const SpeedTestState.failed());
+        store.set(target, SpeedTestState.failed(error: '$error'));
       }
     } finally {
       if (identical(_speedTestJob, job)) {

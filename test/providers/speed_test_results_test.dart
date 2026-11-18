@@ -125,6 +125,18 @@ void main() {
       expect(stateOf('JP-03')?.phase, SpeedTestPhase.failed);
     });
 
+    test('a failed result keeps its per-source errors in the state', () async {
+      const errors = 'https://a: answered 403; https://b: timed out';
+      when(() => core.asyncTestSpeed('JP-03')).thenAnswer(
+        (_) async => const SpeedTestResult(name: 'JP-03', error: errors),
+      );
+      await action().proxySpeedTest(node);
+      final state = stateOf('JP-03');
+      expect(state?.phase, SpeedTestPhase.failed);
+      expect(state?.error, errors);
+      expect(state?.mbps, isNull);
+    });
+
     test('a thrown core error lands as failed, never as a reading', () async {
       when(() => core.asyncTestSpeed('JP-03')).thenThrow(Exception('down'));
       await action().proxySpeedTest(node);
