@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.4.3 (2026-11-18)
+
+**Features**
+
+- **proxies** Node rows can now run a speed test (5dd5f3b)
+- **proxies** Node rows now show recent delay stability (1b1e904)
+
 ## v1.4.2 (2026-11-11)
 
 **Bug Fixes**

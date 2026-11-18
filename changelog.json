@@ -2,6 +2,29 @@
   "schemaVersion": 2,
   "versions": [
     {
+      "version": "1.4.3",
+      "tag": "v1.4.3",
+      "date": "2026-11-18",
+      "prerelease": false,
+      "groups": [
+        {
+          "type": "feat",
+          "entries": [
+            {
+              "id": "5dd5f3b",
+              "scope": "proxies",
+              "text": "Node rows can now run a speed test"
+            },
+            {
+              "id": "1b1e904",
+              "scope": "proxies",
+              "text": "Node rows now show recent delay stability"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "version": "1.4.2",
       "tag": "v1.4.2",
       "date": "2026-11-11",
